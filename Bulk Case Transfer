@@ -1,0 +1,148 @@
+option Explicit
+DIM name_of_script, start_time, worker_signature
+DIM beta_agency, url, req, fso
+DIM Auto_Approved_COLA_DAIL_Message_Dialog, SNAP_COLA_Message_Checkbox, GRH_COLA_Message_Checkbox, MSA_COLA_Message_Checkbox, x_number
+DIM on_dail, read_col, read_row, is_right_line, SNAP_COLA_Check, COLA_auto_approved_first_line, cola_message, pick_row
+DIM ButtonPressed, worker_sig_dlg, delete_dail_check, bulk_check, error_msg, current_user
+DIM delete_confirm, dail_row, original_message, case_note_auto_approval, MAXIS_case_number, is_this_a_cola_message
+DIM objExcel, objWorkbook, excel_row, last_page, check_for_case_number_row, look_for_case_number
+
+'STATS GATHERING----------------------------------------------------------------------------------------------------
+name_of_script = "Bulk Case Transfer"
+start_time = timer
+
+'LOADING ROUTINE FUNCTIONS FROM GITHUB REPOSITORY---------------------------------------------------------------------------
+If beta_agency = "" or beta_agency = True then
+                url = "https://raw.githubusercontent.com/MN-Script-Team/BZS-FuncLib/BETA/MASTER%20FUNCTIONS%20LIBRARY.vbs"
+Else
+                url = "https://raw.githubusercontent.com/MN-Script-Team/BZS-FuncLib/master/MASTER%20FUNCTIONS%20LIBRARY.vbs"
+END IF
+SET req = CreateObject("Msxml2.XMLHttp.6.0")                                                               'Creates an object to get a URL
+req.open "GET", url, FALSE                                                                                                                                          'Attempts to open the URL
+req.send                                                                                                                                                                                                              'Sends request
+IF req.Status = 200 THEN                                                                                                                                               '200 means great success
+                SET fso = CreateObject("Scripting.FileSystemObject")    'Creates an FSO
+                Execute req.responseText                                                                                                                          'Executes the script code
+ELSE                                                                                                                                                                                                                       'Error message, tells user to try to reach github.com, otherwise instructs to contact Veronica with details (and stops script).
+                MsgBox                "Something has gone wrong. The code stored on GitHub was not able to be reached." & vbCr &_ 
+                                                vbCr & _
+                                                "Before contacting Veronica Cary, please check to make sure you can load the main page at www.GitHub.com." & vbCr &_
+                                                vbCr & _
+                                                "If you can reach GitHub.com, but this script still does not work, ask an alpha user to contact Veronica Cary and provide the following information:" & vbCr &_
+                                                vbTab & "- The name of the script you are running." & vbCr &_
+                                                vbTab & "- Whether or not the script is ""erroring out"" for any other users." & vbCr &_
+                                                vbTab & "- The name and email for an employee from your IT department," & vbCr & _
+                                                vbTab & vbTab & "responsible for network issues." & vbCr &_
+                                                vbTab & "- The URL indicated below (a screenshot should suffice)." & vbCr &_
+                                                vbCr & _
+                                                "Veronica will work with your IT department to try and solve this issue, if needed." & vbCr &_ 
+                                                vbCr &_
+                                                "URL: " & url
+                                                script_end_procedure("Script ended due to error connecting to GitHub.")
+END IF
+
+'DIALOG-----------------------------------------------------------------
+'Dim variables from dialog	
+Bulk_transfer_cases_dialog, County_Number, Office_Number, Team_Number, Position_Number, Worker_Signature, Case_Number, purge_worklist_check, bulk_case_transfer_check
+
+BeginDialog Bulk_transfer_cases_dialog, 0, 0, 241, 180, "Bulk Transfer Cases"
+  EditBox 60, 0, 50, 15, Case_Number
+  EditBox 55, 25, 50, 15, County_Number
+  EditBox 55, 45, 50, 15, Office_Number
+  EditBox 55, 65, 50, 15, Team_Number
+  EditBox 55, 85, 50, 15, Position_Number
+  EditBox 55, 105, 50, 15, location_of_file
+  EditBox 75, 140, 50, 15, Worker_Signature
+  Text 10, 0, 45, 15, "Case Number"
+  Text 10, 25, 25, 15, "County"
+  Text 10, 45, 35, 15, "Office"
+  Text 10, 65, 30, 15, "Team"
+  Text 10, 85, 30, 15, "Position"
+  Text 10, 105, 40, 15, "File location"
+  Text 10, 140, 60, 15, "Worker Signature"
+  CheckBox 10, 10, 185, 15, "Check here to have the script run on ALL active cases", bulk_case_transfer_check
+  CheckBox 5, 120, 240, 15, "Check here if you want to purge worklist M8001- Review Case Referred", purge_worklist_check
+  ButtonGroup ButtonPressed
+    OkButton 140, 160, 50, 15
+    CancelButton 190, 160, 50, 15
+EndDialog
+'THE SCRIPT------------------------------------------------------------------
+
+'Connecting to BlueZone
+EMConnect ""
+
+CALL check_for_PRISM(True) 'If not in PRISM, stop script
+'Sends a transmit to check for password issues
+
+Do
+
+
+ 	Do
+
+		Do
+
+			Do
+		      	Do
+					DIALOG Bulk_transfer_cases_dialog
+     					IF ButtonPressed = 0 THEN StopScript
+
+				      IF County_Number = "" THEN MsgBox "You must enter County number"
+     				 LOOP UNTIL County_Number <> ""
+     			       IF Office_Number = "" THEN MsgBox "You must enter Office number"
+			 LOOP UNTIL Office_Number <> ""
+			 IF Team_Number = "" THEN MsgBox "You must enter Team number"
+		LOOP UNTIL Team_Number <> ""
+		IF Position_Number = "" THEN MsgBox "You must enter Position number"
+	LOOP UNTIL Position_Number <> ""
+	IF Worker_Signature = "" THEN MsgBox "You must enter Worker Signature"
+LOOP UNTIL worker_signature <> ""
+     
+'Checks to make sure PRISM is open and you are logged in
+CALL check_for_PRISM(True)
+'CSO can transfer individual case by adding Case Number
+
+
+IF bulk_case_transfer_check = checked THEN
+
+'Goes to CALI screen 							
+CALL Navigate_to_PRISM_screen ("CALI")
+EMWriteScreen "s", 8, 3 
+EMSendKey "<enter>"
+EMWaitReady 0, 0 
+
+'Set Cursor on Direct Command Line of CALI
+EMSetCursor 21,18
+EMWriteScreen "CAAS", 21, 18 
+EMSendKey "<enter>"
+EMWaitReady 0, 0
+
+EMWriteScreen "m", 3, 29 
+
+
+
+
+               
+      
+
+
+
+
+'write worklist
+ 
+'always add EMSendKey and EMWaitReady together
+EMWriteScreen "CAWD", 21, 18
+EMSendKey "<enter>"
+EMSendKey "<PF5>"
+EMWaitReady 0,0
+EMWriteScreen "Free", 4, 37
+EMWriteScreen "File located in <>'s office", 10, 4
+EMWriteScreen "800", 17, 52
+EMSendKey "<enter>"
+EMWaitReady 0,0
+
+
+END IF
+
+
+
+Enter file contents here
