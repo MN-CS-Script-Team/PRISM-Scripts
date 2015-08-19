@@ -6,7 +6,7 @@ start_time = timer
 url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/master/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
 SET req = CreateObject("Msxml2.XMLHttp.6.0")				'Creates an object to get a URL
 req.open "GET", url, FALSE									'Attempts to open the URL
-req.send													'Sends request
+req.send			 										'Sends request
 IF req.Status = 200 THEN									'200 means great success
 	Set fso = CreateObject("Scripting.FileSystemObject")	'Creates an FSO
 	Execute req.responseText								'Executes the script code
