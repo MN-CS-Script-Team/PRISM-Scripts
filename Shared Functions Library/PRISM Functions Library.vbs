@@ -117,7 +117,7 @@ FUNCTION date_converter_PALC_PAPL (date_variable)
 	date_variable = date_month & "/" & date_day & "/" & date_year 
 END FUNCTION
 
-FUNCTION change_date_format_from_MDYYY_to_MMDDYYY(date_to_format)
+FUNCTION change_date_format_from_MDYYYY_to_MMDDYYY(date_to_format)
 		month3 = DatePart("M", date_to_format)
 		day3 = DatePart("D", date_to_format)
 		year3 = DatePart("YYYY", date_to_format)
