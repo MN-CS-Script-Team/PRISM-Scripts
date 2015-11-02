@@ -117,6 +117,16 @@ FUNCTION date_converter_PALC_PAPL (date_variable)
 	date_variable = date_month & "/" & date_day & "/" & date_year 
 END FUNCTION
 
+FUNCTION change_date_format_from_MDYYY_to_MMDDYYY(date_to_format)
+		month3 = DatePart("M", date_to_format)
+		day3 = DatePart("D", date_to_format)
+		year3 = DatePart("YYYY", date_to_format)
+		if len(month3) = 1 then month3 = 0 & month3
+		if len(day3) = 1 then day3 = 0 & day3
+		date_to_format = month3 & "/" & day3 & "/" & year3
+		change_date_format = date_to_format
+END FUNCTION
+
 Function end_excel_and_script
   objExcel.Workbooks.Close
   objExcel.quit
