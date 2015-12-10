@@ -34,8 +34,8 @@ BeginDialog start_end_date_dialog, 0, 0, 171, 65, "Start and End Date Dialog"
     OkButton 120, 25, 50, 15
     CancelButton 120, 45, 50, 15
   EditBox 60, 5, 110, 15, PRISM_case_number
-  EditBox 45, 25, 70, 15, start_date
-  EditBox 45, 45, 70, 15, end_date
+  EditBox 45, 25, 70, 15, start_date  'Start date for the search
+  EditBox 45, 45, 70, 15, end_date  'End date for the search
   Text 5, 10, 50, 10, "Case number:"
   Text 5, 30, 40, 10, "Start date:"
   Text 5, 50, 40, 10, "End date:"
