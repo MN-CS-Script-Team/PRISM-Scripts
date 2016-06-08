@@ -1,28 +1,35 @@
 'GATHERING STATS----------------------------------------------------------------------------------------------------
 name_of_script = "NOTES - DATE OF THE HEARING (EXPRO).vbs"
 start_time = timer
-'
-'LOADING ROUTINE FUNCTIONS FROM GITHUB REPOSITORY---------------------------------------------------------------------------
-url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/master/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
-SET req = CreateObject("Msxml2.XMLHttp.6.0")				'Creates an object to get a URL
-req.open "GET", url, FALSE									'Attempts to open the URL
+
+'LOADING ROUTINE FUNCTIONS (FOR PRISM)---------------------------------------------------------------
+Dim URL, REQ, FSO					'Declares variables to be good to option explicit users
+If beta_agency = "" then 			'For scriptwriters only
+	url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/master/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
+ElseIf beta_agency = True then		'For beta agencies and testers
+	url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/beta/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
+Else								'For most users
+	url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/release/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
+End if
+Set req = CreateObject("Msxml2.XMLHttp.6.0")				'Creates an object to get a URL
+req.open "GET", url, False									'Attempts to open the URL
 req.send													'Sends request
-IF req.Status = 200 THEN									'200 means great success
+If req.Status = 200 Then									'200 means great success
 	Set fso = CreateObject("Scripting.FileSystemObject")	'Creates an FSO
 	Execute req.responseText								'Executes the script code
 ELSE														'Error message, tells user to try to reach github.com, otherwise instructs to contact Veronica with details (and stops script).
 	MsgBox 	"Something has gone wrong. The code stored on GitHub was not able to be reached." & vbCr &_ 
 			vbCr & _
-			"Before contacting Veronica Cary, please check to make sure you can load the main page at www.GitHub.com." & vbCr &_
+			"Before contacting Robert Kalb, please check to make sure you can load the main page at www.GitHub.com." & vbCr &_
 			vbCr & _
-			"If you can reach GitHub.com, but this script still does not work, ask an alpha user to contact Veronica Cary and provide the following information:" & vbCr &_
+			"If you can reach GitHub.com, but this script still does not work, ask an alpha user to contact Robert Kalb and provide the following information:" & vbCr &_
 			vbTab & "- The name of the script you are running." & vbCr &_
 			vbTab & "- Whether or not the script is ""erroring out"" for any other users." & vbCr &_
 			vbTab & "- The name and email for an employee from your IT department," & vbCr & _
 			vbTab & vbTab & "responsible for network issues." & vbCr &_
 			vbTab & "- The URL indicated below (a screenshot should suffice)." & vbCr &_
 			vbCr & _
-			"Veronica will work with your IT department to try and solve this issue, if needed." & vbCr &_ 
+			"Robert will work with your IT department to try and solve this issue, if needed." & vbCr &_ 
 			vbCr &_
 			"URL: " & url
 			StopScript
@@ -34,7 +41,7 @@ BeginDialog date_of_the_hearing_expro_dialog, 0, 0, 321, 220, "Date of the Heari
   Text 5, 25, 85, 10, "Child Support Magistrate"
   DropListBox 90, 25, 85, 15, "Select one:"+chr(9)+"Beverly Anderson"+chr(9)+"Jeffery Bangma"+chr(9)+"Kim Brandell"+chr(9)+"Alyssa Berg"+chr(9)+"James Brinegar"+chr(9)+"Jill Prohofsky"+chr(9)+"Patricia Marty-Villaume"+chr(9)+"Susan Williams", child_support_magistrate
   Text 180, 25, 55, 10, "County Attorney"
-  DropListBox 235, 25, 85, 15, "Select one:"+chr(9)+"Tonya D.F. Berzat"+chr(9)+"Michael S. Barone"+chr(9)+"Paul C. Clabo"+chr(9)+"Dorrie B. Estebo"+chr(9)+"Kay M. Gavinski"+chr(9)+"Rachel Morrison"+chr(9)+"D. Marie Sieber"+chr(9)+"Brett Schading", CAO_list
+  DropListBox 235, 25, 85, 15, "Select one:"+chr(9)+"Tonya D.F. Berzat"+chr(9)+"Michael S. Barone"+chr(9)+"Paul C. Clabo"+chr(9)+"Dorrie B. Estebo"+chr(9)+"Francine P. Mocchi"+chr(9)+"Rachel Morrison"+chr(9)+"D. Marie Sieber"+chr(9)+"Brett Schading", CAO_list
   CheckBox 5, 50, 50, 10, "NCP present", NCP_present_check
   Text 60, 50, 60, 10, "Represented by:"
   EditBox 115, 50, 85, 15, NCP_represented_by

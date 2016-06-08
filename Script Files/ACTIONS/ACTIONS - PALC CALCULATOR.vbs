@@ -2,27 +2,34 @@
 name_of_script = "ACTIONS - PALC CALCULATOR.vbs"
 start_time = timer
 
-'LOADING ROUTINE FUNCTIONS FROM GITHUB REPOSITORY---------------------------------------------------------------------------
-url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/master/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
-SET req = CreateObject("Msxml2.XMLHttp.6.0")				'Creates an object to get a URL
-req.open "GET", url, FALSE									'Attempts to open the URL
+'LOADING ROUTINE FUNCTIONS (FOR PRISM)---------------------------------------------------------------
+Dim URL, REQ, FSO					'Declares variables to be good to option explicit users
+If beta_agency = "" then 			'For scriptwriters only
+	url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/master/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
+ElseIf beta_agency = True then		'For beta agencies and testers
+	url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/beta/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
+Else								'For most users
+	url = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/release/Shared%20Functions%20Library/PRISM%20Functions%20Library.vbs"
+End if
+Set req = CreateObject("Msxml2.XMLHttp.6.0")				'Creates an object to get a URL
+req.open "GET", url, False									'Attempts to open the URL
 req.send													'Sends request
-IF req.Status = 200 THEN									'200 means great success
+If req.Status = 200 Then									'200 means great success
 	Set fso = CreateObject("Scripting.FileSystemObject")	'Creates an FSO
 	Execute req.responseText								'Executes the script code
 ELSE														'Error message, tells user to try to reach github.com, otherwise instructs to contact Veronica with details (and stops script).
 	MsgBox 	"Something has gone wrong. The code stored on GitHub was not able to be reached." & vbCr &_ 
 			vbCr & _
-			"Before contacting Veronica Cary, please check to make sure you can load the main page at www.GitHub.com." & vbCr &_
+			"Before contacting Robert Kalb, please check to make sure you can load the main page at www.GitHub.com." & vbCr &_
 			vbCr & _
-			"If you can reach GitHub.com, but this script still does not work, ask an alpha user to contact Veronica Cary and provide the following information:" & vbCr &_
+			"If you can reach GitHub.com, but this script still does not work, ask an alpha user to contact Robert Kalb and provide the following information:" & vbCr &_
 			vbTab & "- The name of the script you are running." & vbCr &_
 			vbTab & "- Whether or not the script is ""erroring out"" for any other users." & vbCr &_
 			vbTab & "- The name and email for an employee from your IT department," & vbCr & _
 			vbTab & vbTab & "responsible for network issues." & vbCr &_
 			vbTab & "- The URL indicated below (a screenshot should suffice)." & vbCr &_
 			vbCr & _
-			"Veronica will work with your IT department to try and solve this issue, if needed." & vbCr &_ 
+			"Robert will work with your IT department to try and solve this issue, if needed." & vbCr &_ 
 			vbCr &_
 			"URL: " & url
 			StopScript
@@ -62,8 +69,7 @@ Loop until isdate(start_date) = True and isdate(end_date) = True
 
 
 'Checks to make sure PRISM isn't locked out
-transmit
-PRISM_check_function
+CALL check_for_PRISM(false)
 
 'Clearing case info from PRISM
 call navigate_to_PRISM_screen("REGL")
@@ -75,8 +81,10 @@ call navigate_to_PRISM_screen("PALC")
 'Entering case number and transmitting
 EMSetCursor 20, 9
 EMSendKey replace(PRISM_case_number, "-", "")	 	'Entering the specific case indicated
-transmit								'Transmitting into it
 
+EMWriteScreen cstr(start_date), 20, 35
+EMWriteScreen cstr(end_date), 20, 49
+transmit								'Transmitting into it
 
 
 row = 9		'Setting variable for the do...loop
@@ -90,18 +98,17 @@ Do
 	EMReadScreen pmt_ID_MM, 2, row, 9
 	EMReadScreen pmt_ID_DD, 2, row, 11
 	pmt_ID_date = pmt_ID_MM & "/" & pmt_ID_DD & "/" & pmt_ID_YY	
-
-	If (cdate(start_date) <= cdate(pmt_ID_date)) and (cdate(pmt_ID_date) <= cdate(end_date)) then 				'Checks to see if date is in between start/end dates
-		date_within_range = True															'Determines date range
+					
 		EMReadScreen proc_type, 3, row, 25														'Reading the proc type
 		EMReadScreen case_alloc_amt, 10, row, 70													'Reading the amt allocated
+		IF case_alloc_amt = "          " THEN case_alloc_amt = 0
 		If proc_type = "FTS" or proc_type = "MCE" or proc_type = "NOC" or proc_type = "IFC" or proc_type = "OST" or _	
 		proc_type = "PCA" or proc_type = "PIF" or proc_type = "STJ" or proc_type = "STS" or proc_type = "FTJ" then 		'If proc type is one of these, it's involuntary. Else, it's voluntary.
 			total_involuntary_alloc = total_involuntary_alloc + abs(case_alloc_amt)							'Adds the alloc amt for involuntary
 		Else
 			total_voluntary_alloc = total_voluntary_alloc + abs(case_alloc_amt)							'Adds the alloc amt for voluntary
 		End if
-	End if
+	
 	row = row + 1														'Increases the row variable by one, to check the next row
 	EMReadScreen end_of_data_check, 19, row, 28									'Checks to see if we've reached the end of the list
 	If end_of_data_check = "*** End of Data ***" then exit do							'Exits do if we have

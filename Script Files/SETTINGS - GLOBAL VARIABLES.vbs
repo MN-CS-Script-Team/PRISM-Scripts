@@ -6,7 +6,7 @@
 default_directory = "C:\PRISM-Scripts\Script Files\"
 
 'This is used for determining whether script_end_procedure will also log usage info in an Access table.
-collecting_statistics = True
+collecting_statistics = False
 
 'This is the file path for the statistics Access database.
 stats_database_path = "Q:\Blue Zone Scripts\Statistics\usage statistics.accdb"
@@ -15,16 +15,27 @@ stats_database_path = "Q:\Blue Zone Scripts\Statistics\usage statistics.accdb"
 EDMS_choice = "Compass Pilot"
 
 'This is used for MEMO scripts, such as appointment letter
+'Replace "Anoka" with your county name below. "Anoka County" just demonstrates the format for County Name.  
 county_name = "Anoka County"
 
+'This is the county code on the CALI screen. 
+county_cali_code = "###"
+
 'Creates a double array of county offices, first by office (using the ~), then by address line (using the |). Dynamically added with the installer.
+'Address below is an example.  Replace with your county office address.
 county_office_array = split("2100 3rd Ave Suite 400|Anoka, MN 55303", "~")
 
 'This is a variable which signifies the agency is beta (affects script URL)
 beta_agency = True
 
-'An array of county attorneys. "Select one:" should ALWAYS be in there, and ALWAYS be first.
-county_attorney_array = array("Select one:", "Tonya D.F. Berzat", "Michael S. Barone", "Paul C. Clabo", "Dorrie B. Estebo", "Francine Mocchi", "Rachel Morrison", "D. Marie Sieber", "Brett Shading")  
+'An array of county attorneys. "Select one:" should ALWAYS be in there, and ALWAYS be first. Replace "County Attorney #" with your agency's county attorney names.
+county_attorney_array = array("Select one:", "County Attorney 1", "County Attorney 2", "County Attorney 3", "County Attorney 4", "County Attorney 5")  
+
+'An array of child support magistrates. "Select one:" should ALWAYS be in there, and ALWAYS be first.  Replace "Magistrate # with your agency's child support magistrate names.
+child_support_magistrates_array = array("Select one:", "Magistrate 1", "Magistrate 2", "Magistrate 3", "Magistrate 4", "Magistrate 5")  
+
+'An array of judges. "Select one:" should ALWAYS be in there, and ALWAYS be first.  Replace "Judge #" with your agency's judges names.
+county_judge_array = array("Select one:", "Judge 1", "Judge 2", "Judge 3", "Judge 4", "Judge 5")  
 
 'ACTIONS TAKEN BASED ON COUNTY CUSTOM VARIABLES------------------------------------------------------------------------------
 
@@ -35,7 +46,6 @@ For each office in county_office_array
 	city_for_array = left(new_office_array(1), comma_location_in_address_line_02 - 1)		'Pops this city into a variable
 	county_office_list = county_office_list & chr(9) & city_for_array					'Adds the city to the variable called "county_office_list", which also contains a new line, so that it works correctly in dialogs.
 Next
-
 
 is_county_collecting_stats = collecting_statistics	'IT DOES THIS BECAUSE THE SETUP SCRIPT WILL OVERWRITE LINES BELOW WHICH DEPEND ON THIS, BY SEPARATING THE VARIABLES WE PREVENT ISSUES
 
@@ -56,8 +66,11 @@ With (CreateObject("Scripting.FileSystemObject"))
 	END IF
 END WITH
 
+'Here is the list of agency super users. These users will have access to the test scripts. Enter the list of users' log-in IDs in the quotes below, comma separated
+beta_users = ""
+
 'This is the URL of our script repository, and should only change if the agency is beta or standard, or if there's a scriptwriter in the group (which is determined by the default directory being C:\PRISM-Scripts\Script Files.
-If default_directory = "C:\PRISM-Scripts\Script Files\" then
+If default_directory = "C:\PRISM-Scripts\Script Files\" OR InStr(beta_users, UCASE(windows_user_ID)) <> 0 then
 	script_repository = "https://raw.githubusercontent.com/MN-CS-Script-Team/PRISM-Scripts/master/Script Files/"
 Else
 	If beta_agency = True then
