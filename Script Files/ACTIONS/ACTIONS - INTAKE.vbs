@@ -189,6 +189,55 @@ BeginDialog motion_to_set_intake_dialog, 0, 0, 381, 305, "Motion to Set Intake D
     CancelButton 310, 285, 50, 15
 EndDialog
 
+BeginDialog paternity_case_initiation_dialog, 0, 0, 356, 310, "Paternity Case Initiation"
+  Text 5, 5, 85, 10, "Paternity Case Initiation"
+  GroupBox 10, 15, 150, 150, "Letters to CP"
+  CheckBox 10, 25, 100, 15, "Financial Statement (F0021)", financial_stmt_cp_checkbox
+  CheckBox 10, 40, 80, 15, "Cover Letter (*.docx)", cp_cover_letter_checkbox
+  CheckBox 10, 55, 130, 15, "Your Privacy Rights (F0018)", cp_your_privacy_rights_checkbox
+  CheckBox 10, 70, 125, 15, "Waiver of Personal Service (F5000)", cp_waiver_of_personal_service_checkbox
+  CheckBox 10, 85, 150, 15, "Paternity Questionnaire Affidavit (*.docx)", paternity_questionnaire_affidavit_checkbox
+  CheckBox 10, 100, 100, 15, "Past Support Form (*.docx)", cp_past_support_form_checkbox
+  CheckBox 10, 115, 110, 15, "Child Care Expenses (*.docx)", cp_child_care_expense_checkbox
+  CheckBox 10, 130, 100, 15, "Statement of Rights (F0022)", cp_statement_of_rights_checkbox
+  CheckBox 10, 145, 110, 15, "Medical Opinion Form (*.docx)", cp_medical_opinion_checkbox
+  GroupBox 185, 15, 145, 130, "Letters to NCP"
+  CheckBox 185, 25, 145, 15, "Financial Statement (F0021)", financial_stmt_ncp_checkbox
+  CheckBox 185, 40, 140, 15, "Cover Letter (*.docx)", ncp_cover_letter_checkbox
+  CheckBox 185, 55, 130, 15, "Your Privacy Rights (F0018)", ncp_your_privacy_rights_checkbox
+  CheckBox 185, 70, 125, 15, "Waiver of Personal Service (F5000)", ncp_waiver_of_personal_service_checkbox
+  CheckBox 185, 85, 150, 15, "NCP Voluntary Paternity Notice (F0516)", ncp_voluntary_paternity_notice_checkbox
+  CheckBox 185, 100, 120, 15, "Past Support Form (*.docx)", ncp_past_support_form_checkbox
+  CheckBox 185, 115, 110, 15, "Statement of Rights (F0022)", ncp_statement_of_rights_checkbox
+  CheckBox 185, 130, 110, 15, "Medical Opinion Form (*.docx)", ncp_medical_opinion_checkbox
+  GroupBox 5, 170, 140, 130, "CAWD notes to add"
+  Text 10, 180, 75, 10, "Worklist Description"
+  EditBox 10, 190, 130, 15, Edit2 t_30_day_cawd_txt
+  Text 10, 205, 80, 10, "Calendar days until due"
+  EditBox 90, 205, 30, 15, CAWT_number_days_editbox_1
+  Text 10, 220, 75, 10, "Worklist Description"
+  EditBox 10, 230, 130, 15, Edit9 worker_name
+  Text 10, 245, 80, 10, "Calendar days until due"
+  EditBox 90, 245, 30, 15, CAWT_number_days_editbox_2
+  Text 10, 260, 75, 10, "Worklist Description"
+  EditBox 10, 270, 130, 15, Edit11 worker_signature
+  Text 10, 285, 80, 10, "Calendar days until due"
+  EditBox 90, 285, 30, 15, CAWT_number_days_editbox_3
+  GroupBox 180, 160, 80, 10, "File Location on CAST"
+  EditBox 265, 155, 55, 15, Edit10 worker_phone
+  Text 185, 175, 150, 20, "Additional text to CAAD note (Docs sent will automatically list in CAAD"
+  EditBox 185, 195, 140, 15, Worklist_text_editbox_3
+  Text 180, 225, 50, 10, "Worker name:"
+  EditBox 230, 220, 90, 15, Worklist_text_editbox_1
+  Text 180, 250, 50, 10, "Worker phone:"
+  EditBox 230, 245, 90, 15, Worklist_text_editbox_2
+  Text 185, 270, 70, 10, "Sign your CAAD note:"
+  EditBox 255, 265, 40, 15, Location_CAST_textbox
+  ButtonGroup ButtonPressed
+    OkButton 245, 285, 50, 20
+    CancelButton 300, 285, 50, 20
+EndDialog
+
 
 'SHOW THE INITIAL DIALOG=================================
 DO
