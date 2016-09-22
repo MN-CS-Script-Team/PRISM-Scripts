@@ -234,14 +234,6 @@ cs_scripts_array(script_num).description		= "Navigates to the ENFL screen."
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "ENFORCEMENT INTAKE"
-cs_scripts_array(script_num).script_type		= "ACTIONS"
-cs_scripts_array(script_num).file_name			= "ACTIONS - ENFORCEMENT INTAKE.vbs"
-cs_scripts_array(script_num).description		= "Intake workflow on enforcement cases."
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "FAILURE POF RSDI DFAS"
 cs_scripts_array(script_num).script_type		= "BULK"
 cs_scripts_array(script_num).file_name			= "BULK - FAILURE POF RSDI DFAS.vbs"
