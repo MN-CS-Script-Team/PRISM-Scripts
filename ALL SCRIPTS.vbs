@@ -242,14 +242,6 @@ cs_scripts_array(script_num).description		= "Intake workflow on enforcement case
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "ESTB DORD DOCS FOR NPA CASE"
-cs_scripts_array(script_num).script_type		= "ACTIONS"
-cs_scripts_array(script_num).file_name			= "ACTIONS - ESTB DORD DOCS FOR NPA CASE.vbs"
-cs_scripts_array(script_num).description		= "Generates establishment DORD docs for NPA case."
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "ESTB DORD DOCS FOR PA CASE"
 cs_scripts_array(script_num).script_type		= "ACTIONS"
 cs_scripts_array(script_num).file_name			= "ACTIONS - ESTB DORD DOCS FOR PA CASE.vbs"
