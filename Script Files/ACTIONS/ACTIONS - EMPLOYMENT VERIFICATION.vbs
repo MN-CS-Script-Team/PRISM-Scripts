@@ -40,45 +40,50 @@ END IF
 
 MsgBox 	"You must be on PANEL ONE of NCID or CPID with the employer you want updated."
 
-BeginDialog Employment_Verification_dialog, 0, 0, 191, 365, "Employment Verification"
-  EditBox 65, 10, 45, 15, Income_Type
-  EditBox 65, 40, 75, 15, Begin_Date
-  EditBox 65, 75, 100, 15, Occupation
-  EditBox 65, 105, 75, 15, Verification_Date
-  EditBox 70, 145, 40, 15, Verification_Source
-  EditBox 70, 180, 70, 15, Wage
-  EditBox 70, 200, 45, 15, Frequency
-  EditBox 70, 220, 45, 15, Hours_Per_Period
-  EditBox 70, 240, 45, 15, Wage_Type
-  EditBox 70, 260, 40, 15, Income_Source
-  DropListBox 70, 280, 60, 15, "Select one..."+chr(9)+"Y"+chr(9)+"N", Med_cov_dropdown
-  DropListBox 70, 300, 60, 15, "Select one..."+chr(9)+"Y"+chr(9)+"N", Den_cov_dropdown
-  EditBox 75, 325, 70, 15, worker_signature
+BeginDialog Employment_Verification_dialog, 0, 0, 196, 400, "Employment Verification"
+  EditBox 70, 15, 45, 15, Income_Type
+  EditBox 70, 35, 75, 15, Begin_Date
+  EditBox 70, 65, 75, 15, End_Date
+  EditBox 70, 85, 60, 15, Term_Reason
+  EditBox 70, 105, 100, 15, Occupation
+  EditBox 70, 125, 75, 15, Verification_Date
+  EditBox 70, 155, 40, 15, Verification_Source
+  EditBox 75, 195, 70, 15, Wage
+  EditBox 75, 220, 45, 15, Frequency
+  EditBox 75, 240, 45, 15, Hours_Per_Period
+  EditBox 75, 265, 45, 15, Wage_Type
+  EditBox 75, 290, 40, 15, Income_Source
+  DropListBox 75, 315, 60, 15, "Select one..."+chr(9)+"Y"+chr(9)+"N", Med_cov_dropdown
+  DropListBox 75, 335, 60, 15, "Select one..."+chr(9)+"Y"+chr(9)+"N", Den_cov_dropdown
+  EditBox 75, 355, 70, 15, worker_signature
   ButtonGroup ButtonPressed
-    OkButton 75, 345, 50, 15
-    CancelButton 135, 345, 50, 15
-  Text 110, 150, 45, 10, "3 letter code"
-  Text 110, 20, 45, 10, "3 letter code"
-  Text 5, 110, 55, 10, "Verification Date"
-  Text 5, 185, 20, 10, "Wage"
-  Text 5, 80, 40, 10, "Occupation:"
-  Text 5, 205, 35, 10, "Frequency"
-  Text 115, 245, 45, 10, "3 letter code"
+    OkButton 80, 380, 50, 15
+    CancelButton 140, 380, 50, 15
+  Text 5, 125, 55, 10, "Verification Date"
+  Text 5, 200, 20, 10, "Wage"
+  Text 5, 105, 40, 10, "Occupation:"
+  Text 5, 225, 35, 10, "Frequency"
+  Text 125, 265, 45, 10, "3 letter code"
   Text 5, 20, 50, 10, "Income Type:"
-  Text 5, 225, 60, 10, "Hours Per Period"
-  Text 15, 55, 140, 10, "Date must be formated 00/00/0000"
-  Text 5, 245, 45, 10, "Wage Type"
-  Text 15, 120, 140, 10, "Date must be formated 00/00/0000"
-  Text 110, 265, 45, 10, "3 letter code"
+  Text 5, 250, 60, 10, "Hours Per Period"
+  Text 50, 55, 135, 10, "Date must be formated 00/00/0000"
+  Text 5, 270, 45, 10, "Wage Type"
+  Text 15, 140, 140, 10, "Date must be formated 00/00/0000"
+  Text 120, 295, 45, 10, "3 letter code"
   GroupBox 0, 5, 185, 165, "1st Panel"
-  GroupBox 0, 170, 185, 150, "2nd Panel"
-  Text 5, 265, 55, 10, "Income Source"
-  Text 5, 325, 65, 10, "Worker Signature:"
-  Text 115, 205, 45, 10, "3 letter code"
-  Text 5, 280, 50, 10, "Med Cov Avail"
-  Text 5, 45, 40, 10, "Begin Date:"
-  Text 5, 300, 55, 10, "Den Cov Avail"
-  Text 5, 150, 65, 10, "Verification Source"
+  GroupBox 0, 180, 185, 170, "2nd Panel"
+  Text 5, 295, 55, 10, "Income Source"
+  Text 5, 360, 65, 10, "Worker Signature:"
+  Text 125, 225, 45, 10, "3 letter code"
+  Text 5, 315, 50, 10, "Med Cov Avail"
+  Text 5, 40, 40, 10, "Begin Date:"
+  Text 5, 340, 55, 10, "Den Cov Avail"
+  Text 5, 160, 65, 10, "Verification Source"
+  Text 5, 70, 40, 10, "End Date"
+  Text 120, 160, 45, 10, "3 letter code"
+  Text 5, 85, 45, 10, "Term Reason"
+  Text 125, 20, 45, 10, "3 letter code"
+  Text 135, 90, 45, 10, "3 letter code"
 EndDialog
 EMconnect ""
 
@@ -100,6 +105,8 @@ EMwritescreen "M", 3, 29
 	'completes 1st screen of income verification
 EMwritescreen Income_Type, 7, 15			'this writes the the type of income they are receiving
 EMwritescreen Begin_Date, 10, 14			'this writes the day employment began
+EMwritescreen End_Date, 10, 38			'this writes the day employment ended
+EMwritescreen Term_Reason, 11, 15			'this writes the reason employment ended
 EMwritescreen Occupation, 12, 14			'this writes their occupation
 EMwritescreen Verification_Date, 20, 7		'this writes the day the information was verified
 EMwritescreen Verification_Source, 20, 36 	'this writes who verified the information
@@ -139,10 +146,12 @@ emsetcursor 19, 4
 
 call write_bullet_and_variable_in_CAAD("Employer", Employer)						'writes the employer name
 call write_bullet_and_variable_in_CAAD("Income Type", Income_Type)					'writes the income type
-call write_bullet_and_variable_in_CAAD ("Begin Date", Begin_Date)						'writes the date employment began
-call write_bullet_and_variable_in_CAAD ("Verification Date", Verification_Date)			'writes the date the information was verified
+call write_bullet_and_variable_in_CAAD ("Begin Date", Begin_Date)					'writes the date employment began
+call write_bullet_and_variable_in_CAAD ("End Date", End_Date)						'writes the date employment ended
+call write_bullet_and_variable_in_CAAD ("Term Reason", Term_Reason)					'writes the reason employment ended
+call write_bullet_and_variable_in_CAAD ("Verification Date", Verification_Date)			        'writes the date the information was verified
 call write_bullet_and_variable_in_CAAD ("Verification Source", Verification_Source)			'writes who verified the income
-call write_bullet_and_variable_in_CAAD ("Wage", "$" & Wage)							'writes the wage per pay period
+call write_bullet_and_variable_in_CAAD ("Wage", "$" & Wage)						'writes the wage per pay period
 call write_bullet_and_variable_in_CAAD ("Frequency", Frequency)						'writes how often they are paid
 call write_bullet_and_variable_in_CAAD ("Income Source", Income_Source)					'writes where the income is coming from
 call write_bullet_and_variable_in_CAAD ("Medical Coverage", Med_cov_dropdown)				'writes if med coverage is avail, and the date if the med ins is not available
@@ -154,3 +163,4 @@ CALL write_variable_in_CAAD (worker_signature)
 transmit
 
 MsgBox 	"If medical or dental insurance is avaible be sure to update NCPD/CPPD, or request the information"
+

@@ -1,10 +1,8 @@
 'Gathering stats+=====================
-'name_of_script = ACTIONS - ESTB DORD DOCS FOR PA CASE.vbs
+'name_of_script = "ACTIONS - ESTB DORD DOCS FOR PA CASE.vbs"
 'start_time = timer
 
 
-
-DIM beta_agency
 
 'LOADING FUNCTIONS LIBRARY FROM GITHUB REPOSITORY===========================================================================
 IF IsEmpty(FuncLib_URL) = TRUE THEN	'Shouldn't load FuncLib if it already loaded once
@@ -38,14 +36,17 @@ IF IsEmpty(FuncLib_URL) = TRUE THEN	'Shouldn't load FuncLib if it already loaded
 END IF
 'END FUNCTIONS LIBRARY BLOCK================================================================================================
 
-'THE SCRIPT IS READY FOR USE
 
-'This is an updated version of the ESTB NPA DORD DOCS that is used when starting a NEW ESTABLISH ACTION on a non public assistance or DWP case that prints the
-'the financial statements, waivers, Important Statement of Rights and NCP Authorization to Collect Support. It would NOT be used on a RELATIVE CARETAKER case as
+
+'THIS SCRIPT IS READY FOR USE 
+
+
+'This is an updated version of the ESTB PA DORD DOCS that is used when starting a NEW ESTABLISH ACTION on a public assistance case that prints the
+'the financial statements, waivers, Important Statement of Rights and NCP Notice of Parental Liablity. It would NOT be used on a RELATIVE CARETAKER case as
 'the CP is not required to complete financial docs on that type of case.
 
 'Connecting to BZ  'This is a script for a PA case to print the fin docs & waivers
-EMConnect ""
+EMConnect ""   
 
 'Checks to make sure we are in Prism
 CALL check_for_Prism (true)
@@ -56,17 +57,17 @@ Call navigate_to_Prism_Screen ("DORD")
 'Clears the screen to add the doc
 EMWriteScreen "C", 3,29
 
-Transmit
+transmit
 
 EMWriteScreen "A", 3,29
 
 EMSetCursor 6,36
-
+		
 'adding the financial statement to DORD
 EMWriteScreen "F0021", 6,36
 
 'Printing financial statement x 2
-Transmit
+transmit
 
 pf9
 
@@ -85,7 +86,7 @@ transmit
 'Adding the Important Statement of Rights
 EMWriteScreen "A", 3,29
 
-EMSetCursor 6,36
+EMSetCursor 6,36			
 
 EMWriteScreen "F0022", 6,36
 
@@ -110,7 +111,7 @@ transmit
 'Adding CP Waiver
 EMWriteScreen "A", 3,29
 
-EMSetCursor 6,36
+EMSetCursor 6,36		
 
 EMWriteScreen "F5000", 6,36
 
@@ -124,8 +125,8 @@ transmit
 EMSetCursor 3,29
 
 'Modifying label in DORD
-EMWriteScreen "M", 3,29
-
+EMWriteScreen "M", 3,29	   
+				    
 pf14
 
 pf8
@@ -140,7 +141,7 @@ transmit
 'updating Waiver to say 12 months valid
 EMWriteScreen "12", 16,15
 
-Transmit
+transmit
 
 pf3
 
@@ -163,7 +164,7 @@ EMSetCursor 6,36
 
 EMWriteScreen "F5000", 6,36
 
-EMSetCursor 11,51
+EMSetCursor 11,51		
 
 'Changing recipient to NCP on Waiver
 EMWriteScreen "NCP", 11,51
@@ -193,10 +194,10 @@ transmit
 
 pf3
 
-'Printing NCP Waiver
+'Pinting NCP Waiver
 pf9
 
-transmit
+transmit	
 
 EMSetCursor 3,29
 
@@ -204,13 +205,12 @@ EMSetCursor 3,29
 EMWriteScreen "C", 3,29
 
 transmit
-
-'Adding the NCP Authorization to Collect Support
-EMWriteScreen "A", 3,29
+'Adding the NCP Notice of Liability
+EMWriteScreen "A", 3,29   
 
 EMSetCursor 6,36
 
-EmwriteScreen "F0100", 6,36
+EmwriteScreen "F0109", 6,36
 
 transmit
 
@@ -232,7 +232,7 @@ EMWriteScreen "S", 7,5
 transmit
 
 'Selecting the "Include Financial Statement" line
-EMwriteScreen "X", 16,15
+EMwriteScreen "X", 16,15 
 
 transmit
 
@@ -242,7 +242,7 @@ transmit
 DIM pa_dord_docs_dialog, worker_name_dialog, worker_title_dialog, worker_phone_dialog, ButtonPressed, write_variable_in_DORD
 'INSERTED THE WORKER INFORMATION NEW DIALOG HERE
 
-BeginDialog npa_dord_docs_dialog, 0, 0, 191, 135, "Worker Information Dialog"
+BeginDialog pa_dord_docs_dialog, 0, 0, 191, 135, "Worker Information Dialog"
   Text 10, 10, 50, 10, "Worker Name:"
   Text 10, 35, 45, 10, "Worker Title:"
   Text 10, 60, 55, 10, "Worker Phone:"
@@ -255,7 +255,7 @@ BeginDialog npa_dord_docs_dialog, 0, 0, 191, 135, "Worker Information Dialog"
 EndDialog
 
 'This makes the dialog run
-Dialog npa_dord_docs_dialog
+Dialog pa_dord_docs_dialog  
 
 IF ButtonPressed = 0 THEN StopScript
 
@@ -266,7 +266,7 @@ EMWriteScreen "S", 9,5
 transmit     'This next part below is needed to make the dialog box run in the script when entering the info
 
 'Below writes the worker information typed into the DORD doc
-EMWriteScreen (worker_name_dialog), 16,15
+EMWriteScreen (worker_name_dialog), 16,15 
 
 transmit
 
@@ -275,7 +275,7 @@ EMWriteScreen "S", 10,5
 
 transmit
 
-EMWriteScreen (worker_title_dialog), 16,15
+EMWriteScreen (worker_title_dialog), 16,15  
 
 transmit
 
@@ -285,7 +285,7 @@ EMWriteScreen "S", 11,5
 
 transmit
 
-EMWriteScreen (worker_phone_dialog), 16,15
+EMWriteScreen (worker_phone_dialog), 16,15  
 
 transmit
 
@@ -293,11 +293,14 @@ pf3
 
 pf9
 
+transmit 
+
+'Adding the CAAD note
 CALL navigate_to_PRISM_screen ("CAAD")
 
-PF5
-
-EMSetCursor 4,54
+pf5
+	
+EMSetCursor 4,54    
 
 EMWriteScreen "FREE", 4,54
 
@@ -316,18 +319,18 @@ EMSetCursor 3,3
 
 EMWriteScreen "A", 3,3
 
-EMSetCursor 4,37
+EMSetCursor 4,37   
 
 EMWriteScreen "Free", 4,37
 
 EMSetCursor 10,4
 
-'Writing the CAWT note out to watch for return of forms in 14 days
-EMWriteScreen "Did CP & NCP Return Financial Statements and Waivers?",10,4
+
+EMWriteScreen "Did CP & NCP Return Financial Statements and Waivers?", 10,4
 
 EMSetCursor 17,52
 
-'Setting out the CAWT for 14 days
+'Writing the CAWT note for 14 days out
 EMWriteScreen "14", 17,52
 
 transmit
@@ -335,3 +338,4 @@ transmit
 pf3
 
 script_end_procedure("")
+

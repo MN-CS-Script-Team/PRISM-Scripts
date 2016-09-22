@@ -53,12 +53,10 @@ BeginDialog NONPAY_LTR_DIALOG, 0, 0, 176, 146, "NONPAY LTR Dialog"
     CancelButton 0, 0, 0, 0
   Text 10, 40, 140, 20, "Send DL Non Compliance Ltr"
   Text 10, 0, 140, 20, "Send Nonpay Letter and E9685 CAAD"
-  Text 10, 90, 150, 20, "Send CP Initial Contempt Ltr, Role of CAO, Special Services Assessment and M2123 CAAD"
+  Text 10, 80, 150, 25, "Send CP Initial Contempt Ltr, Role of CAO, Special Services Assessment and M2123 CAAD"
   ButtonGroup ButtonPressed
     PushButton 10, 130, 70, 10, "Cancel", Cancel_button
 EndDialog
-
-
 
 
 
@@ -104,11 +102,11 @@ FUNCTION send_non_pay_memo
 	LOOP UNTIL dord_row = 19
 	transmit
 	
-	EMWriteScreen "As you are aware, you have a court ordered obligation to     ", 16, 15
+	EMWriteScreen "As you are aware, you have a court ordered obligation to pay ", 16, 15
 	transmit
-	EMWriteScreen "pay child support. As of this date, it has been over 30 days", 16, 15
+	EMWriteScreen "child support. Last payment of: $" & last_payment_amount & " was received", 16, 15
 	transmit
-	EMWriteScreen "since your last payment. All court ordered obligations must", 16, 15
+	EMWriteScreen "on: " & last_payment_date & ". All court ordered obligations must", 16, 15
 	transmit
 	EMWriteScreen "be paid during the month in which they are due. Failure to", 16, 15
 	transmit
@@ -120,13 +118,13 @@ FUNCTION send_non_pay_memo
 	transmit
 	EMWriteScreen "passport, suspension of recreational licenses such as", 16, 15
 	transmit
-	EMWriteScreen "fishing and hunting, interception of tax refunds from the", 16, 15
-	transmit
-	EMWriteScreen "MN Department of Revenue and the IRS, suspension of any", 16, 15
+	EMWriteScreen "fishing and hunting, interception of tax refunds, suspension of any", 16, 15
 	transmit
 	EMWriteScreen "professional license you may hold, reporting of your arrears", 16, 15
 	transmit
-	EMWriteScreen "balance to the major credit reporting agencies and/or", 16, 15
+	EMWriteScreen "balance to the major credit reporting agencies and possible ", 16, 15
+	transmit
+	EMWriteScreen "court action for non-payment of support. Please contact me ", 16, 15
 	transmit
 	transmit
 
@@ -137,17 +135,17 @@ FUNCTION send_non_pay_memo
 	LOOP UNTIL dord_row = 13
 	transmit
 
-	EMWriteScreen "possible court action for non-payment of support. Please", 16, 15
+	EMWriteScreen "to discuss your employment status or sources of income.", 16, 15
 	transmit
-	EMWriteScreen "contact me immediately to discuss your employment status", 16, 15
+	EMWriteScreen "Please make a payment today. Your current arrears balance", 16, 15
 	transmit
-	EMWriteScreen "or sources of income. To avoid further delinquency, please", 16, 15
-	transmit
-	EMWriteScreen "make a payment today. If you have questions or concerns", 16, 15
+	EMWriteScreen "is $" & arrears_balance & ". If you have any questions or concerns", 16, 15
 	transmit
 	EMWriteScreen "regarding your support obligation, please contact me at the", 16, 15
 	transmit
-	EMWriteScreen "number listed below.", 16, 15
+	EMWriteScreen "number listed below. Here's the link to making payments", 16, 15
+	transmit
+	EMWriteScreen "online:  http://www.childsupport.dhs.state.mn.us", 16, 15
 	transmit
 	
 	PF3
@@ -172,7 +170,11 @@ EMConnect ""
 CALL check_for_PRISM(True)
 call PRISM_case_number_finder(PRISM_case_number)
 
-
+CALL navigate_to_PRISM_screen("PAPL")
+EMReadScreen last_payment_date, 8, 7, 40   
+EMReadScreen last_payment_amount, 7, 7, 53
+CALL navigate_to_PRISM_screen("CAFS")
+EMReadScreen arrears_balance, 9, 12, 69
 'Case number display dialog
 Do
 	

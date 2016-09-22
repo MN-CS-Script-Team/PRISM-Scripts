@@ -286,5 +286,8 @@ IF recipient_code = "BOTH - CP and NCP" THEN
 ELSE
 	recipient = left(recipient_code, 3)
 	CALL write_text_to_DORD (memo_text, recipient)
+PF9
+Transmit
+
 END IF
 script_end_procedure("")

@@ -36,16 +36,19 @@ word_documents_folder_path = "C:\DHS-PRISM-Scripts\Word files for script usage\"
 county_cali_code = "###"
 
 'An array of county attorneys. "Select one:" should ALWAYS be in there, and ALWAYS be first. Replace "County Attorney #" with your agency's county attorney names.
-county_attorney_array = array("Select one:", "County Attorney 1", "County Attorney 2", "County Attorney 3", "County Attorney 4", "County Attorney 5")
+county_attorney_array = array("County Attorney 1", "County Attorney 2", "County Attorney 3", "County Attorney 4", "County Attorney 5")
 
 'An array of child support magistrates. "Select one:" should ALWAYS be in there, and ALWAYS be first.  Replace "Magistrate # with your agency's child support magistrate names.
-child_support_magistrates_array = array("Select one:", "Magistrate 1", "Magistrate 2", "Magistrate 3", "Magistrate 4", "Magistrate 5")
+child_support_magistrates_array = array("Magistrate 1", "Magistrate 2", "Magistrate 3", "Magistrate 4", "Magistrate 5")
 
 'An array of judges. "Select one:" should ALWAYS be in there, and ALWAYS be first.  Replace "Judge #" with your agency's judges names.
-county_judge_array = array("Select one:", "Judge 1", "Judge 2", "Judge 3", "Judge 4", "Judge 5")
+county_judge_array = array("Judge 1", "Judge 2", "Judge 3", "Judge 4", "Judge 5")
 
 'This is used by scripts which tell the worker where to find a doc to send to a client (ie "Send form using Compass Pilot")
 EDMS_choice = "Compass Pilot"
+
+'This is the county's email support address. It can be a distribution list or an individual.
+support_email_address = "jean.valjean@paris.fr"
 
 'ACTIONS TAKEN BASED ON COUNTY CUSTOM VARIABLES------------------------------------------------------------------------------
 '**DO NOT EDIT BELOW THIS LINE UNLESS YOU ARE ABSOLUTELY SURE OF WHAT YOU ARE DOING**
@@ -57,7 +60,7 @@ Set objNet = CreateObject("WScript.NetWork")
 windows_user_ID = objNet.UserName
 
 'This will assign beta users to the master branch.
-If InStr(beta_users, UCASE(windows_user_ID)) <> 0 then use_master_branch = true
+If InStr(UCASE(beta_users), UCASE(windows_user_ID)) <> 0 then use_master_branch = true
 
 'This is the URL of our script repository, and should only change if the agency is a scriptwriting agency. Scriptwriters can elect to use the master branch, allowing them to test new tools, etc.
 IF use_master_branch = TRUE THEN		'scriptwriters typically use the master branch
