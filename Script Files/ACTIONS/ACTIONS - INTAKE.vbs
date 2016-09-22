@@ -50,25 +50,25 @@ EndDialog
 BeginDialog intake_enforcement_dialog, 0, 0, 391, 335, "Intake: Enforcement Dialog"
   Text 5, 5, 95, 10, "Intake: Enforcement"
   GroupBox 5, 20, 185, 90, "Documents Sending to CP:"
-  CheckBox 15, 35, 145, 10, 	"Case Opening - Welcome Letter (*.docx)", CP_welcome_ltr_checkbox
-  CheckBox 15, 50, 130, 10, 	"Child Care Verification (*.docx)", child_care_verif_checkbox
-  CheckBox 15, 65, 140, 10, 	"Court Order Summary Letter (*.docx)", CP_new_order_summary_checkbox
-  CheckBox 15, 80, 155, 10, 	"Health Insurance Verification (F0924)", CP_healthverif_checkbox
-  CheckBox 15, 95, 100, 10, 	"Pin Notice (F0999)", CP_pinnotice_checkbox
+  CheckBox 15, 35, 160, 10, "Child Care Verification (*.docx)", CP_word_child_care_verification_checkbox
+  CheckBox 15, 50, 160, 10, "Court Order Summary Letter (*.docx)", CP_word_court_order_summary_letter_checkbox
+  CheckBox 15, 65, 160, 10, "Cover Letter (*.docx)", CP_word_cover_letter_checkbox
+  CheckBox 15, 80, 160, 10, "Health Insurance Verification (F0924)", CP_F0924_health_insurance_verification_checkbox
+  CheckBox 15, 95, 160, 10, "Pin Notice (F0999)", CP_F0999_pin_notice_checkbox
   GroupBox 200, 20, 185, 90, "Documents Sending to NCP:"
-  CheckBox 205, 35, 110, 10, 	"Arrears Amount Letter (*.docx)", NCP_arrearsletter_checkbox
-  CheckBox 205, 50, 150, 10, 	"Case Opening - Introduction Letter (*.docx)", NCP_welcomeltr_checkbox
-  CheckBox 205, 65, 130, 10, 	"Court Order Summary Letter (*.docx)", NCP_courtordersummary_checkbox
-  CheckBox 205, 80, 155, 10, 	"Health Insurance Verfication (F0924)", NCP_healthverif_checkbox
-  CheckBox 205, 95, 100, 10, 	"Pin Notice (F0999)", NCP_pinnotice_checkbox
+  CheckBox 205, 35, 160, 10, "Arrears Amount Letter (*.docx)", NCP_word_arrears_amount_letter_checkbox
+  CheckBox 205, 50, 160, 10, "Court Order Summary Letter (*.docx)", NCP_word_court_order_summary_letter_checkbox
+  CheckBox 205, 65, 160, 10, "Cover Letter (*.docx)", NCP_word_cover_letter_checkbox
+  CheckBox 205, 80, 160, 10, "Health Insurance Verification (F0924)", NCP_F0924_health_insurance_verification_checkbox
+  CheckBox 205, 95, 160, 10, "Pin Notice (F0999)", NCP_F0999_pin_notice_checkbox
   GroupBox 200, 115, 185, 110, "Send Liability Notice to NCP:"
   Text 210, 125, 50, 10, "NPA Cases"
-  CheckBox 215, 135, 140, 10, 	"Authorization to Collect Support (F0100)", authtocollect_F0100_checkbox
-  CheckBox 215, 150, 170, 10, 	"Notice of Child Support/Spousal Liability (F0108)", notice_csandspousal_dord_F0108_checkbox
+  CheckBox 215, 135, 140, 10, "Authorization to Collect Support (F0100)", NCP_F0100_authorization_to_collect_support_checkbox
+  CheckBox 215, 150, 170, 10, "Notice of Child Support/Spousal Liability (F0108)", NCP_F0108_notice_of_child_support_spousal_liability_checkbox
   Text 210, 165, 50, 10, "PA Cases"
-  CheckBox 215, 175, 165, 10, 	"Notice of Parental Liability for Support (F0109)", notification_of_parental_liability_dord_F0109_checkbox
+  CheckBox 215, 175, 165, 10, "Notice of Parental Liability for Support (F0109)", NCP_F0109_notice_of_parental_liability_for_support_checkbox
   Text 210, 195, 50, 10, "MA Only Cases"
-  CheckBox 215, 205, 165, 10, 	"Notice of Medical Support Liability (F0107)", notification_of_medical_liability_dord_F0107_checkbox
+  CheckBox 215, 205, 165, 10, "Notice of Medical Support Liability (F0107)", NCP_F0107_notice_of_medical_support_liability_checkbox
   GroupBox 5, 115, 185, 125, "CAWD Notes to Add:"
   Text 10, 130, 50, 10, "Worklist Text:"
   EditBox 65, 125, 110, 15, worklist_text_01
@@ -93,32 +93,33 @@ BeginDialog intake_enforcement_dialog, 0, 0, 391, 335, "Intake: Enforcement Dial
     CancelButton 335, 315, 50, 15
 EndDialog
 
+
 BeginDialog intake_establishment_dialog, 0, 0, 391, 330, "Intake: Establishment Dialog"
   Text 10, 5, 105, 10, "Intake: Establishment"
   GroupBox 5, 20, 185, 165, "Documents Sending to CP:"
-  CheckBox 15, 30, 110, 15, 	"Child Care Expenses (*.docx)", daycare_checkbox
-  CheckBox 15, 45, 80, 15, 		"Cover Letter (*.docx)", cover_letter_cp_checkbox
-  CheckBox 15, 60, 120, 15, 	"Employment Verification (F0405)", emp_verif_cp_checkbox
-  CheckBox 15, 75, 100, 15, 	"Financial Statement (F0021)", financial_stmt_cp_checkbox
-  CheckBox 15, 90, 110, 15, 	"Medical Opinion Form (*.docx)", med_opinion_cp_checkbox
-  CheckBox 15, 105, 120, 15, 	"Parenting Time Calendar (*.docx)", calendar_cp_checkbox
-  CheckBox 15, 120, 100, 15, 	"Past Support Form (*.docx)", Past_support_cp_checkbox
-  CheckBox 15, 135, 105, 15, 	"Statement of Rights (F0022)", stmt_right_cp_checkbox
-  CheckBox 15, 150, 125, 15, 	"Waiver of Personal Service (F5000)", Waiver_cp_checkbox
-  CheckBox 15, 165, 105, 15, 	"Your Privacy Rights (F0018)", priv_rights_cp_checkbox
+  CheckBox 15, 30, 160, 15, "Child Care Verification (*.docx)", CP_word_child_care_verification_checkbox
+  CheckBox 15, 45, 160, 15, "Cover Letter (*.docx)", CP_word_cover_letter_checkbox
+  CheckBox 15, 60, 160, 15, "Employment Verification (F0405)", CP_F0405_employment_verification_checkbox
+  CheckBox 15, 75, 160, 15, "Financial Statement (F0021)", CP_F0021_financial_statement_checkbox
+  CheckBox 15, 90, 160, 15, "Medical Opinion Form (*.docx)", CP_word_medical_opinion_form_checkbox
+  CheckBox 15, 105, 160, 15, "Parenting Time Calendar (*.docx)", CP_word_parenting_time_calendar_checkbox
+  CheckBox 15, 120, 160, 15, "Past Support Form (*.docx)", CP_word_past_support_form_checkbox
+  CheckBox 15, 135, 160, 15, "Statement of Rights (F0022)", CP_F0022_statement_of_rights_checkbox
+  CheckBox 15, 150, 160, 15, "Waiver of Personal Service (F5000)", CP_F5000_waiver_of_personal_service_checkbox
+  CheckBox 15, 165, 160, 15, "Your Privacy Rights (F0018)", CP_F0018_your_privacy_rights_checkbox
   GroupBox 200, 20, 185, 195, "Documents Sending to NCP:"
-  CheckBox 210, 30, 145, 15, 	"Authorization to Collect Support (F0100)", auth_collect_ncp_checkbox
-  CheckBox 210, 45, 80, 15, 	"Cover Letter (*.docx)", cover_letter_ncp_checkbox
-  CheckBox 210, 60, 120, 15, 	"Employment Verification (F0405)", emp_verif_ncp_checkbox
-  CheckBox 210, 75, 105, 15, 	"Financial Statement (F0021)", financial_stmt_ncp_checkbox
-  CheckBox 210, 90, 110, 15, 	"Medical Opinion Form (*.docx)", med_opinion_ncp_checkbox
-  CheckBox 210, 105, 120, 15, 	"Parenting Time Calendar (*.docx)", calendar_ncp_checkbox
-  CheckBox 210, 120, 100, 15, 	"Past Support Form (*.docx)", past_support_ncp_checkbox
-  CheckBox 210, 135, 150, 15, 	"Notice of Medical Support Liability (F0107)", par_med_liab_ncp_checkbox
-  CheckBox 210, 150, 160, 15, 	"Notice of Parental Liability for Support (F0109)", par_lia_ncp_checkbox
-  CheckBox 210, 165, 105, 15, 	"Statement of Rights (F0022)", stmt_right_ncp_checkbox
-  CheckBox 210, 180, 130, 15, 	"Waiver of Personal Service (F5000)", waiver_ncp_checkbox
-  CheckBox 210, 195, 105, 15, 	"Your Privacy Rights (F0018)", priv_rights_ncp_checkbox
+  CheckBox 210, 30, 145, 15, "Authorization to Collect Support (F0100)", NCP_F0100_authorization_to_collect_support_checkbox
+  CheckBox 210, 45, 160, 15, "Cover Letter (*.docx)", NCP_word_cover_letter_checkbox
+  CheckBox 210, 60, 160, 15, "Employment Verification (F0405)", NCP_F0405_employment_verification_checkbox
+  CheckBox 210, 75, 160, 15, "Financial Statement (F0021)", NCP_F0021_financial_statement_checkbox
+  CheckBox 210, 90, 160, 15, "Medical Opinion Form (*.docx)", NCP_word_medical_opinion_form_checkbox
+  CheckBox 210, 105, 160, 15, "Notice of Medical Support Liability (F0107)", NCP_F0107_notice_of_medical_support_liability_checkbox
+  CheckBox 210, 120, 160, 15, "Notice of Parental Liability for Support (F0109)", NCP_F0109_notice_of_parental_liability_for_support_checkbox
+  CheckBox 210, 135, 160, 15, "Parenting Time Calendar (*.docx)", NCP_word_parenting_time_calendar_checkbox
+  CheckBox 210, 150, 160, 15, "Past Support Form (*.docx)", NCP_word_past_support_form_checkbox
+  CheckBox 210, 165, 160, 15, "Statement of Rights (F0022)", NCP_F0022_statement_of_rights_checkbox
+  CheckBox 210, 180, 160, 15, "Waiver of Personal Service (F5000)", NCP_F5000_waiver_of_personal_service_checkbox
+  CheckBox 210, 195, 160, 15, "Your Privacy Rights (F0018)", NCP_F0018_your_privacy_rights_checkbox
   GroupBox 5, 190, 185, 125, "CAWD Notes to Add:"
   Text 10, 205, 50, 10, "Worklist Text:"
   EditBox 65, 200, 120, 15, worklist_text_01
@@ -146,22 +147,22 @@ EndDialog
 BeginDialog intake_motion_to_set_dialog, 0, 0, 391, 285, "Intake: Motion to Set Dialog"
   Text 5, 5, 75, 10, "Intake: Motion to Set"
   GroupBox 5, 20, 185, 90, "Documents Sending to CP:"
-  CheckBox 10, 30, 145, 10, 	"Case Opening - Welcome Letter (*.docx)", CP_coverletter_checkbox
-  CheckBox 10, 45, 115, 10, 	"Finacial Statement (F0021)", CP_Finacial_Statement_checkbox
-  CheckBox 10, 60, 130, 10, 	"Child Care Verification (*.docx)", child_care_verif_checkbox
-  CheckBox 10, 75, 140, 10, 	"Medical Opinion Form (*.docx)", CP_Medical_opinion_checkbox
-  CheckBox 10, 90, 120, 10, 	"Employment Verification (F0405)", CP_Employment_Verification_checkbox
+  CheckBox 10, 30, 160, 10, "Child Care Verification (*.docx)", CP_word_child_care_verification_checkbox
+  CheckBox 10, 45, 160, 10, "Cover Letter (*.docx)", CP_word_cover_letter_checkbox
+  CheckBox 10, 60, 160, 10, "Employment Verification (F0405)", CP_F0405_employment_verification_checkbox
+  CheckBox 10, 75, 160, 10, "Financial Statement (F0021)", CP_F0021_financial_statement_checkbox
+  CheckBox 10, 90, 160, 10, "Medical Opinion Form (*.docx)", CP_word_medical_opinion_form_checkbox
   GroupBox 200, 20, 185, 55, "Documents Sending to NCP:"
-  CheckBox 205, 30, 120, 10, 	"Finacial Statement (F0021)", NCP_finacial_statement_checkbox
-  CheckBox 205, 60, 115, 10, 	"Employment Verification (F0405)", NCP_employment_verification_checkbox
-  CheckBox 205, 45, 130, 10, 	"Medical Opinion Form (*.docx)", NCP_medical_opinion_checkbox
+  CheckBox 205, 30, 160, 10, "Employment Verification (F0405)", NCP_F0405_employment_verification_checkbox
+  CheckBox 205, 60, 160, 10, "Financial Statement (F0021)", NCP_F0021_financial_statement_checkbox
+  CheckBox 205, 45, 160, 10, "Medical Opinion Form (*.docx)", NCP_word_medical_opinion_form_checkbox
   GroupBox 200, 80, 185, 90, "Send Liability Notice to NCP:"
   Text 210, 90, 40, 10, "NPA Cases"
-  CheckBox 215, 100, 140, 10, 	"Authorization to Collect Support (F0100)", authorization_to_collect_support_F0100_checkbox
+  CheckBox 215, 100, 140, 10, "Authorization to Collect Support (F0100)", NCP_F0100_authorization_to_collect_support_checkbox
   Text 210, 115, 95, 10, "MFIP, DWP, or CCA cases"
-  CheckBox 215, 130, 160, 10, 	"Notice of Parental Liability for Support (F0109)", notification_of_parental_liability_dord_F0109_checkbox
+  CheckBox 215, 130, 160, 10, "Notice of Parental Liability for Support (F0109)", NCP_F0109_notice_of_parental_liability_for_support_checkbox
   Text 210, 145, 50, 10, "MA only cases"
-  CheckBox 215, 155, 165, 10, 	"Notice of Medical Support Liability (F0107)", notification_of_medical_liability_dord_F0107_checkbox
+  CheckBox 215, 155, 165, 10, "Notice of Medical Support Liability (F0107)", NCP_F0107_notice_of_medical_support_liability_checkbox
   GroupBox 5, 115, 185, 125, "CAWD Notes to Add:"
   Text 10, 130, 50, 10, "Worklist Text:"
   EditBox 65, 125, 120, 15, worklist_text_01
@@ -189,24 +190,24 @@ EndDialog
 BeginDialog intake_paternity_dialog, 0, 0, 391, 310, "Intake: Paternity Dialog"
   Text 5, 5, 85, 10, "Paternity Case Initiation"
   GroupBox 5, 20, 185, 150, "Documents Sending to CP:"
-  CheckBox 15, 35, 110, 10, 	"Child Care Expenses (*.docx)", cp_child_care_expense_checkbox
-  CheckBox 15, 50, 80, 10, 		"Cover Letter (*.docx)", cp_cover_letter_checkbox
-  CheckBox 15, 65, 100, 10, 	"Financial Statement (F0021)", financial_stmt_cp_checkbox
-  CheckBox 15, 80, 110, 10, 	"Medical Opinion Form (*.docx)", cp_medical_opinion_checkbox
-  CheckBox 15, 95, 150, 10, 	"Paternity Questionnaire Affidavit (*.docx)", paternity_questionnaire_affidavit_checkbox
-  CheckBox 15, 110, 100, 10, 	"Past Support Form (*.docx)", cp_past_support_form_checkbox
-  CheckBox 15, 125, 100, 10, 	"Statement of Rights (F0022)", cp_statement_of_rights_checkbox
-  CheckBox 15, 140, 125, 10, 	"Waiver of Personal Service (F5000)", cp_waiver_of_personal_service_checkbox
-  CheckBox 15, 155, 130, 10, 	"Your Privacy Rights (F0018)", cp_your_privacy_rights_checkbox
+  CheckBox 15, 35, 160, 10, "Child Care Verification (*.docx)", CP_word_child_care_verification_checkbox
+  CheckBox 15, 50, 160, 10, "Cover Letter (*.docx)", CP_word_cover_letter_checkbox
+  CheckBox 15, 65, 160, 10, "Financial Statement (F0021)", CP_F0021_financial_statement_checkbox
+  CheckBox 15, 80, 160, 10, "Medical Opinion Form (*.docx)", CP_word_medical_opinion_form_checkbox
+  CheckBox 15, 95, 160, 10, "Past Support Form (*.docx)", CP_word_past_support_form_checkbox
+  CheckBox 15, 110, 160, 10, "Paternity Questionnaire Affidavit (*.docx)", CP_word_paternity_questionnaire_affidavit_checkbox
+  CheckBox 15, 125, 160, 10, "Statement of Rights (F0022)", CP_F0022_statement_of_rights_checkbox
+  CheckBox 15, 140, 160, 10, "Waiver of Personal Service (F5000)", CP_F5000_waiver_of_personal_service_checkbox
+  CheckBox 15, 155, 160, 10, "Your Privacy Rights (F0018)", CP_F0018_your_privacy_rights_checkbox
   GroupBox 200, 20, 185, 135, "Documents Sending to NCP:"
-  CheckBox 210, 35, 140, 10, 	"Cover Letter (*.docx)", ncp_cover_letter_checkbox
-  CheckBox 210, 50, 145, 10, 	"Financial Statement (F0021)", financial_stmt_ncp_checkbox
-  CheckBox 210, 65, 110, 10, 	"Medical Opinion Form (*.docx)", ncp_medical_opinion_checkbox
-  CheckBox 210, 80, 150, 10, 	"NCP Voluntary Paternity Notice (F0516)", ncp_voluntary_paternity_notice_checkbox
-  CheckBox 210, 95, 120, 10, 	"Past Support Form (*.docx)", ncp_past_support_form_checkbox
-  CheckBox 210, 110, 110, 10, 	"Statement of Rights (F0022)", ncp_statement_of_rights_checkbox
-  CheckBox 210, 125, 125, 10, 	"Waiver of Personal Service (F5000)", ncp_waiver_of_personal_service_checkbox
-  CheckBox 210, 140, 130, 10, 	"Your Privacy Rights (F0018)", ncp_your_privacy_rights_checkbox
+  CheckBox 210, 35, 160, 10, "Cover Letter (*.docx)", NCP_word_cover_letter_checkbox
+  CheckBox 210, 50, 160, 10, "Financial Statement (F0021)", NCP_F0021_financial_statement_checkbox
+  CheckBox 210, 65, 160, 10, "Medical Opinion Form (*.docx)", NCP_word_medical_opinion_form_checkbox
+  CheckBox 210, 80, 160, 10, "Past Support Form (*.docx)", NCP_word_past_support_form_checkbox
+  CheckBox 210, 95, 160, 10, "Statement of Rights (F0022)", NCP_F0022_statement_of_rights_checkbox
+  CheckBox 210, 110, 160, 10, "Voluntary Paternity Notice (F0516)", NCP_F0516_voluntary_paternity_notice_checkbox
+  CheckBox 210, 125, 160, 10, "Waiver of Personal Service (F5000)", NCP_F5000_waiver_of_personal_service_checkbox
+  CheckBox 210, 140, 160, 10, "Your Privacy Rights (F0018)", NCP_F0018_your_privacy_rights_checkbox
   GroupBox 5, 180, 185, 125, "CAWD Notes to Add:"
   Text 10, 195, 50, 10, "Worklist Text:"
   EditBox 65, 190, 120, 15, worklist_text_01
