@@ -322,6 +322,14 @@ cs_scripts_array(script_num).description		= "Displays information about your Blu
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "INTAKE"
+cs_scripts_array(script_num).script_type		= "ACTIONS"
+cs_scripts_array(script_num).file_name			= "ACTIONS - INTAKE.vbs"
+cs_scripts_array(script_num).description		= "NEW 09/2016!! - Sends DORD and Word docs related to either establishment, enforcement, motion-to-set, or paternity intakes."
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "INVOICES"
 cs_scripts_array(script_num).script_type		= "NOTES"
 cs_scripts_array(script_num).file_name			= "NOTES - INVOICES.vbs"
