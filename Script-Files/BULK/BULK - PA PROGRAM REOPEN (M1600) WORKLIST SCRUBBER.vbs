@@ -1,5 +1,5 @@
 'GATHERING STATS---------------------------------------------------------------------------------------------------- 
-name_of_script = "BULK - M1600 WORKLIST SCRUBBER.vbs" 
+name_of_script = "BULK - PA PROGRAM REOPEN (M1600) WORKLIST SCRUBBER.vbs" 
 start_time = timer 
 
 'LOADING FUNCTIONS LIBRARY FROM GITHUB REPOSITORY===========================================================================
