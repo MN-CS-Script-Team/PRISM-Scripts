@@ -426,6 +426,14 @@ cs_scripts_array(script_num).description		= "Evaluates D0800 (REVW for Notice of
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "PA PROGRAM OPEN REVIEW CLOSED CASE(M1600) WORKLIST SCRUBBER"
+cs_scripts_array(script_num).script_type		= "BULK"
+cs_scripts_array(script_num).file_name			= "BULK - PA PROGRAM OPEN REVIEW CLOSED CASE(M1600) WORKLIST SCRUBBER.vbs"
+cs_scripts_array(script_num).description		= "Evaluates M1600 (PA PROGRAM OPEN REVIEW CLOSED CASE) worklist and purges reasons in which a case was close and would not be reopened."
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "PALC"
 cs_scripts_array(script_num).script_type		= "NAV"
 cs_scripts_array(script_num).file_name			= "NAV - PALC.vbs"
