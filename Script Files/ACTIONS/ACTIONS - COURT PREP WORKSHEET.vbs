@@ -59,7 +59,6 @@ EndDialog
 '***************************************************************************************************************
 ' This is a custom function to change the format of a participant name.  The parameter is a string with the
 ' client's name formatted like "Levesseur, Wendy K", and will change it to "Wendy K LeVesseur".
-
 FUNCTION change_client_name_to_FML(client_name)
 	client_name = trim(client_name)
 	length = len(client_name)
@@ -195,7 +194,7 @@ END FUNCTION
 '***************************************************************************************************************
 FUNCTION create_NCID_variable(NCID)
 	CALL navigate_to_PRISM_screen("NCID")
-	CALL go_to("B", 3, 29)
+	CALL write_value_and_transmit("B", 3, 29)
 
 	NCID = "Employment history: " & chr(13) & chr(13)
 	employer_found = false
@@ -281,7 +280,7 @@ END FUNCTION
 FUNCTION create_PAPD_variable(PAPD)
 
 	CALL navigate_to_PRISM_screen("PAPD")
-	CALL go_to("B", 3, 29)
+	CALL write_value_and_transmit("B", 3, 29)
 
 	PAPD_row = 8
 	DO
@@ -301,7 +300,7 @@ FUNCTION create_PAPD_variable(PAPD)
 
 			PAPD = PAPD & "Remedy: " & papd_remedy & "; " & "Begin Date: " & pay_plan_begin & "; " & "Total Due: " & ttl_due & "; " & "Delinq. Amount: " & delinquent & ";"
 
-			CALL go_to("B", 3, 29)
+			CALL write_value_and_transmit("B", 3, 29)
 		END IF
 		PAPD_row = PAPD_row + 1
 	LOOP UNTIL end_of_data = "End of Data"
@@ -310,10 +309,7 @@ END FUNCTION
 
 
 '***************************************************************************************************************
-FUNCTION go_to(input_value, row, col)
-	EMWriteScreen input_value, row, col
-	transmit
-END FUNCTION
+
 
 'THE SCRIPT----------------------------------------------------------------------------------------------------
 'Connects to BlueZone
