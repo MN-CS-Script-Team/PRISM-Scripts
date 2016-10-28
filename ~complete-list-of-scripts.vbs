@@ -684,6 +684,15 @@ cs_scripts_array(script_num).scriptwriter		= "Veronica Cary"
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "External Links"
+cs_scripts_array(script_num).category			= "utilities"
+cs_scripts_array(script_num).description		= "An agency-customizable list of web resources for general use."
+cs_scripts_array(script_num).release_date		= #11/01/2016#
+cs_scripts_array(script_num).scriptwriter		= "Robert Fewins-Kalb"
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "External Resources"
 cs_scripts_array(script_num).category			= "utilities"
 cs_scripts_array(script_num).description		= "An agency-customizable list of web resources for general use."

@@ -226,6 +226,14 @@ cs_scripts_array(script_num).description		= "NEW 08/2016!! - Complete an Employm
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		="EXTERNAL LINKS"
+cs_scripts_array(script_num).script_type		="UTILITIES"
+cs_scripts_array(script_num).file_name			="UTILITIES - EXTERNAL LINKS.vbs"
+cs_scripts_array(script_num).description		="Allows agency to build list of external links for staff to quickly access."
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "ENFL"
 cs_scripts_array(script_num).script_type		= "NAV"
 cs_scripts_array(script_num).file_name			= "NAV - ENFL.vbs"
