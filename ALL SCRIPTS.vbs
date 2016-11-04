@@ -322,6 +322,14 @@ cs_scripts_array(script_num).description		= "Displays information about your Blu
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "INTERVIEW INFORMATION SHEET"
+cs_scripts_array(script_num).script_type		= "ACTIONS"
+cs_scripts_array(script_num).file_name			= "ACTIONS - INTERVIEW INFORMATION SHEET.vbs"
+cs_scripts_array(script_num).description		= "NEW 11/2016!! - Creates Word document resource for client in-person visits."
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "INVOICES"
 cs_scripts_array(script_num).script_type		= "NOTES"
 cs_scripts_array(script_num).file_name			= "NOTES - INVOICES.vbs"
