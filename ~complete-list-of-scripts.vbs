@@ -62,6 +62,15 @@ cs_scripts_array(script_num).scriptwriter		= ""
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "County Attorney Referral"
+cs_scripts_array(script_num).category			= "notes"
+cs_scripts_array(script_num).description		= "Makes a CAAD note regarding attorney referrals"
+cs_scripts_array(script_num).release_date		= #11/14/2016#
+cs_scripts_array(script_num).scriptwriter		= ""
+						
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "Court Prep Worksheet"
 cs_scripts_array(script_num).category			= "actions"
 cs_scripts_array(script_num).description		= "Leads you through performing a COLA. Adds CAAD note when completed."
