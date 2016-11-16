@@ -134,6 +134,15 @@ cs_scripts_array(script_num).scriptwriter		= ""
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "Free Worklist"
+cs_scripts_array(script_num).category			= "actions"
+cs_scripts_array(script_num).description		= "Creates more uniform free worklist and indicates if action is needed or if it is informational only"  
+cs_scripts_array(script_num).release_date		= #11/16/2016#
+cs_scripts_array(script_num).scriptwriter		= ""
+															
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "Generic Enforcement Intake"
 cs_scripts_array(script_num).category			= "actions"
 cs_scripts_array(script_num).description		= "Creates various docs related to CS intake as well as DORD docs and enters CAAD."
