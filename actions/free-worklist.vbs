@@ -1,5 +1,5 @@
 'GATHERING STATS=================================
-name_of_script = "Free Worklist Dialog.vbs"
+name_of_script = "free-worklist.vbs"
 start_time = timer
 
 'LOADING FUNCTIONS LIBRARY FROM GITHUB REPOSITORY===========================================================================
