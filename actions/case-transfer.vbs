@@ -95,6 +95,8 @@ If row <> 0 then
 	If isnumeric(left(PRISM_case_number, 10)) = False or isnumeric(right(PRISM_case_number, 2)) = False then PRISM_case_number = ""
 End if
 
+office = "001"	'This auto-populates the office field with 001									
+					
 'Makes sure you are not passworded out
 CALL check_for_PRISM(True)
 DO
