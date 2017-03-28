@@ -160,6 +160,15 @@ cs_scripts_array(script_num).scriptwriter		= ""
 																	
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script				
+cs_scripts_array(script_num).script_name		= "Interview Information Sheet"
+cs_scripts_array(script_num).category			= "actions"
+cs_scripts_array(script_num).description		= "Generates Word document of high-level case information and county-specific resources."
+cs_scripts_array(script_num).release_date		= #11/23/2016#
+cs_scripts_array(script_num).scriptwriter		= ""	
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "NCP Locate"
 cs_scripts_array(script_num).category			= "actions"
