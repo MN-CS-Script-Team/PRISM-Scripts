@@ -155,7 +155,7 @@ EMWriteScreen "M", 3, 029
 
 EMSetCursor 16, 004
 
-Call Write_variable_in_CAAD("Finacial Statement follow up letter send to " & Left(recipient_code, 3))
+Call Write_variable_in_CAAD("Financial Statement follow up letter send to " & Left(recipient_code, 3))
 transmit
 
 
@@ -235,14 +235,14 @@ EMWriteScreen "D", 8, 005
 transmit
 EMWriteScreen "M", 3, 029
 EMSetCursor 16, 004
-Call Write_variable_in_CAAD("Finacial Statement follow up letter send to CP")
+Call Write_variable_in_CAAD("Financial Statement follow up letter send to CP")
 transmit
 PF3
 EMWriteScreen "D", 9, 005
 Transmit
 EMWriteScreen "M", 3, 029
 EMSetCursor 16, 004
-Call Write_variable_in_CAAD("Finacial Statement follow up letter send to NCP")
+Call Write_variable_in_CAAD("Financial Statement follow up letter send to NCP")
 Transmit
 PF3
 
