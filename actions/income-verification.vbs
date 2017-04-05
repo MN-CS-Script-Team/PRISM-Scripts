@@ -40,6 +40,8 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("12/02/2016", "The script has been updated to improve the user experience by providing a more consistent error message handling and by ensuring the script is always writing the date on DDPL and PALC in the correct format.", "Robert Fewins-Kalb, Anoka County")
+call changelog_update("12/01/2016", "Dialog and Write fixes.", "Robert Fewins-Kalb, Anoka County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -62,7 +64,7 @@ Worker_title = "Child Support Officer"
 
 'dialog box to select the information needed
 
-BeginDialog Child_Support_verif_dialog, 0, 0, 241, 265, "Child Support Verif Dialog"
+BeginDialog child_support_income_verification, 0, 0, 241, 265, "Child Support Income Verification"
   Text 10, 10, 50, 10, "Case Number"
   EditBox 60, 5, 145, 15, PRISM_case_number
   Text 15, 30, 105, 10, "Number of Months of Payments"
@@ -81,12 +83,10 @@ BeginDialog Child_Support_verif_dialog, 0, 0, 241, 265, "Child Support Verif Dia
   Text 120, 190, 55, 10, "Worker's Title"
   EditBox 120, 205, 110, 15, Worker_title
   ButtonGroup ButtonPressed
-    PushButton 125, 235, 50, 15, "OK", OK
-    PushButton 180, 235, 50, 15, "Cancel", Cancel
+    OKButton 125, 235, 50, 15
+    CancelButton 180, 235, 50, 15
   Text 95, 120, 10, 10, "to"
 EndDialog
-
-
 
 
 'Connecting to BlueZone
@@ -100,14 +100,18 @@ CALL check_for_PRISM(True)
 
 call PRISM_case_number_finder(PRISM_case_number)
 
-
 'Case number display dialog
 Do
+	'err_msg handling
+	err_msg = ""
 	Dialog child_support_income_verification
 	If buttonpressed = 0 then stopscript
 	call PRISM_case_number_validation(PRISM_case_number, case_number_valid)
-	If case_number_valid = False then MsgBox "Your case number is not valid. Please make sure it uses the following format: ''XXXXXXXXXX-XX''"
-Loop until case_number_valid = True
+	If case_number_valid = False then err_msg = err_msg & vbNewLine & "* Your case number is not valid. Please make sure it uses the following format: ''XXXXXXXXXX-XX''"
+	IF begin_date <> "" AND IsDate(begin_date) = FALSE THEN err_msg = err_msg & vbNewLine & "* You entered a value for the beginning of the date range, but the script does not recognize it as a valid date."
+	IF end_date <> "" AND IsDate(end_date) = FALSE THEN err_msg = err_msg & vbNewLine & "* You entered a value for the end of the date range, but the script does not recognize it as a valid date."
+	IF err_msg <> "" THEN MsgBox "*** NOTICE!!! ***" & vbNewLine & err_msg & vbNewLine & vbNewLine & "Please resolve for the script to continue."
+Loop until err_msg = ""
 
 
 'collecting information for the word document
@@ -133,9 +137,9 @@ address_line1 = replace(address_line1, "_", "")
 call fix_case(address_line1, 1)
 address_line2 = replace(address_line2, "_", "")
 if trim (address_line2) <> "" then
-                address = address_line1 & chr(13) & address_line2
+	address = address_line1 & chr(13) & address_line2
 else
-                address = address_line1
+	address = address_line1
 end if
 call fix_case(address_line2, 1)
 city_state_zip = replace(replace(replace(city_state_zip, "_", ""), "    St: ", ", "), "    Zip: ", " ")
@@ -154,36 +158,34 @@ monthly_nonaccrual = FormatCurrency(monthly_nonaccrual)
 CALL navigate_to_PRISM_screen("DDPL")
 
 
-IF begin_date <> "" THEN EMWriteScreen begin_date, 20, 038
-IF end_date <> "" THEN EMWriteScreen end_date, 20, 067
-IF three_months_checkbox = checked THEN EMWriteScreen DateAdd("m", -3, date), 20, 038    '*****VERONICA THIS IS WHERE WE WOULD NEED THE CODE FOR THE 30, 60, 90 DAY CHECK BOX INFORMATION
-IF six_months_checkbox = checked THEN EMWriteScreen DateAdd("m", -6, date), 20, 038
-IF twelve_months_checkbox = checked THEN EMWriteScreen DateAdd("m", -12, date), 20, 038
+IF begin_date <> "" THEN CALL write_date(begin_date, "MM/DD/YYYY", 20, 38)
+IF end_date <> "" THEN CALL write_date(end_date, "MM/DD/YYYY", 20, 67)
+IF three_months_checkbox = checked THEN CALL write_date(DateAdd("m", -3, date), "MM/DD/YYYY", 20, 38)    '*****VERONICA THIS IS WHERE WE WOULD NEED THE CODE FOR THE 30, 60, 90 DAY CHECK BOX INFORMATION
+IF six_months_checkbox = checked THEN CALL write_date(DateAdd("m", -6, date), "MM/DD/YYYY", 20, 38)
+IF twelve_months_checkbox = checked THEN CALL write_date(DateAdd("m", -12, date), "MM/DD/YYYY", 20, 38)
 
 transmit
 
 row = 8
-
 total_amount_issued = 0
 
 Do
-
-EMReadScreen end_of_data_check, 19, row, 28 					'Checks to see if we've reached the end of the list
+	EMReadScreen end_of_data_check, 19, row, 28 					'Checks to see if we've reached the end of the list
 	If end_of_data_check = "*** End of Data ***" then exit do 		'Exits do if we have
-EMReadScreen direct_deposit_issued_date, 9, row, 11 				'Reading the issue date
-EMReadScreen direct_deposit_amount, 10, row, 33 				'Reading amount issued
+	EMReadScreen direct_deposit_issued_date, 9, row, 11 				'Reading the issue date
+	EMReadScreen direct_deposit_amount, 10, row, 33 				'Reading amount issued
 
-total_amount_issued = abs(total_amount_issued + abs(direct_deposit_amount)) 	'Totals amount issued
+	total_amount_issued = abs(total_amount_issued + abs(direct_deposit_amount)) 	'Totals amount issued
 
-row = row + 1 										'Increases the row variable by one, to check the next row
+	row = row + 1 										'Increases the row variable by one, to check the next row
 
-EMReadScreen end_of_data_check, 19, row, 28 					'Checks to see if we've reached the end of the list
-    If end_of_data_check = "*** End of Data ***" then exit do 		'Exits do if we have
+	EMReadScreen end_of_data_check, 19, row, 28 					'Checks to see if we've reached the end of the list
+	If end_of_data_check = "*** End of Data ***" then exit do 		'Exits do if we have
 
-    If row = 19 then 									'Resets row and PF8s
-        PF8
-        row = 8
-    End if
+	If row = 19 then 									'Resets row and PF8s
+		PF8
+		row = 8
+	End if
 Loop until end_of_data_check = "*** End of Data ***"
 
 PF9												'Print DDPL for the time period
@@ -194,42 +196,35 @@ total_amount_issued = FormatCurrency(total_amount_issued)
 
 CALL navigate_to_PRISM_screen("PALC")
 
-
-IF begin_date <> "" THEN EMWriteScreen begin_date, 20, 35
-IF end_date <> "" THEN EMWriteScreen end_date, 20, 49
-IF three_months_checkbox = checked THEN EMWriteScreen DateAdd("m", -3, date), 20, 038    		'*****VERONICA THIS IS WHERE WE WOULD NEED THE CODE FOR THE 30, 60, 90 DAY CHECK BOX INFORMATION
-IF six_months_checkbox = checked THEN EMWriteScreen DateAdd("m", -6, date), 20, 038
-IF twelve_months_checkbox = checked THEN EMWriteScreen DateAdd("m", -12, date), 20, 038
+IF begin_date <> "" THEN CALL write_date(begin_date, "MM/DD/YYYY", 20, 35)
+IF end_date <> "" THEN CALL write_date(end_date, "MM/DD/YYYY", 20, 49)
+IF three_months_checkbox = checked THEN CALL write_date(DateAdd("m", -3, date), "MM/DD/YYYY", 20, 35)    		'*****VERONICA THIS IS WHERE WE WOULD NEED THE CODE FOR THE 30, 60, 90 DAY CHECK BOX INFORMATION
+IF six_months_checkbox = checked THEN CALL write_date(DateAdd("m", -6, date), "MM/DD/YYYY", 20, 35)
+IF twelve_months_checkbox = checked THEN CALL write_date(DateAdd("m", -12, date), "MM/DD/YYYY", 20, 35)
 
 transmit
 
 PALC_row = 9
-
 case_total = 0
-
 Do
-
-EMReadScreen end_of_data_check, 19, PALC_row, 28 					'Checks to see if we've reached the end of the list
+	EMReadScreen end_of_data_check, 19, PALC_row, 28 					'Checks to see if we've reached the end of the list
 	If end_of_data_check = "*** End of Data ***" then exit do 			'Exits do if we have
-EMReadScreen case_alloc_amt, 9, PALC_row, 70 							'Reading the payment IDEMReadScreen case_alloc_amt, 10, row, 70 					   	'Reading amount issued
+	EMReadScreen case_alloc_amt, 9, PALC_row, 70 							'Reading the payment IDEMReadScreen case_alloc_amt, 10, row, 70 					   	'Reading amount issued
 
-case_total = abs(case_total + abs(case_alloc_amt)) 					'Case Totals amount issued
+	case_total = abs(case_total + abs(case_alloc_amt)) 					'Case Totals amount issued
 
-PALC_row = PALC_row + 1 									'Increases the row variable by one, to check the next row
+	PALC_row = PALC_row + 1 									'Increases the row variable by one, to check the next row
 
-EMReadScreen end_of_data_check, 19, PALC_row, 28 					'Checks to see if we've reached the end of the list
+	EMReadScreen end_of_data_check, 19, PALC_row, 28 					'Checks to see if we've reached the end of the list
 	If end_of_data_check = "*** End of Data ***" then exit do 			'Exits do if we have
 
 	If PALC_row = 19 then 									'Resets row and PF8s
-        PF8
-        PALC_row = 10
-    End if
+		PF8
+		PALC_row = 10
+	End if
 Loop until end_of_data_check = "*** End of Data ***"
 
 case_total = FormatCurrency(case_total)
-
-
-
 
 'Child's Name
 Prism_row = 8
@@ -242,29 +237,29 @@ Do
 	EMReadScreen MCI_List2, 10, Prism_row, 67
 	IF MCI_List2 = "          " Then exit Do
 	Prism_row = Prism_row + 1
-  IF MCI_List1 = "" THEN
-    MCI_List1 = MCI_List2
-  ELSE
-    MCI_List1 = MCI_List1 & "," & MCI_List2
-  END IF
-	Loop until MCI_List2 = "          "
-MCIArray = split(MCI_List1, ",")
+	IF MCI_List1 = "" THEN
+		MCI_List1 = MCI_List2
+	ELSE
+		MCI_List1 = MCI_List1 & "," & MCI_List2
+	END IF
+Loop until MCI_List2 = "          "
 
+MCIArray = split(MCI_List1, ",")
 
 call navigate_to_PRISM_screen("CHDE")
 For each MCI in MCIArray
 	EMWriteScreen "D", 3, 29
-  EMWriteScreen MCI, 4, 7
-  Transmit
+	EMWriteScreen MCI, 4, 7
+	Transmit
 	EMReadScreen Child_F, 12, 9, 34
-  EMReadScreen Child_M, 12, 9, 56
-  EMReadScreen Child_L, 17, 9, 8
-  EMReadScreen Child_S, 3, 9, 74
-  child_name = fix_read_data(Child_F) & " " & fix_read_data(Child_M) & " " & fix_read_data(Child_L)
+	EMReadScreen Child_M, 12, 9, 56
+	EMReadScreen Child_L, 17, 9, 8
+	EMReadScreen Child_S, 3, 9, 74
+	child_name = fix_read_data(Child_F) & " " & fix_read_data(Child_M) & " " & fix_read_data(Child_L)
 	If trim(Child_S) <> "" then child_name = child_name & " " & ucase(fix_read_data(Child_S))
 	child_name = trim(child_name)
 	child_list = child_list & child_name & VBnewline
-	Next
+Next
 
 'MCI Array 0 = MCINumber
 'MCI Array 1 = Child_F
@@ -279,22 +274,20 @@ objWord.Visible = True
 'repeat this for each document (opens the document)
 Set objDoc = objWord.Documents.Add(word_documents_folder_path & "child-support-income-verification-form.docx")
 With objDoc
-		.FormFields("client_name").Result = client_name
-		.FormFields ("address_line1").Result = address_line1
-		.FormFields("city_state_zip").Result = city_state_zip
-		.FormFields("total_amount_issued").Result = total_amount_issued
-		.FormFields("case_total").Result = case_total
-		.FormFields("PRISM_case_number").Result = PRISM_case_number
-		.FormFields("monthly_accrual").Result = monthly_accrual
-		.FormFields("monthly_nonaccrual").Result = monthly_nonaccrual
-		.FormFields("child_name").Result = child_list
-		.FormFields("worker_signature").Result = worker_signature
-		.FormFields("Worker_title").Result = Worker_title
-		.FormFields("Phone_number_editbox").Result = Worker_phone_number
-		.FormFields("Date_complete").Result = Date_complete
-
-
-                'Ect to fill in all the blanks in the documents
+	.FormFields("client_name").Result = client_name
+	.FormFields ("address_line1").Result = address_line1
+	.FormFields("city_state_zip").Result = city_state_zip
+	.FormFields("total_amount_issued").Result = total_amount_issued
+	.FormFields("case_total").Result = case_total
+	.FormFields("PRISM_case_number").Result = PRISM_case_number
+	.FormFields("monthly_accrual").Result = monthly_accrual
+	.FormFields("monthly_nonaccrual").Result = monthly_nonaccrual
+	.FormFields("child_name").Result = child_list
+	.FormFields("worker_signature").Result = worker_signature
+	.FormFields("Worker_title").Result = Worker_title
+	.FormFields("Phone_number_editbox").Result = Worker_phone_number
+	.FormFields("Date_complete").Result = Date_complete
+	'Ect to fill in all the blanks in the documents
 End With
 
 

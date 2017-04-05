@@ -1,5 +1,4 @@
 'GATHERING STATS----------------------------------------------------------------------------------------------------
-
 name_of_script = "cola.vbs"
 start_time = timer
 STATS_Counter = 1
@@ -46,6 +45,8 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("03/28/2017", "When the non standard arrears dialog box appears, it will now bring you to CAWT instead of NCOD.", "Gretchen Thornbrugh, Dakota County")
+CALL changelog_update("01/20/2017", "Worker signature should now auto-populate.", "Kelly Hiestand, Wright County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -117,6 +118,7 @@ transmit
 	End If
 
 'non standard arrears payment ordered
+call navigate_to_PRISM_screen ("CAWT")	
 	ARREARSresult = msgbox ("Is there a non-standard arrears payment ordered (not 20%)?" & VbNewline & VbNewline & _
 		"If YES make sure non-accrual is on NCOD and case is coded with 20% overide on SUOD.", VbOKCancel)
 	If ARREARSresult = vbCancel then
@@ -145,7 +147,7 @@ FINALResult = msgbox ("Is the COLA okay to run?", VbYesNo)
 		stopscript
 	End If
 
-DIM MN_order, correct, special_arrears, worker_signature, COLACAAD, FINALResult
+DIM MN_order, correct, special_arrears, COLACAAD, FINALResult
 
 BeginDialog COLACAAD, 0, 0, 191, 145, "COLA OK TO RUN"
   CheckBox 5, 55, 45, 10, "MN Order.", MN_order

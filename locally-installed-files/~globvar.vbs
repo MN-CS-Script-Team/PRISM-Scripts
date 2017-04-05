@@ -13,6 +13,10 @@ use_master_branch = true
 'Here is the list of agency super users. These users will have access to the test scripts. Enter the list of users' log-in IDs in the quotes below, comma separated
 beta_users = ""
 
+'This allows a list of users to have access to additional functionality in some scripts.
+'Identifying a user as a supervisor...
+supervisor_users = ""
+
 'This is modified by the installer, which will determine the production directory. Don't update unless you're sure you know what you're doing.
 default_directory = "C:\DHS-PRISM-Scripts\"			'Note: non-local users get "locally-installed-files" tacked onto this
 
@@ -55,6 +59,9 @@ EDMS_choice = "Compass Pilot"
 'This is the county's email support address. It can be a distribution list or an individual.
 support_email_address = "jean.valjean@paris.fr"
 
+'This is a setting to determine if changes to scripts will be displayed in messageboxes in real time to end users
+changelog_enabled = true
+
 'ACTIONS TAKEN BASED ON COUNTY CUSTOM VARIABLES------------------------------------------------------------------------------
 '**DO NOT EDIT BELOW THIS LINE UNLESS YOU ARE ABSOLUTELY SURE OF WHAT YOU ARE DOING**
 
@@ -66,6 +73,13 @@ windows_user_ID = objNet.UserName
 
 'This will assign beta users to the master branch.
 If InStr(UCASE(beta_users), UCASE(windows_user_ID)) <> 0 then use_master_branch = true
+		
+'This will assign a value to supervisor_user...
+IF InStr(UCASE(supervisor_users), UCASE(windows_user_ID)) <> 0 THEN 
+	supervisor_user = TRUE
+ELSE
+	supervisor_user = FALSE
+END IF
 
 'This is the URL of our script repository, and should only change if the agency is a scriptwriting agency. Scriptwriters can elect to use the master branch, allowing them to test new tools, etc.
 IF use_master_branch = TRUE THEN		'scriptwriters typically use the master branch

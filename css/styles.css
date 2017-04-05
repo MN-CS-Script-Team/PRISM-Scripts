@@ -1,0 +1,183 @@
+/* -----------------------------------------------------------------------------------  Custom Navbar coloring courtesy of https://work.smarchal.com/twbscolor/css/003865b6c2d6ffffff0000001 */
+
+.navbar-default {
+  background-color: #003865;
+  border-color: #b6c2d6;
+}
+.navbar-default .navbar-brand {
+  color: #ffffff;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #000000;
+}
+.navbar-default .navbar-text {
+  color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #000000;
+}
+.navbar-default .navbar-nav > li > .dropdown-menu {
+  background-color: #003865;
+}
+.navbar-default .navbar-nav > li > .dropdown-menu > li > a {
+  color: #ffffff;
+}
+.navbar-default .navbar-nav > li > .dropdown-menu > li > a:hover,
+.navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
+  color: #000000;
+  background-color: #b6c2d6;
+}
+.navbar-default .navbar-nav > li > .dropdown-menu > li > .divider {
+  background-color: #b6c2d6;
+}
+.navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+.navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+.navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+  color: #000000;
+  background-color: #b6c2d6;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #000000;
+  background-color: #b6c2d6;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  color: #000000;
+  background-color: #b6c2d6;
+}
+.navbar-default .navbar-toggle {
+  border-color: #b6c2d6;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: #b6c2d6;
+}
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+  border-color: #ffffff;
+}
+.navbar-default .navbar-link {
+  color: #ffffff;
+}
+.navbar-default .navbar-link:hover {
+  color: #000000;
+}
+
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #ffffff;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #000000;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #000000;
+    background-color: #b6c2d6;
+  }
+}
+
+/* ----------------------------------------------------------------------------------- End custom navbar coloring */
+
+
+
+/* Updating size of navbar brand image, so it fits in the default window */
+.navbar-brand {
+    padding: 0px;
+}
+.navbar-brand > img {
+    height: 100%;
+    padding: 0px;
+    width: auto;
+}
+
+/* Create hover-over for navbar background */
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    background-color: #b6c2d6;
+}
+
+/* Updating color of buttons */
+.btn-primary {
+    background-color: #003865;
+    border-color: #003865;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary:visited, {
+    background-color: #b6c2d6;
+    border-color: #b6c2d6;
+    color: #000;
+}
+
+/* Updating color of Jumbotron */
+.jumbotron {
+    background-color: #1A5781;
+    color: #fff;
+}
+
+/* Updating fonts and text/content placement */
+body {
+    margin-top: 50px;
+    font-family: 'Calibri', sans-serif;
+}
+.btn {
+    font-family: 'Calibri', sans-serif;
+    font-weight: 300;
+}
+code {
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+#defaultDatePicker > input {
+    width: 100%;
+}
+h1 {
+    font-family: 'Calibri', sans-serif;
+    font-weight: 700;
+}
+h2, h3, h4, h5, h6 {
+    font-family: 'Calibri', sans-serif;
+    font-weight: 300;
+}
+#loading {
+   text-align: center;
+}
+p, li {
+    font-family: 'Calibri', sans-serif;
+    font-size: 14px;
+}
+nav li {
+    font-family: 'Calibri', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+}
+.navbar-brand {
+    font-size: 20px;
+    font-weight: bold;
+}
+.tag-buttons {
+    font-family: 'Calibri', sans-serif;
+    font-weight: bold;
+}
+
+
+/* Updating color of panels */
+.panel-default>.panel-heading {
+    background-color: #f3fff3;
+}
+
+
+/* Creating buttons for tags */
+.tag-buttons {
+    margin-right: 5px;
+}

@@ -40,6 +40,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update ("02/22/2017", "Added Supervisor options.", "Jodi Martin, Wright County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -47,37 +48,43 @@ changelog_display
 'END CHANGELOG BLOCK =======================================================================================================
 
 'DIALOGS----------------------------------------------------------------------------------------------------
-BeginDialog arrears_mgmt_dialog, 0, 0, 387, 296, "Arrears Mgmt Review"
-  DropListBox 100, 30, 270, 20, "E9852 Reviewed for Arrears Mgmt - Approval Requested"+chr(9)+"E9851 Reviewed for Arrears Mgmt - No Action"+chr(9)+"E9853 Reviewed for Arrears Mgmt - More Information Needed"+chr(9)+"E9854 Arrears Management - Additional Information Not Returned"+chr(9)+"E9860 Arrears Management Recurring Strategy Ended"+chr(9)+"E9865 NPA CP Approved Arrears Management Strategy", CAAD_type
+BeginDialog arrears_mgmt_dialog, 0, 0, 391, 385, "Arrears Mgmt Review"
   EditBox 170, 0, 80, 20, PRISM_case_number
-  EditBox 90, 180, 280, 14, details
-  EditBox 110, 200, 260, 14, arrears_mgmt_amount
   CheckBox 20, 50, 260, 10, "Check here if arrears mgmt is for CMS while NCP was also a recipient of MA", CMS_check
+  EditBox 130, 60, 80, 15, cms_date_txt
   CheckBox 20, 80, 250, 10, "Check here if arrears mgmt is for charging while NCP rec'd cash assistance", Cash_PA_check
-  CheckBox 30, 220, 330, 10, "Check here if your request for arrears mgmt includes suspension of PA interest charging", suspend_interest_check
+  EditBox 130, 90, 80, 15, cash_pa_date_txt
   CheckBox 20, 110, 250, 10, "Check here if arrears mgmt is for charging while NCP was incarcerated", incarcerated_check
-  EditBox 90, 250, 70, 14, worker_signature
-  ButtonGroup ButtonPressed
-    OkButton 250, 250, 50, 14
-    CancelButton 310, 250, 50, 14
-    PushButton 310, 0, 60, 14, "DHS Sir-Milo Info", DHS_sir_button
-  Text 10, 30, 90, 10, "Please select CAAD note:"
-  Text 10, 10, 160, 10, "PRISM case number (XXXXXXXXXX-XX format):"
-  Text 10, 170, 80, 30, "Other details about this arrears mgmt review and CAAD note free text:"
-  Text 10, 200, 100, 10, "Total amount of arrears mgmt:"
-  Text 10, 250, 70, 10, "Sign your case note: "
+  EditBox 130, 120, 80, 15, incar_date_txt
   CheckBox 20, 140, 190, 10, "Check here if arrears mgmt is for other circumstances ", other_check
+  EditBox 260, 140, 80, 15, other_reason_txt
+  EditBox 120, 150, 80, 15, other_date_txt
+  EditBox 90, 180, 280, 15, details
+  EditBox 110, 200, 260, 15, arrears_mgmt_amount
+  CheckBox 30, 220, 330, 10, "Check here if your request for arrears mgmt includes suspension of PA interest charging", suspend_interest_check
   CheckBox 30, 230, 330, 10, "Check here if your request for arrears mgmt includes $1 PA forgiveness for every $1 payment", dollar_for_dollar_check
-  EditBox 60, 60, 80, 14, cms_date_txt
-  Text 30, 60, 30, 10, "Date(s):"
-  EditBox 60, 90, 80, 14, cash_pa_date_txt
-  Text 30, 90, 30, 10, "Date(s):"
-  EditBox 60, 120, 80, 14, incar_date_txt
-  Text 30, 120, 30, 10, "Date(s):"
-  EditBox 60, 150, 80, 14, other_date_txt
-  Text 30, 150, 30, 10, "Date(s):"
-  EditBox 260, 140, 80, 14, other_reason_txt
+  Text 10, 10, 160, 10, "PRISM case number (XXXXXXXXXX-XX format):"
+  EditBox 90, 295, 270, 35, add_info_txt
+  EditBox 95, 350, 70, 15, worker_signature
+  ButtonGroup ButtonPressed
+    OkButton 275, 360, 50, 15
+    CancelButton 335, 360, 50, 15
+  Text 100, 65, 30, 10, "Date(s):"
+  DropListBox 95, 270, 265, 15, "Sent reqest to Supervisor"+chr(9)+"E9855 SUPERVISOR APPROVED ARREARS MANAGEMENT STRATEGY"+chr(9)+"E9856 SUPERVISOR APPROVED RECURRING ARREARS MGMT STRGY"+chr(9)+"E9857 SUPERVISOR DENIED ARREARS MANAGEMENT STRATEGY", decision_drop_down
+  DropListBox 100, 30, 270, 20, "Supervisor decision "+chr(9)+"E9852 Reviewed for Arrears Mgmt - Approval Requested"+chr(9)+"E9851 Reviewed for Arrears Mgmt - No Action"+chr(9)+"E9853 Reviewed for Arrears Mgmt - More Information Needed"+chr(9)+"E9854 Arrears Management - Additional Information Not Returned"+chr(9)+"E9860 Arrears Management Recurring Strategy Ended"+chr(9)+"E9865 NPA CP Approved Arrears Management Strategy", CAAD_type
+  Text 10, 30, 90, 10, "Please select CAAD note:"
+  Text 125, 250, 105, 15, "*****Decision /  Response***** "
+  ButtonGroup ButtonPressed
+    PushButton 310, 0, 60, 15, "DHS Sir-Milo Info", DHS_sir_button
+  Text 90, 150, 30, 10, "Date(s):"
+  Text 15, 270, 75, 10, "Decision:"
+  Text 10, 355, 70, 10, "Sign your case note: "
   Text 210, 140, 50, 10, "Reason detail:"
+  Text 100, 95, 30, 10, "Date(s):"
+  Text 10, 170, 80, 30, "Other details about this arrears mgmt review and CAAD note free text:"
+  Text 100, 125, 30, 10, "Date(s):"
+  Text 15, 290, 55, 15, "Additional info:"
+  Text 10, 200, 100, 10, "Total amount of arrears mgmt:"
 EndDialog
 
 
@@ -142,11 +149,18 @@ IF CAAD_type = "E9853 Reviewed for Arrears Mgmt - More Information Needed" THEN 
 IF CAAD_type = "E9854 Arrears Management - Additional Information Not Returned" THEN CAAD_code = "E9854"
 IF CAAD_type = "E9860 Arrears Management Recurring Strategy Ended" THEN CAAD_code = "E9860"
 IF CAAD_type = "E9865 NPA CP Approved Arrears Management Strategy" THEN CAAD_code = "E9865"
+IF decision_drop_down = "E9855 SUPERVISOR APPROVED ARREARS MANAGEMENT STRATEGY" THEN CAAD_code = "E9855"
+IF decision_drop_down = "E9856 SUPERVISOR APPROVED RECURRING ARREARS MGMT STRGY" THEN CAAD_code = "E9856"
+IF decision_drop_down = "E9857 SUPERVISOR DENIED ARREARS MANAGEMENT STRATEGY" THEN CAAD_code = "E9857"
+
+
 
 'Writing the case note
 EMWriteScreen CAAD_code, 4, 54
 
-EMSetCursor 16, 4 								'Because the PRISM case note functions require the cursor to start here
+EMSetCursor 16, 4 
+
+'Because the PRISM case note functions require the cursor to start here
 IF details <> "" THEN CALL write_bullet_and_variable_in_CAAD("Arrears Mgmt Review Details", details)
 IF arrears_mgmt_amount <> "" THEN CALL write_bullet_and_variable_in_CAAD("Amount requested", arrears_mgmt_amount)
 IF dollar_for_dollar_check = 1 THEN write_variable_in_CAAD("* Arrears Mgmt request includes $1 PA forgiveness for every $1 paid, if approved.")
@@ -173,6 +187,10 @@ ELSE
 	IF other_check = 1 THEN CALL write_variable_in_CAAD("* Arrears Mgmt requested: " & trim(other_reason_txt)  & ".")
 END IF
 
+IF add_info_txt <> "" THEN CALL write_variable_in_CAAD("* Additional information: " & trim(add_info_txt)  & ".")
+
+
+	
 CALL write_variable_in_CAAD("---")
 CALL write_variable_in_CAAD(worker_signature)
 

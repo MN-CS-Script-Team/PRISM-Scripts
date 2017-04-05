@@ -40,14 +40,16 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
-call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
+CALL changelog_update("01/18/2017", "The worker signature field should now auto-populate.", "Kelly Hiestand, Wright County")
+CALL changelog_update("11/30/2016", "The script has been updated to include a Requested Via drop down option of E-Filed. Signature Date has also been added to the order type field.", "Kelly Hiestand, Wright County")
+CALL changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
 changelog_display
 'END CHANGELOG BLOCK =======================================================================================================
 
 'DIMMING variables
-DIM row, col, case_number_valid, Court_Order_Request_Dialog, prism_case_number, date_court_order_requested, requested_via_droplistbox, requested_from, court_order_number, create_worklist_checkbox, worker_signature, order_type, ButtonPressed
+DIM row, col, case_number_valid, Court_Order_Request_Dialog, prism_case_number, date_court_order_requested, requested_via_droplistbox, requested_from, court_order_number, create_worklist_checkbox, order_type, ButtonPressed
 
 
 'THE DIALOG----------------------------------------------------------------------------------------------------------------------------------------------
@@ -55,9 +57,9 @@ BeginDialog Court_Order_Request_Dialog, 0, 0, 406, 95, "Court Order Request"
   EditBox 80, 5, 70, 15, prism_case_number
   EditBox 290, 5, 65, 15, date_court_order_requested
   ComboBox 100, 30, 115, 15, "Click here to enter county name"+chr(9)+"CP"+chr(9)+"NCP", requested_from
-  DropListBox 290, 30, 85, 15, "Select one..."+chr(9)+"Email"+chr(9)+"Fax"+chr(9)+"Telephone"+chr(9)+"Mail"+chr(9)+"SIR Email"+chr(9)+"Inter-Office", requested_via_droplistbox
+  DropListBox 290, 30, 85, 15, "Select one..."+chr(9)+"E-Filed"+chr(9)+"Email"+chr(9)+"Fax"+chr(9)+"Inter-Office"+chr(9)+"Mail"+chr(9)+"SIR Email"+chr(9)+"Telephone", requested_via_droplistbox
   EditBox 80, 50, 85, 15, court_order_number
-  EditBox 290, 50, 100, 15, order_type
+  EditBox 325, 50, 70, 15, order_type
   EditBox 80, 75, 90, 15, worker_signature
   ButtonGroup ButtonPressed
     OkButton 295, 75, 50, 15
@@ -66,10 +68,11 @@ BeginDialog Court_Order_Request_Dialog, 0, 0, 406, 95, "Court Order Request"
   Text 5, 10, 70, 10, "Prism Case Number:"
   Text 5, 80, 70, 10, "Sign your CAAD note:"
   Text 190, 10, 95, 10, "Date Court Order Requested:"
-  Text 245, 55, 40, 10, "Order Type:"
+  Text 235, 55, 90, 10, "Order Type/Signature Date:"
   Text 15, 55, 65, 10, "Court File Number:"
   Text 5, 30, 90, 20, "Requested From: (or type in County name)"
 EndDialog
+
 
 'THE SCRIPT------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -124,7 +127,7 @@ CALL write_bullet_and_variable_in_CAAD("Date Court Order Requested", date_court_
 CALL write_bullet_and_variable_in_CAAD("Requested From", requested_from)                           'types requested from info
 CALL write_bullet_and_variable_in_CAAD("Requested Via", requested_via_droplistbox)			   'types requested via info
 CALL write_bullet_and_variable_in_CAAD("Court File Number", court_order_number)                    'types court file number info
-CALL write_bullet_and_variable_in_CAAD("Order Type", order_type)                                   'types order type info
+CALL write_bullet_and_variable_in_CAAD("Order Type/Signature Date", order_type)                    'types order type info and signature date
 CALL write_variable_in_CAAD(worker_signature)                                                      'types worker signature
 
 

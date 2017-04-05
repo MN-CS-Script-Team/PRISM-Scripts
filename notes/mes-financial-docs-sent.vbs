@@ -40,6 +40,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+CALL changelog_update("01/18/2017", "Worker signature should now auto-populate.", "Kelly Hiestand, Wright County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -48,7 +49,7 @@ changelog_display
 
 'DIMMING VARIABLES---------------------------------------------------------------------------------------------------------------------------------------------------------
 DIM row, col
-DIM financial_stmt_cp_check, financial_stmt_ncp_check, Cover_letter_cp_check, cover_letter_ncp_check, Waiver_cp_check, waiver_ncp_check, calendar_cp_check, calendar_ncp_check, past_support_cp_check, past_support_ncp_check, return_date, worker_signature, PRISM_case_number, MES_Financial_Docs_Sent_dialog, buttonpressed, case_number_valid
+DIM financial_stmt_cp_check, financial_stmt_ncp_check, Cover_letter_cp_check, cover_letter_ncp_check, Waiver_cp_check, waiver_ncp_check, calendar_cp_check, calendar_ncp_check, past_support_cp_check, past_support_ncp_check, return_date, PRISM_case_number, MES_Financial_Docs_Sent_dialog, buttonpressed, case_number_valid
 
 'Calling dialog for the MES Financial Docs Sent-----------------------------------------------------------------------------------------------------------------------------
 

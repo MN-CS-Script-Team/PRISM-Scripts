@@ -41,6 +41,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+CALL changelog_update("01/18/2017", "A bug was fixed in this script to require the team field have 3 characters.", "Kelly Hiestand, Wright County")
 call changelog_update("11/16/2016", "County, Office, Team and Position fields now have length requirements.", "Kelly Hiestand, Wright County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
@@ -57,7 +58,7 @@ BeginDialog Case_Transfer_dialog, 0, 0, 316, 160, "Case Transfer"
   EditBox 85, 5, 80, 15, prism_case_number
   EditBox 50, 45, 35, 15, county
   EditBox 50, 65, 35, 15, office
-  EditBox 50, 85, 35, 15, Team:
+	EditBox 50, 85, 35, 15, team
   EditBox 50, 105, 35, 15, Position
   EditBox 130, 45, 175, 15, transfer_reason
   DropListBox 190, 70, 85, 15, "Select One..."+chr(9)+"Internal"+chr(9)+"External", transfer_type

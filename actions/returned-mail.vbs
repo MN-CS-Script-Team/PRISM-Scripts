@@ -44,6 +44,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("01/18/2017", "Added other returned mail options for CAAD codes. Also the option to not change the address, just CAAD note.", "Kelly Hiestand, Wright County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -51,51 +52,95 @@ changelog_display
 'END CHANGELOG BLOCK =======================================================================================================
 
 
-'Calling the Returned Mail Dialog--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-BeginDialog returned_mail_dialog, 0, 0, 441, 195, "Returned Mail Received"
-  EditBox 85, 5, 95, 15, PRISM_case_number
-  CheckBox 100, 30, 25, 10, "CP", rm_cp_checkbox
-  CheckBox 135, 30, 50, 10, "NCP/ALF", rm_ncp_checkbox
-  EditBox 225, 25, 80, 15, rm_other
-  DropListBox 70, 50, 150, 15, "Select one..."+chr(9)+"Update to Unknown"+chr(9)+"Update to New Forwarding Address", updated_ADDR
-  EditBox 230, 60, 75, 15, date_received
-  EditBox 75, 80, 125, 15, new_ADDR
-  EditBox 75, 100, 120, 15, new_CITY
-  EditBox 75, 120, 25, 15, new_STATE
-  EditBox 160, 120, 45, 15, new_ZIP
-  DropListBox 260, 80, 115, 15, "Select one..."+chr(9)+"APP - Application for CS Services"+chr(9)+"COO - Court Order"+chr(9)+"COU - Court"+chr(9)+"CRB - Credit Bureau"+chr(9)+"CUP - Custodial Parent"+chr(9)+"DES - Dept Economic Security"+chr(9)+"DIR - City Directory"+chr(9)+"DOC - Dept of Corrections"+chr(9)+"DPS - Dept Public Safety"+chr(9)+"EMP - Employer"+chr(9)+"INT - Interstate"+chr(9)+"MAX - Maxis"+chr(9)+"NCP - Non Custodial Parent"+chr(9)+"OTH - Other"+chr(9)+"POS - US Postal Service", source_code
-  ComboBox 290, 105, 140, 15, "Select One or Leave Blank..."+chr(9)+"MDA - Mail delivered as addressed"+chr(9)+"MFE - Moved, Forwarding Expired"+chr(9)+"MNF - Moved, No Forwarding Address"+chr(9)+"NKA - Not known as Addressed"+chr(9)+"NSA - No such Address"+chr(9)+"OTH - Other"+chr(9)+"PGA - Post Office Gave New Address", postal_resp_code
-  EditBox 100, 150, 240, 15, misc_notes
-  EditBox 75, 170, 110, 15, worker_signature
-  ButtonGroup ButtonPressed
-    OkButton 235, 170, 50, 15
-    CancelButton 290, 170, 50, 15
-  Text 200, 30, 20, 10, "Other:"
-  Text 10, 50, 60, 10, "Update Address?"
-  Text 230, 50, 80, 10, "Effective/Verified Date:"
-  GroupBox 5, 65, 215, 80, "New Address Info (If given by Post Office)"
-  Text 20, 85, 50, 10, "Street Address:"
-  Text 55, 105, 20, 10, "City:"
-  Text 50, 125, 20, 10, "State:"
-  Text 125, 125, 35, 10, "Zip Code:"
-  Text 230, 85, 30, 10, "Source:"
-  Text 230, 110, 60, 10, "Postal Response:"
-  Text 10, 155, 90, 10, "Misc notes/Actions Taken:"
-  Text 10, 175, 65, 10, "Worker Signature:"
-  Text 10, 10, 70, 10, "PRISM Case Number:"
-  Text 10, 30, 85, 10, "Returned Mail Rec'd for:"
-EndDialog
-
-
 'THE SCRIPT--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 'Connecting to Bluezone
 EMConnect ""			
+
+'Warning message to remind users to review address before running script
+warning_message = msgbox ("Please review address in PRISM before running this script." & vbcr & vbcr & "Press YES to continue, press NO to end script.", vbyesno)
+IF warning_message = vbno THEN stopscript
 
 'Checks for prism case number and navigates to CAST for that case
 CALL check_for_prism(TRUE)
 CALL PRISM_case_number_finder(PRISM_case_number)
 CALL navigate_to_PRISM_screen("CAST")
 EMReadScreen function_code, 2, 5, 78
+
+'We are navigating to CAAD to dynamically read the R caad codes
+CALL navigate_to_prism_screen("CAAD")
+PF5 'Creates new caad
+EMsetcursor 4, 54 'Sets cursor at caad code location
+PF1 'Brings up list of all caad codes
+CALL write_value_and_transmit("R", 20, 28) 'Types in R and sorts by R caad codes
+returned_mail_code_array = "Select One...~" 'Defining the first variable that will display on the droplist
+caad_row = 13 'Defining the starting row to read from
+DO 
+	EMreadscreen returned_mail_code, 60, caad_row, 18 'Reading for the first R code
+	IF Left(returned_mail_code, 1) = "R" THEN 'If it is an R code
+		returned_mail_code_array = returned_mail_code_array & trim(returned_mail_code) & "~" 'Then adding the R code to the array and trimming out the spaces, adding a ~ to split by
+		caad_row = caad_row + 1 'Adding to the row so we can read from the next row
+		IF caad_row = 20 THEN 'If row is at 20
+			caad_row = 13 'Then reset to 13 because 20 is the end of that page
+			PF8 'Pages over to next page
+		END IF
+	ELSE 'If it is anything other than an R code 
+		returned_mail_code_array = Left(returned_mail_code_array, len(returned_mail_code_array) - 1) 'Here we are removing the final ~
+		exit DO
+	END IF
+LOOP UNTIL Left(returned_mail_code, 1) <> "R" 'It will likely never hit this, but it will leave if it doesn't find an R code
+	
+returned_mail_code_array = Split(returned_mail_code_array, "~") 'Spliting the array based on the ~
+
+call convert_array_to_droplist_items(returned_mail_code_array, ret_mail_caad_list) 'Using function to convert the array to a variable to use in the dialog
+
+PF3 'backs out
+PF3 'backs out
+Call navigate_to_prism_screen("CAST")
+
+'Calling the Returned Mail Dialog--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+'!!!!!!! THIS DIALOG CANNOT BE COPIED AND PASTED INTO DIALOG EDITOR!!!!!
+'!!!!!! IT CONTAINS A DYNAMIC VARIABLE, ret_mail_caad_list, THAT CANNOT BE IN USED IN DIALOG EDITOR!!!!!!
+'!!!!! IF YOU REMOVE THAT DROPLIST YOU CAN EDIT IT IN DIALOG EDITOR, BUT YOU MUST ADD IT BACK ONCE YOU ARE DONE!!!!!
+
+BeginDialog returned_mail_dialog, 0, 0, 436, 225, "Returned Mail Received"
+  EditBox 85, 5, 95, 15, PRISM_case_number
+  CheckBox 100, 30, 25, 10, "CP", rm_cp_checkbox
+  CheckBox 135, 30, 50, 10, "NCP/ALF", rm_ncp_checkbox
+  EditBox 225, 25, 80, 15, rm_other
+  DropListBox 100, 45, 270, 15, ret_mail_caad_list, ret_mail_caad
+  DropListBox 70, 70, 180, 15, "Select one..."+chr(9)+"Do not Update Address, CAAD note only"+chr(9)+"Update to Unknown"+chr(9)+"Update to New Forwarding Address", updated_ADDR
+  EditBox 75, 105, 125, 15, new_ADDR
+  EditBox 75, 125, 125, 15, new_CITY
+  EditBox 75, 145, 25, 15, new_STATE
+  EditBox 160, 145, 45, 15, new_ZIP
+  EditBox 310, 90, 75, 15, date_received
+  DropListBox 260, 115, 115, 15, "Select one..."+chr(9)+"APP - Application for CS Services"+chr(9)+"COO - Court Order"+chr(9)+"COU - Court"+chr(9)+"CRB - Credit Bureau"+chr(9)+"CUP - Custodial Parent"+chr(9)+"DES - Dept Economic Security"+chr(9)+"DIR - City Directory"+chr(9)+"DOC - Dept of Corrections"+chr(9)+"DPS - Dept Public Safety"+chr(9)+"EMP - Employer"+chr(9)+"INT - Interstate"+chr(9)+"MAX - Maxis"+chr(9)+"NCP - Non Custodial Parent"+chr(9)+"OTH - Other"+chr(9)+"POS - US Postal Service", source_code
+  ComboBox 290, 140, 140, 15, "Select One or Leave Blank..."+chr(9)+"MDA - Mail delivered as addressed"+chr(9)+"MFE - Moved, Forwarding Expired"+chr(9)+"MNF - Moved, No Forwarding Address"+chr(9)+"NKA - Not known as Addressed"+chr(9)+"NSA - No such Address"+chr(9)+"OTH - Other"+chr(9)+"PGA - Post Office Gave New Address", postal_resp_code
+  EditBox 100, 180, 240, 15, misc_notes
+  EditBox 75, 205, 110, 15, worker_signature
+  ButtonGroup ButtonPressed
+    OkButton 305, 200, 50, 15
+    CancelButton 360, 200, 50, 15
+  Text 10, 70, 60, 10, "Update Address?"
+  Text 230, 95, 80, 10, "Effective/Verified Date:"
+  GroupBox 5, 90, 215, 80, "New Address Info (If given by Post Office)"
+  Text 20, 110, 50, 10, "Street Address:"
+  Text 55, 130, 20, 10, "City:"
+  Text 50, 150, 20, 10, "State:"
+  Text 125, 150, 35, 10, "Zip Code:"
+  Text 230, 115, 30, 10, "Source:"
+  Text 230, 140, 60, 10, "Postal Response:"
+  Text 10, 185, 90, 10, "Misc notes/Actions Taken:"
+  Text 10, 210, 65, 10, "Worker Signature:"
+  Text 10, 10, 70, 10, "PRISM Case Number:"
+  Text 10, 30, 85, 10, "Returned Mail Rec'd for:"
+  Text 10, 50, 90, 10, "Returned Mail CAAD Code:"
+  Text 200, 30, 20, 10, "Other:"
+  Text 310, 25, 125, 15, "Note: Selecting ""Other"" will only create a CAAD note."
+
+EndDialog
+
 
 'The script will not run unless the mandatory fields are completed
 DO
@@ -104,11 +149,12 @@ DO
 	IF ButtonPressed = 0 THEN StopScript		                                       
 	CALL PRISM_case_number_validation(PRISM_case_number, case_number_valid)
 	IF case_number_valid = FALSE THEN err_msg = err_msg & vbNewline & "You must enter a valid PRISM case number!"
-	IF forwarding_addr = "Select One..." THEN err_msg = err_msg & vbNewline & "You must answer if there was a forwarding address given!"
 	IF worker_signature = "" THEN err_msg = err_msg & vbNewline & "You sign your CAAD note!"       
 	IF date_received = "" THEN err_msg = err_msg & vbNewline & "You must enter a effective/verified date."            
 	IF err_msg <> "" THEN MsgBox "***NOTICE***" & vbNewLine & err_msg & vbNewline & vbNewline & "Please resolve for the script to continue!"
 LOOP UNTIL err_msg = ""
+
+ret_mail_caad_code = left(ret_mail_caad, 5)
 
 'Cleaning up inputs a bit
 IF postal_resp_code = "Select One or Leave Blank..." then postal_resp_code = ""		'Blanking this out if they didn't select anything
@@ -116,13 +162,19 @@ IF postal_resp_code = "Select One or Leave Blank..." then postal_resp_code = ""	
 'Checks to make sure PRISM is open and you are logged in
 CALL check_for_PRISM(True)
 
-'Clears out the existing PRISM case number, if it doesn't match the currnet case
-CALL PRISM_case_number_finder(PRISM_case_number_to_check)
+'Check to see what the current PRISM case number is
+EMReadScreen PRISM_case_number_to_check, 13, 5, 8
+PRISM_case_number_to_check = Replace(PRISM_case_number_to_check, " ", "-")
+
+
+'Clears out the existing PRISM case number, if it doesn't match the current case
+
 If PRISM_case_number_to_check <> PRISM_case_number then 
 	REGL
 	call enter_PRISM_case_number(PRISM_case_number, 4, 8)
 	call write_value_and_transmit("d", 3, 29)
 End if
+
 
 'Cutting postal response to three characters
 source= left(source_code, 3)
@@ -136,7 +188,7 @@ IF rm_cp_checkbox = CHECKED THEN
 	CALL navigate_to_PRISM_screen("CAAD")
 	PF5
 	CALL create_mainframe_friendly_date(date_received, 4, 37, "YYYY")
-	EMWritescreen "R0011", 4, 54
+	EMWritescreen ret_mail_caad_code, 4, 54
 	EMSetCursor 16, 4
 	CALL write_variable_in_CAAD(misc_notes)
 	CALL write_variable_in_CAAD("---" & worker_signature)
@@ -263,6 +315,8 @@ IF rm_cp_checkbox = CHECKED THEN
 		EMSendkey  "<EraseEof>"
 		EMWaitReady 0, 0
 		transmit		
+	ELSEIF updated_addr = "Do not Update Address, CAAD note only" THEN 
+		script_end_procedure("")
 	END IF
 END IF
 
@@ -272,7 +326,7 @@ IF rm_ncp_checkbox = CHECKED THEN
 	CALL navigate_to_PRISM_screen("CAAD")
 	PF5
 	CALL create_mainframe_friendly_date(date_received, 4, 37, "YYYY")
-	EMWritescreen "R0010", 4, 54
+	EMWritescreen ret_mail_caad_code, 4, 54
 	EMSetCursor 16, 4
 	CALL write_variable_in_CAAD(misc_notes)
 	CALL write_variable_in_CAAD("---" & worker_signature)
@@ -393,6 +447,8 @@ IF rm_ncp_checkbox = CHECKED THEN
 		EMSendkey  "<EraseEof>"
 		EMWaitReady 0, 0
 		transmit
+	ELSEIF updated_addr = "Do not Update Address, CAAD note only" THEN 
+		script_end_procedure("")
 	END IF
 END IF
 
@@ -400,7 +456,7 @@ END IF
 IF rm_other <> "" THEN
 	CALL navigate_to_PRISM_screen("CAAD")
 	PF5
-	EMWritescreen "R0012", 4, 54
+	EMWritescreen ret_mail_caad_code, 4, 54
 	EMSetCursor 16, 4
 	CALL write_variable_in_CAAD(rm_other)
 	CALL write_variable_in_CAAD(misc_notes)

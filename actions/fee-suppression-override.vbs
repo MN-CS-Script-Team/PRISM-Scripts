@@ -40,6 +40,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+Call changelog_update("01/20/2017", "Worker signature should now auto-populate.", "Kelly Hiestand, Wright County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -47,7 +48,7 @@ changelog_display
 'END CHANGELOG BLOCK =======================================================================================================
 
 'DIMMING variables
-DIM row, col, worker_signature, ButtonPressed, Fee_Suppression_dialog, PRISM_case_number, Fee_date, CAAD_standard_checkbox,CAAD_text_checkbox, CAAD_text
+DIM row, col, ButtonPressed, Fee_Suppression_dialog, PRISM_case_number, Fee_date, CAAD_standard_checkbox,CAAD_text_checkbox, CAAD_text
 
 'THE DIALOG----------------------------------------------------------------------------------------------------------------------------------------------
 

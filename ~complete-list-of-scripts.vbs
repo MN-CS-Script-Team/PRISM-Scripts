@@ -62,15 +62,6 @@ cs_scripts_array(script_num).scriptwriter		= ""
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "Court Prep Worksheet"
-cs_scripts_array(script_num).category			= "actions"
-cs_scripts_array(script_num).description		= "Leads you through performing a COLA. Adds CAAD note when completed."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= "Runs a court prep worksheet in anticipation of court dates, getting info from PRISM and putting it into a Word doc."
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "Emancipation DORD docs"
 cs_scripts_array(script_num).category			= "actions"
 cs_scripts_array(script_num).description		= "Sends emancipation DORD docs."
@@ -157,6 +148,15 @@ cs_scripts_array(script_num).category			= "actions"
 cs_scripts_array(script_num).description		= "Generates Word document regarding payments CP has received on their case."
 cs_scripts_array(script_num).release_date		= #11/14/2016#
 cs_scripts_array(script_num).scriptwriter		= ""																
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "Interview Information Sheet"
+cs_scripts_array(script_num).category			= "actions"
+cs_scripts_array(script_num).description		= "Creates a Word document with general and case-specific information to be used as a reference when meeting with clients."
+cs_scripts_array(script_num).release_date		= #01/31/2017#
+cs_scripts_array(script_num).scriptwriter		= ""
 																	
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
@@ -183,6 +183,15 @@ cs_scripts_array(script_num).script_name		= "Record IW Info"
 cs_scripts_array(script_num).category			= "actions"
 cs_scripts_array(script_num).description		= "Record IW withholding info in a CAAD note, worklist, or view in a message box."
 cs_scripts_array(script_num).release_date		= #09/01/2016#
+cs_scripts_array(script_num).scriptwriter		= ""
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "Refer to Mod"
+cs_scripts_array(script_num).category			= "actions"
+cs_scripts_array(script_num).description		= "Starts REAM and sends docs to include employer verifs."
+cs_scripts_array(script_num).release_date		= #03/28/2017#
 cs_scripts_array(script_num).scriptwriter		= ""
 
 script_num = script_num + 1
@@ -239,6 +248,15 @@ cs_scripts_array(script_num).script_name		= "Case Transfer"
 cs_scripts_array(script_num).category			= "bulk"
 cs_scripts_array(script_num).description		= "Gives the user the ability to quickly transfer mulitple cases."
 cs_scripts_array(script_num).release_date		= #01/01/2000#
+cs_scripts_array(script_num).scriptwriter		= ""
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "E0002 No-Pay-To-Spreadsheet"
+cs_scripts_array(script_num).category			= "bulk"
+cs_scripts_array(script_num).description		= "Reviews all E0002 worklists and copies the Worklists Date, Case Number, NCP Name, File Location, Last NCP Contact in 90 days, NCP's Phone Number into a spreadsheet and purges the worklists"
+cs_scripts_array(script_num).release_date		= #03/28/2017#
 cs_scripts_array(script_num).scriptwriter		= ""
 
 script_num = script_num + 1
@@ -374,156 +392,6 @@ cs_scripts_array(script_num).scriptwriter		= ""
 
 
 
-'NAV SCRIPTS ======================================================================================================================================================================='
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "CAAD"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the CAAD screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "CAFS"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the CAFS screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "CAPS"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the CAPS screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "CAST"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the CAST screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "CAWT"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the CAWT screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "CPDD"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the CPDD screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "ENFL"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the ENFL screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "MAXIS Screen Finder"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Displays a list of MAXIS screens you can select."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "NCDD"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the NCDD screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "NCID"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the NCID screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "PALC"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the PALC screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "PAPL"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the PAPL screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "PESE"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the PESE screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "PRISM Screen Finder"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Displays a list of PRISM screens which you can then select."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "SUCW"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the SUCW screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "USWD"
-cs_scripts_array(script_num).category			= "nav"
-cs_scripts_array(script_num).description		= "Navigates to the USWD screen."
-cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-
-
-
 'NOTES SCRIPTS ======================================================================================================================================================================='
 
 
@@ -638,6 +506,15 @@ cs_scripts_array(script_num).scriptwriter		= ""
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "Maintaining County"
+cs_scripts_array(script_num).category			= "notes"
+cs_scripts_array(script_num).description		= "Creates CAAD note for requesting maintaining county."
+cs_scripts_array(script_num).release_date		= #02/22/2017#
+cs_scripts_array(script_num).scriptwriter		= ""
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "MES Financial Docs Sent"
 cs_scripts_array(script_num).category			= "notes"
 cs_scripts_array(script_num).description		= "Creates CAAD note for recording documents sent to parties."
@@ -669,15 +546,6 @@ cs_scripts_array(script_num).script_name		= "Quarterly Reviews"
 cs_scripts_array(script_num).category			= "notes"
 cs_scripts_array(script_num).description		= "CAAD note for quarterly review processes."
 cs_scripts_array(script_num).release_date		= #01/01/2000#
-cs_scripts_array(script_num).scriptwriter		= ""
-
-script_num = script_num + 1
-ReDim Preserve cs_scripts_array(script_num)
-SET cs_scripts_array(script_num) = NEW cs_script
-cs_scripts_array(script_num).script_name		= "Quick CAAD"
-cs_scripts_array(script_num).category			= "notes"
-cs_scripts_array(script_num).description		= "Quickly add links to CAAD codes you frequently use. Includes a search feature."
-cs_scripts_array(script_num).release_date		= #08/01/2016#
 cs_scripts_array(script_num).scriptwriter		= ""
 
 script_num = script_num + 1
@@ -723,6 +591,33 @@ cs_scripts_array(script_num).category			= "utilities"
 cs_scripts_array(script_num).description		= "An agency-customizable list of web resources for general use."
 cs_scripts_array(script_num).release_date		= #11/01/2016#
 cs_scripts_array(script_num).scriptwriter		= "Robert Fewins-Kalb"
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "MAXIS Screen Finder"
+cs_scripts_array(script_num).category			= "utilities"
+cs_scripts_array(script_num).description		= "Displays a list of MAXIS screens you can select."
+cs_scripts_array(script_num).release_date		= #01/01/2000#
+cs_scripts_array(script_num).scriptwriter		= ""
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "PRISM Screen Finder"
+cs_scripts_array(script_num).category			= "utilities"
+cs_scripts_array(script_num).description		= "Displays a list of PRISM screens which you can then select."
+cs_scripts_array(script_num).release_date		= #01/01/2000#
+cs_scripts_array(script_num).scriptwriter		= ""
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "Quick CAAD"
+cs_scripts_array(script_num).category			= "utilities"
+cs_scripts_array(script_num).description		= "Quickly add links to CAAD codes you frequently use. Includes a search feature."
+cs_scripts_array(script_num).release_date		= #08/01/2016#
+cs_scripts_array(script_num).scriptwriter		= ""
 
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)

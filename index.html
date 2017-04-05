@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>DHS-PRISM-Scripts Documentation</title>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+	  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	
+	<!-- Bootstrap datepicker -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css" integrity="sha256-LPN+eTpTPBqagrVriv55Ec3nMrGY4CdujtnzMBrAwMA=" crossorigin="anonymous" />
+
+	<!-- Google fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Oxygen:300,400,700|Source+Sans+Pro:400,700|Source+Code+Pro:400,700" rel="stylesheet">
+
+	<!--Hit our custom CSS-->
+	<link rel="stylesheet" href="css/styles.css">
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" type="image/png" href="img/BlueZoneScripts.png"/>
+
+	<!--Hit our custom JavaScript-->
+	<script src="js/changelog-reader.js" charset="utf-8"></script>	
+	
+	<!--Hit moment.js-->
+	<script src="js/moment.min.js" charset="utf-8"></script>	
+	
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	
+</head>
+
+
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-script-links" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="index.html"><img src="img/dhslogo.png" /></a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="navbar-collapse-script-links">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="active"><a href="index.html">Changelog</a></li>
+					<li><a href="issuelist.html">Project tracking/issue list</a></li>
+					<li><a href="https://mn-script-team.github.io/bzs-config-utility/" target="_blank">Get scripts!</a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+
+		</div>
+	</nav>
+	<div class="container">
+		
+		<div class="page-header">
+  			<h1>PRISM Scripts Changelog</h1> 
+		</div>
+		
+		<span id="IEWarning">
+			<script>
+				msieversion();
+			</script>
+		</span>
+
+		<div class="alert alert-info" role="info">
+			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Please note that this list and the utilities behind it are both in "beta". They are functional but there may be bugs.
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<h2>About this list</h2>
+				<p>This is a list of changes implemented by the Minnesota Department of Human Services' BlueZone Scripts PRISM project. It works by scanning each script file in our workspace, and returning a list of all changes made by scriptwriters.</p>
+				<p>To view this changelog, simply select some default dates (for example, "last 30 days"), and press the "submit" button.</p>
+				<p>These functions and all scripts in this project are open source. The source code for the project can be <a href="https://github.com/MN-Script-Team/DHS-PRISM-Scripts" target="_blank">found on GitHub</a>.</p>
+			</div>
+		</div>
+		<hr>
+		<div class="row" id="search-form">
+			<div class="col-xs-12 col-sm-3" id="defaultDatePicker">
+				<h4>Select some default dates...</h4>
+				<input type="button" onclick="modifyDateRangeLast30Days()" class="btn btn-default btn-md" value="last 30 days" /> <br />
+				<input type="button" onclick="modifyDateRangeLast90Days()" class="btn btn-default btn-md" value="last 90 days" /> <br />
+				<input type="button" onclick="modifyDateRangeMonthToDate()" class="btn btn-default btn-md" value="Month to date" /> <br />
+				<input type="button" onclick="modifyDateRangeLastCompleteMonth()" class="btn btn-default btn-md" value="Last complete month" />
+			</div>
+			<div class="col-xs-12 col-sm-3">
+				<h4>...or pick a custom date range...</h4>
+				<span>
+					<div class="input-daterange input-group input-group-md" id="datepicker">
+						<label for="start" class="sr-only">Start date</label>
+			    		<input type="text" class="input-md form-control" name="start" id="start" />
+			    		<span class="input-group-addon">to</span>
+						<label for="end" class="sr-only">End date:</label>
+			    		<input type="text" class="input-md form-control" name="end" id="end" />
+					</div>
+					<p>Select a custom date range to search for script changes.</p>
+				</span>
+			</div>
+			<div class="col-xs-12 col-sm-3">
+				<h4>...change these if you need to...</h4>
+				<div class="checkbox">
+  					<label><input type="checkbox" value="scriptwriterBranchCheckbox" id="scriptwriterBranchCheckbox" checked>Use scriptwriter branch</label>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-1">
+				<h4>Go!</h4>
+				<input id="goButton" type="button" onclick="displayChangelogInfo()" class="btn btn-primary btn-md" value="Submit" />
+			</div>
+		</div>
+		<hr />
+		
+		<table class="table" id="changelogTable">
+    		<thead>
+      			<tr>
+					<th class="col-md-1" role="button" onclick="sortTable(0)">Category</th>
+        			<th class="col-md-1" role="button" onclick="sortTable(1)">Script</th>
+        			<th class="col-md-1" role="button" onclick="sortTable(2)">Update date</th>
+        			<th class="col-md-7" role="button" onclick="sortTable(3)">Details</th>
+					<th class="col-md-2" role="button" onclick="sortTable(4)">Scriptwriter</th>
+      			</tr>
+    		</thead>
+    		<tbody id="changelogContents">
+	      	
+		   	</tbody>
+			
+		</table>
+		
+	</div>
+	
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js" integrity="sha256-zXNrZH6Aqd2T5QyZumro0VuxbhdKhOiQhxtw6YxgjUM=" crossorigin="anonymous"></script>
+	
+	<!-- jQuery for the datepicker -->
+	<script>
+		$(function(){
+			$('#search-form .input-daterange').datepicker({
+				maxViewMode: 2,
+    			todayBtn: "linked"
+			});
+		});
+	</script>
+
+</body>
+</html>
