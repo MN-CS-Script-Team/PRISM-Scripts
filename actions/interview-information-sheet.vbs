@@ -42,6 +42,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("03/31/2017", "Bug fix for FormatCurrency error message.", "Wendy LeVesseur, Anoka County")
 call changelog_update("03/09/2017", "Replace username with worker signature and fix other bugs.", "Wendy LeVesseur, Anoka County")
 call changelog_update("12/08/2016", "Initial version.", "Wendy LeVesseur, Anoka County")
 
@@ -575,8 +576,8 @@ CLASS doc_info
 
 	' Last payment date
 	PUBLIC PROPERTY GET last_payment_date
-		EMReadScreen at_screen, 4, 21, 75
-		IF at_screen <> "PALC" THEN CALL navigate_to_PRISM_screen("PALC")
+		EMReadScreen at_screen, 20, 2, 29
+		IF at_screen <> "Payment List By Case" THEN CALL navigate_to_PRISM_screen("PALC")
 		EMWritescreen "12/12/2015", 20, 49
 		transmit
 		EMWriteScreen date, 20, 49
@@ -593,8 +594,8 @@ CLASS doc_info
 
 	'Last payment type
 	PUBLIC PROPERTY GET last_payment_type
-		EMReadScreen at_screen, 4, 21, 75
-		IF at_screen <> "PALC" THEN CALL navigate_to_PRISM_screen("PALC")
+		EMReadScreen at_screen, 20, 2, 29
+		IF at_screen <> "Payment List By Case" THEN CALL navigate_to_PRISM_screen("PALC")
 		EMWritescreen "12/12/2015", 20, 49
 		transmit
 		EMWriteScreen date, 20, 49
@@ -611,8 +612,8 @@ CLASS doc_info
 
 	'Last payment amount
 	PUBLIC PROPERTY GET last_payment_amount
-		EMReadScreen at_screen, 4, 21, 75
-		IF at_screen <> "PALC" THEN CALL navigate_to_PRISM_screen("PALC")
+		EMReadScreen at_screen, 20, 2, 29
+		IF at_screen <> "Payment List By Case" THEN CALL navigate_to_PRISM_screen("PALC")
 		EMWritescreen "12/12/2015", 20, 49
 		transmit	
 		EMWriteScreen date, 20, 49
@@ -624,13 +625,12 @@ CLASS doc_info
 				EMReadScreen last_payment_amount, 13, 9, 29
 				last_payment_amount = trim(last_payment_amount)
 			end if
-		
 	END PROPERTY
 
 	'Last payment allocation
 	PUBLIC PROPERTY GET last_payment_allocation
-		EMReadScreen at_screen, 4, 21, 75
-		IF at_screen <> "PALC" THEN CALL navigate_to_PRISM_screen("PALC")
+		EMReadScreen at_screen, 20, 2, 29
+		IF at_screen <> "Payment List By Case" THEN CALL navigate_to_PRISM_screen("PALC")
 		EMWritescreen "12/12/2015", 20, 49
 		transmit
 		EMWriteScreen date, 20, 49
@@ -779,7 +779,7 @@ IF participant = "NCP" Then
 			.FormFields("other_cases").Result = info.number_of_ncps_open_cases		
 			.FormFields("function").Result = info.case_function
 			.FormFields("assigned_worker").Result = info.worker_name & ", Phone: " & info.worker_phone
-			.FormFields("last_payment").Result = info.last_payment_date & " " & FormatCurrency(info.last_payment_allocation) & " " & info.last_payment_type
+			.FormFields("last_payment").Result = info.last_payment_date & " " & FormatCurrency(CCur(info.last_payment_allocation)) & " " & info.last_payment_type
 			.FormFields("arrears_balance").Result = FormatCurrency (info.pa_arrears) & " PA arrears + " & FormatCurrency(info.npa_arrears) & " NPA arrears = " & FormatCurrency(info.ttl_arrears) & " total"
 			.FormFields("pay_plan").Result = info.pay_plan_info(PRISM_case_number)
 			'The dollar values below must be converted to currency using the CCur before we can use the FormatCurrency fucntion.  The end result is beautifully formatted dollar amounts with minimal effort!
