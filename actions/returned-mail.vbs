@@ -162,15 +162,18 @@ IF postal_resp_code = "Select One or Leave Blank..." then postal_resp_code = ""	
 'Checks to make sure PRISM is open and you are logged in
 CALL check_for_PRISM(True)
 
+'Check to see what the current PRISM case number is
+EMReadScreen PRISM_case_number_to_check, 13, 5, 8
+PRISM_case_number_to_check = Replace(PRISM_case_number_to_check, " ", "-")
+
+
 'Clears out the existing PRISM case number, if it doesn't match the current case
-CALL PRISM_case_number_finder(PRISM_case_number_to_check)
+
 If PRISM_case_number_to_check <> PRISM_case_number then 
 	REGL
 	call enter_PRISM_case_number(PRISM_case_number, 4, 8)
 	call write_value_and_transmit("d", 3, 29)
 End if
-
-
 
 
 'Cutting postal response to three characters

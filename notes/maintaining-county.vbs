@@ -41,6 +41,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update ("03/09/2017", "Removed automatic transmit so user can save the CAAD note themselves.", "Kelly Hiestand, Wright County")
 call changelog_update ("01/18/2017", "Added DHS SIR button.", "Jodi Martin, Wright County")
 call changelog_update ("11/16/2016", "Initial version.", "Jodi Martin, Wright County")
 
@@ -129,9 +130,6 @@ CALL check_for_PRISM(True)
 CALL PRISM_case_number_finder(PRISM_case_number)
 
 'The script will not run unless the mandatory fields are completed
-
-
-'The script will not run unless the mandatory fields are completed
 DO
 	Do
 		DIALOG Main_question_dlg
@@ -140,8 +138,6 @@ DO
 	Loop until buttonpressed = ok
 	IF script_run_mode = "Select one..." THEN MsgBox "Please select a maintaining county action"
 LOOP UNTIL script_run_mode <> "Select one..."
-
-
 
 	IF script_run_mode = "Requesting County" THEN
 	
@@ -183,8 +179,6 @@ LOOP UNTIL err_msg = ""
 	CALL write_bullet_and_variable_in_CAAD("Additional Info", Additional_info)
 	CALL write_variable_in_CAAD(worker_signature)
 
-transmit
-
 	end if	
 	
 IF script_run_mode = "Responding County" THEN
@@ -214,8 +208,6 @@ EMSetCursor 17, 4															' sets cursor on the 2nd line of the CAAD note
 	CALL write_bullet_and_variable_in_CAAD ("Position", Position_nbr)
 	IF Transfer_tocheck = 1 THEN CALL write_variable_in_CAAD("Transfer to county:", Transfer_to)
 	CALL write_variable_in_CAAD(worker_signature)
-
-transmit
 
 	end if
 

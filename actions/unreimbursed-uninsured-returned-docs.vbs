@@ -43,6 +43,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("03/28/2017", "You can now add the County Name for the Affidavit of Service.", "Gretchen Thornbrugh, Dakota Co.")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -144,14 +145,17 @@ LOOP UNTIL err_msg = ""
 
 	IF ncp_documents_checkbox = 1 THEN
 
-		BeginDialog DATE_SERVED_dialog, 0, 0, 146, 75, "DATE SERVED"
- 	  	  EditBox 50, 5, 50, 15, date_served
-  	  	  CheckBox 10, 30, 125, 10, "check if address is CONFIDENTIAL", confidential_checkbox
-  	  	  ButtonGroup ButtonPressed
-    	    	    OkButton 35, 55, 50, 15
-    	    	    CancelButton 90, 55, 50, 15
-  	  	  Text 10, 10, 40, 10, "Served on: "
-		EndDialog
+	BeginDialog DATE_SERVED_dialog, 0, 0, 161, 95, "DATE SERVED"
+  	  EditBox 50, 5, 50, 15, date_served
+  	  EditBox 65, 30, 65, 15, county_name
+  	  CheckBox 10, 55, 125, 10, "check if address is CONFIDENTIAL", confidential_checkbox
+  	  ButtonGroup ButtonPressed
+    	    OkButton 50, 75, 50, 15
+          CancelButton 105, 75, 50, 15
+  	  Text 10, 10, 40, 10, "Served on:"
+        Text 10, 35, 50, 10, "County Name:"
+	EndDialog
+
 	
 'dialog box for date on aff of service
 Do
@@ -159,6 +163,7 @@ Do
 	Dialog DATE_SERVED_dialog
 	IF buttonpressed = 0 then stopscript
 	IF date_served = "" THEN err_msg = err_msg & vbNewline & "Please enter date you are sending Affidavit of Service."
+	IF county_name = "" THEN err_msg = err_msg & vbNewline & "Please enter County Name for the Affidavit of Service."
 	IF err_msg <> "" THEN 
 		MsgBox "***NOTICE!!!***" & vbNewline & err_msg & vbNewline & vbNewline & "Please resolve for the script to continue."
 	END IF
@@ -180,7 +185,7 @@ Loop until err_msg = ""
 		EMWriteScreen "S", 11, 5
 		transmit 
 	
-		EMWriteScreen(amount), 16, 15
+		EMWriteScreen amount, 16, 15
 		transmit
 		PF3
 		EMWriteScreen "m", 3, 29
@@ -212,12 +217,15 @@ Loop until err_msg = ""
 		transmit
 		EMWriteScreen "Medical/Dental Expenses", 16, 15
 		transmit
-		EMWriteScreen (date_served), 16, 15
+		EMWriteScreen date_served, 16, 15
 		transmit
 		PF8
 		EMWriteScreen "s", 8, 5
+		EMWriteScreen "s", 10, 5
 		transmit
 		EMWriteScreen "N", 16, 15
+		transmit
+		EmWriteScreen county_name, 16, 15
 		transmit
 		PF3
 		EMWriteScreen "M", 3, 29
@@ -263,12 +271,15 @@ Loop until err_msg = ""
 		transmit
 		EMWriteScreen "Medical/Dental Expenses", 16, 15
 		transmit
-		EMWriteScreen (date_served), 16, 15
+		EMWriteScreen date_served, 16, 15
 		transmit
 		PF8
 		EMWriteScreen "s", 8, 5
+		EMWriteScreen "s", 10, 5
 		transmit
 		EMWriteScreen "Y", 16, 15
+		transmit
+		EMWriteScreen county_name, 16, 15
 		transmit
 		PF3
 		EMWriteScreen "M", 3, 29
@@ -475,13 +486,15 @@ LOOP UNTIL err_msg = ""
 
 	IF cp_documents_checkbox = 1 THEN
 
-	BeginDialog DATE_SERVED_dialog, 0, 0, 146, 75, "DATE SERVED"
-	  EditBox 50, 5, 50, 15, date_served
-	  CheckBox 10, 30, 125, 10, "check if address is CONFIDENTIAL", confidential_checkbox
-	  ButtonGroup ButtonPressed
-   	    OkButton 35, 55, 50, 15
-    	    CancelButton 90, 55, 50, 15
-	  Text 10, 10, 40, 10, "Served on: "
+	BeginDialog DATE_SERVED_dialog, 0, 0, 161, 95, "DATE SERVED"
+  	  EditBox 50, 5, 50, 15, date_served
+  	  EditBox 65, 30, 65, 15, county_name
+  	  CheckBox 10, 55, 125, 10, "check if address is CONFIDENTIAL", confidential_checkbox
+  	  ButtonGroup ButtonPressed
+    	    OkButton 50, 75, 50, 15
+    	    CancelButton 105, 75, 50, 15
+  	  Text 10, 10, 40, 10, "Served on:"
+ 	  Text 10, 35, 50, 10, "County Name:"
 	EndDialog
 
 'dialog box for date on aff of service
@@ -491,6 +504,7 @@ Do
 	Dialog DATE_SERVED_dialog
 	IF buttonpressed = 0 then stopscript
 	IF date_served = "" THEN err_msg = err_msg & vbNewline & "Please enter date you are sending Affidavit of Service."
+	IF county_name = "" THEN err_msg = err_msg & vbNewline & "Please enter County Name for the Affidavit of Service."	
 	IF err_msg <> "" THEN 
 		MsgBox "***NOTICE!!!***" & vbNewline & err_msg & vbNewline & vbNewline & "Please resolve for the script to continue."
 	END IF
@@ -549,8 +563,11 @@ Loop until err_msg = ""
 		transmit
 		PF8
 		EMWriteScreen "s", 8, 5
+		EMWriteScreen "s", 10, 5
 		transmit
 		EMWriteScreen "N", 16, 15
+		transmit
+		EMWriteScreen county_name, 16, 15
 		transmit
 		PF3
 		EMWriteScreen "M", 3, 29
@@ -600,8 +617,11 @@ Loop until err_msg = ""
 		transmit
 		PF8
 		EMWriteScreen "s", 8, 5
+		EMWriteScreen "s", 10, 5
 		transmit
 		EMWriteScreen "Y", 16, 15
+		transmit
+		EMWriteScreen county_name, 16, 15
 		transmit
 		PF3
 		EMWriteScreen "M", 3, 29
@@ -704,3 +724,4 @@ Loop until err_msg = ""
 	END IF		
 END IF	
 script_end_procedure("")
+

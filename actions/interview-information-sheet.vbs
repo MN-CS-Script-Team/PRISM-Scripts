@@ -1,3 +1,5 @@
+
+
 'GATHERING STATS----------------------------------------------------------------------------------------------------
 name_of_script = "interview-information-sheet.vbs"
 start_time = timer
@@ -40,6 +42,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("03/09/2017", "Replace username with worker signature and fix other bugs.", "Wendy LeVesseur, Anoka County")
 call changelog_update("12/08/2016", "Initial version.", "Wendy LeVesseur, Anoka County")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -56,12 +59,14 @@ BeginDialog PRISM_case_number_dialog, 0, 0, 186, 50, "PRISM case number dialog"
 EndDialog
 
 
-BeginDialog Interview_Info_dialog, 0, 0, 206, 60, "Interview Information Sheet"
+BeginDialog Interview_Info_dialog, 0, 0, 206, 85, "Interview Information Sheet"
   ButtonGroup ButtonPressed
-    OkButton 35, 40, 50, 15
-    CancelButton 100, 40, 50, 15
+    OkButton 30, 60, 50, 15
+    CancelButton 95, 60, 50, 15
   Text 5, 10, 105, 20, "Which participant do you want to prepare the sheet for?"
-  ListBox 125, 10, 60, 15, "NCP"+chr(9)+"CP", participant
+  DropListBox 115, 10, 80, 20, "NCP"+chr(9)+"CP", participant
+  EditBox 115, 35, 80, 15, worker_signature
+  Text 45, 40, 60, 10, "Worker Signature:"
 EndDialog
 
 
@@ -252,9 +257,9 @@ CLASS doc_info
 					open_cases = open_cases + 1
 				END IF
 				browse_row = browse_row + 1
-				IF NCID_row = 19 THEN
+				IF browse_row = 19 THEN
 					PF8
-					NCID_row = 8
+					browse_row = 8
 				END IF
 			END IF
 		LOOP UNTIL end_of_data = "End of Data"
@@ -444,9 +449,9 @@ CLASS doc_info
 					open_cases = open_cases + 1
 				END IF
 				browse_row = browse_row + 1
-				IF NCID_row = 19 THEN
+				IF browse_row = 19 THEN
 					PF8
-					NCID_row = 8
+					browse_row = 8
 				END IF
 			END IF
 		LOOP UNTIL end_of_data = "End of Data"
@@ -578,8 +583,12 @@ CLASS doc_info
 		transmit
 		EMWriteScreen "D", 9, 5
 		transmit
-		EMReadScreen last_payment_date, 8, 13, 37
-		PF3
+		EMReadScreen end_of_data, 11, 9, 32
+			if end_of_data = "End of Data" then
+				last_payment_date = "N/A"
+			else
+				EMReadScreen last_payment_date, 8, 13, 37
+			end if
 	END PROPERTY
 
 	'Last payment type
@@ -590,10 +599,14 @@ CLASS doc_info
 		transmit
 		EMWriteScreen date, 20, 49
 		transmit
-		EMReadScreen last_payment_type, 3, 9, 25
-		IF last_payment_type = "STJ" or last_payment_type = "STS" or last_payment_type = "FTJ" or last_payment_type = "FTS" or last_payment_type = "FIN" or last_payment_type = "BND" THEN
-			last_payment_type = "Involuntary"
-		END IF
+		EMReadScreen end_of_data, 11, 9, 32
+			if end_of_data = "End of Data" then
+				last_payment_type = "N/A"
+			else
+				EMReadScreen last_payment_type, 3, 9, 25
+				 IF last_payment_type = "STJ" or last_payment_type = "STS" or last_payment_type = "FTJ" or last_payment_type = "FTS" or last_payment_type = "FIN"_
+					 or last_payment_type = "BND" THEN last_payment_type = "Involuntary"
+			end if
 	END PROPERTY
 
 	'Last payment amount
@@ -604,8 +617,14 @@ CLASS doc_info
 		transmit	
 		EMWriteScreen date, 20, 49
 		transmit
-		EMReadScreen last_payment_amount, 13, 9, 29
-		last_payment_amount = trim(last_payment_amount)
+		EMReadScreen end_of_data, 11, 9, 32
+			if end_of_data = "End of Data" then
+				last_payment_amount = "0.00"
+			else
+				EMReadScreen last_payment_amount, 13, 9, 29
+				last_payment_amount = trim(last_payment_amount)
+			end if
+		
 	END PROPERTY
 
 	'Last payment allocation
@@ -616,8 +635,13 @@ CLASS doc_info
 		transmit
 		EMWriteScreen date, 20, 49
 		transmit
-		EMReadScreen last_payment_allocation, 12, 9, 68
-		last_payment_allocation = trim (last_payment_allocation)
+		EMReadScreen end_of_data, 11, 9, 32
+			if end_of_data = "End of Data" then
+				last_payment_allocation = "0.00"
+			else
+				EMReadScreen last_payment_allocation, 12, 9, 68
+				last_payment_allocation = trim (last_payment_allocation)
+			end if
 	END PROPERTY
 	
 	'Last payment plan info
@@ -637,7 +661,7 @@ CLASS doc_info
 			pay_plan_info = "No DL pay plan information found."
 		ELSE
 			EMReadScreen pay_plan_begin, 8, 8, 47
-			EMReadScreen pay_plan_end, 8, 8, 58
+			EMReadScreen pay_plan_end, 8, 8, 57
 		
 			EMSetCursor 8, 32
 			transmit
@@ -723,10 +747,6 @@ EMSendKey replace(PRISM_case_number, "-", "")									'Entering the specific cas
 EMWriteScreen "d", 3, 29												'Setting the screen as a display action
 transmit															'Transmitting into it
 
-'Collect username of the user.  This value will display on the word document the script produces, so that after the sheet is printed it is clear who created it.
-set objNet = CreateObject("WScript.NetWork")
-username = lcase(objNet.UserName)
-
 'The command below is necessary in order to utilize the doc_info class to efficiently obtain case data.  We are creating an object called "info" that is a member of the "doc_info" class.
 set info = new doc_info
 
@@ -749,7 +769,7 @@ objWord.Visible = True
 IF participant = "NCP" Then	
 	set objDoc = objWord.Documents.Add(word_documents_folder_path & "interview-information-sheet.docx")
 		With objDoc
-			.FormFields("user").Result = username
+			.FormFields("user").Result = worker_signature
 			.FormFields("name").Result = info.ncp_name   
 			.FormFields("address").Result = info.ncp_addr & " " & info.ncp_city & ", " & info.ncp_state & " " & Left(info.ncp_zip, 5)
 			.FormFields("phone").Result = info.ncp_phone_numbers
@@ -779,7 +799,7 @@ ELSE
 'Unless classes are added to the functions library, it is necessary to have the class definition in your script if you want to use it.
 	set objDoc = objWord.Documents.Add(word_documents_folder_path & "interview-information-sheet.docx")
 		With objDoc
-			.FormFields("user").Result = username
+			.FormFields("user").Result = worker_signature
 			.FormFields("name").Result = info.cp_name
 			.FormFields("address").Result = info.cp_addr & " " & info.cp_city & ", " & info.cp_state & " " & Left(info.cp_zip, 5)
 			.FormFields("phone").Result = info.cp_phone_numbers

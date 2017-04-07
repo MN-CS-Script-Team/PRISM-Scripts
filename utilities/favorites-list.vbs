@@ -1,8 +1,3 @@
-'TODO: make the hotkey dialog do something
-'TODO: create hotkey file
-'TODO: make sure file names display clearly in the display dialog
-'TODO: work in agency-customizable mandatory script lists
-
 'STATS GATHERING--------------------------------------------------------------------------------------------------------------
 name_of_script = "favorites-list.vbs"
 start_time = timer
@@ -45,13 +40,19 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
-call changelog_update("01/31/2017", "Initial version.", "Veronica Cary, DHS")
+call changelog_update("04/04/2017", "The favorites script is now ready for use!", "Veronica Cary, DHS")
+call changelog_update("02/22/2017", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
 changelog_display
 'END CHANGELOG BLOCK =======================================================================================================
 
-script_end_procedure("Favorites button is coming soon! - Veronica Cary (01/31/2017)")
+'DEFINING SOME VARIABLES ===================================================================================================
+button_height = 12
+button_width = 145
+dialog_margin = 5
+groupbox_margin = 5
+'END VARIABLES =============================================================================================================
 
 'This function simply displays a list of hotkeys, and the user can insert screens-to-navigate-to within
 function edit_hotkeys
@@ -98,7 +99,23 @@ function edit_hotkeys
 	Dialog hotkey_selection_dialog
 	If ButtonPressed = cancel then StopScript
 
-	'Edit the hotkey file
+	'>>> If the user has already selected their hotkeys, the script will open that file and
+	'>>> and read it, storing the contents in the variable name ''favorites_text_file_array''
+	SET oTxtFile = (CreateObject("Scripting.FileSystemObject"))
+	With oTxtFile
+		If .FileExists(hotkeys_text_file_location) Then
+			Set hotkeys = CreateObject("Scripting.FileSystemObject")
+			Set hotkeys_command = hotkeys.OpenTextFile(hotkeys_text_file_location)
+			hotkeys_array = hotkeys_command.ReadAll
+			hotkeys_command.Close
+		Else
+			MsgBox "file not found"
+			Set hotkeys = CreateObject("Scripting.FileSystemObject")
+			Set hotkeys_command = hotkeys.CreateTextFile(hotkeys_text_file_location)
+			hotkeys_command.Write("Hey")
+			hotkeys_command.Close
+		End if
+	END WITH
 
 	'Somehow program the redirects to look at that file and do the magic
 
@@ -148,7 +165,7 @@ function edit_favorites
 
 	'Warning/instruction box
 	MsgBox  "This section will display a dialog with various scripts on it. Any script you check will be added to your favorites menu. Scripts you un-check will be removed. Once you are done making your selection hit ""OK"" and your menu will be updated. " & vbNewLine & vbNewLine &_
-			"Note: you will be unable to edit the list of NEW Scripts and Recommended Scripts."
+			"Note: you will be unable to edit the list of new scripts."
 
 	'An array containing details about the list of scripts, including how they are displayed and stored in the favorites tag
 	'0 => The script name
@@ -183,14 +200,14 @@ function edit_favorites
 
 
 	'>>> If the user has already selected their favorites, the script will open that file and
-	'>>> and read it, storing the contents in the variable name ''user_scripts_array''
+	'>>> and read it, storing the contents in the variable name ''favorites_text_file_array''
 	SET oTxtFile = (CreateObject("Scripting.FileSystemObject"))
 	With oTxtFile
 		If .FileExists(favorites_text_file_location) Then
 			Set fav_scripts = CreateObject("Scripting.FileSystemObject")
 			Set fav_scripts_command = fav_scripts.OpenTextFile(favorites_text_file_location)
 			fav_scripts_array = fav_scripts_command.ReadAll
-			IF fav_scripts_array <> "" THEN user_scripts_array = fav_scripts_array
+			IF fav_scripts_array <> "" THEN favorites_text_file_array = fav_scripts_array
 			fav_scripts_command.Close
 		END IF
 	END WITH
@@ -225,7 +242,7 @@ function edit_favorites
 					col = col + 195
 				END IF
 				'>>> If the script in question is already known to the list of scripts already picked by the user, the check box is defaulted to checked.
-				IF InStr(UCASE(replace(user_scripts_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
+				IF InStr(UCASE(replace(favorites_text_file_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
 					scripts_edit_favs_array(script_position, 1) = checked
 				ELSE
 					scripts_edit_favs_array(script_position, 1) = unchecked
@@ -265,7 +282,7 @@ function edit_favorites
 					col = col + 195
 				END IF
 				'>>> If the script in question is already known to the list of scripts already picked by the user, the check box is defaulted to checked.
-				IF InStr(UCASE(replace(user_scripts_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
+				IF InStr(UCASE(replace(favorites_text_file_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
 					scripts_edit_favs_array(script_position, 1) = checked
 				ELSE
 					scripts_edit_favs_array(script_position, 1) = unchecked
@@ -305,7 +322,7 @@ function edit_favorites
 					col = col + 195
 				END IF
 				'>>> If the script in question is already known to the list of scripts already picked by the user, the check box is defaulted to checked.
-				IF InStr(UCASE(replace(user_scripts_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
+				IF InStr(UCASE(replace(favorites_text_file_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
 					scripts_edit_favs_array(script_position, 1) = checked
 				ELSE
 					scripts_edit_favs_array(script_position, 1) = unchecked
@@ -345,7 +362,7 @@ function edit_favorites
 					col = col + 195
 				END IF
 				'>>> If the script in question is already known to the list of scripts already picked by the user, the check box is defaulted to checked.
-				IF InStr(UCASE(replace(user_scripts_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
+				IF InStr(UCASE(replace(favorites_text_file_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
 					scripts_edit_favs_array(script_position, 1) = checked
 				ELSE
 					scripts_edit_favs_array(script_position, 1) = unchecked
@@ -385,7 +402,7 @@ function edit_favorites
 					col = col + 195
 				END IF
 				'>>> If the script in question is already known to the list of scripts already picked by the user, the check box is defaulted to checked.
-				IF InStr(UCASE(replace(user_scripts_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
+				IF InStr(UCASE(replace(favorites_text_file_array, "-", " ")), UCASE(replace(cs_scripts_array(i).script_name, "-", " "))) <> 0 THEN
 					scripts_edit_favs_array(script_position, 1) = checked
 				ELSE
 					scripts_edit_favs_array(script_position, 1) = unchecked
@@ -475,6 +492,7 @@ Set wshshell = CreateObject("WScript.Shell")
 user_myDocs_folder = wshShell.SpecialFolders("MyDocuments") & "\"
 
 favorites_text_file_location = user_myDocs_folder & "\scripts-cs-favorites.txt"
+hotkeys_text_file_location = user_myDocs_folder & "\scripts-cs-hotkeys.txt"
 
 'switching up the script_repository because the all scripts file is not in the Script Files folder
 all_scripts_repo = script_repository & "/~complete-list-of-scripts.vbs"
@@ -489,19 +507,13 @@ all_scripts_repo = script_repository & "/~complete-list-of-scripts.vbs"
 '========================================================================================================
 '========================================================================================================
 
-'>>> Our script arrays.
-'>>> all_scripts_array will be built from the contents of the user's text file
-'>>> new_scripts will be build automatically by looking at the description of each script in GitHub. If the description includes "NEW" then it is added to the array.
-'>>> mandatory_array is pre-determined
-all_scripts_array = ""
-new_scripts = ""
-'mandatory_array = "ACTIONS - NCP LOCATE" & vbNewLine & "ACTIONS - RECORD IW INFO" & vbNewLine & "ACTIONS - SEND F0104 DORD MEMO" & vbNewLine & "NOTES - ADJUSTMENTS" & vbNewLine & "NOTES - ARREARS MANAGEMENT REVIEW" & vbNewLine & "NOTES - CLIENT CONTACT"
+'>>> favorited_scripts_array will be built from the contents of the user's text file
+favorited_scripts_array = ""
 
 'Does this differently if you're a run_locally user vs not
 If run_locally <> true then
 	'>>> Creating the object needed to connect to the interwebs.
 	SET get_all_scripts = CreateObject("Msxml2.XMLHttp.6.0")
-	'all_scripts_repo = script_repository & "~complete-list-of-scripts.vbs"
 	get_all_scripts.open "GET", all_scripts_repo, FALSE
 	get_all_scripts.send
 	IF get_all_scripts.Status = 200 THEN
@@ -524,125 +536,92 @@ ELSE
 END IF
 
 '>>> Building the array of new scripts
-'>>> If the description of the script includes the word "NEW" then the script file name is added to the array.
 num_of_new_scripts = 0
-new_array = ""
+
+'>>> Looking through the scripts array and determining all of the new ones.
 FOR i = 0 TO Ubound(cs_scripts_array)
-	IF DateDiff("D", cs_scripts_array(i).release_date, date) < 90 THEN new_array = new_array & UCASE(cs_scripts_array(i).category) & " - " & UCASE(replace(replace(cs_scripts_array(i).file_name, ".vbs", " "), "-", " ")) & vbNewLine
+	IF DateDiff("D", cs_scripts_array(i).release_date, date) < 60 THEN 				
+		num_of_new_scripts = num_of_new_scripts + 1		
+		ReDim Preserve new_cs_scripts_array(num_of_new_scripts)
+		SET new_cs_scripts_array(num_of_new_scripts) = NEW cs_script
+		new_cs_scripts_array(num_of_new_scripts).script_name		= cs_scripts_array(i).script_name		
+		new_cs_scripts_array(num_of_new_scripts).category			= cs_scripts_array(i).category			
+		new_cs_scripts_array(num_of_new_scripts).description		= cs_scripts_array(i).description		
+		new_cs_scripts_array(num_of_new_scripts).release_date		= cs_scripts_array(i).release_date		
+		new_cs_scripts_array(num_of_new_scripts).scriptwriter		= cs_scripts_array(i).scriptwriter				
+	end if
 NEXT
 
-'>>> Removing .vbs from the array for the prettification of the display to the users.
-new_array = replace(new_array, ".vbs", "")
+'>>> This handles what happens if there are no new scripts (it'll happen)
+if num_of_new_scripts = 0 then
+	num_of_new_scripts = 1
+	ReDim Preserve new_cs_scripts_array(num_of_new_scripts)
+	SET new_cs_scripts_array(num_of_new_scripts) = NEW cs_script
+	new_cs_scripts_array(num_of_new_scripts).script_name		= "no new scripts found."
+	new_cs_scripts_array(num_of_new_scripts).category			= "none"
+	new_cs_scripts_array(num_of_new_scripts).description		= "none"
+	new_cs_scripts_array(num_of_new_scripts).release_date		= "none"
+	new_cs_scripts_array(num_of_new_scripts).scriptwriter		= "none"
+end if
 
 '>>> Custom function that builds the Favorites Main Menu dialog.
 '>>> the array of the user's scripts
-FUNCTION favorite_menu(user_scripts_array, mandatory_array, new_array, script_location, worker_signature)
+FUNCTION favorite_menu(favorites_text_file_array, script_location)
 	'>>> Splitting the array of all scripts.
-	user_scripts_array = trim(user_scripts_array)
-	user_scripts_array = split(user_scripts_array, vbNewLine)
+	favorites_text_file_array = trim(favorites_text_file_array)
+	favorites_text_file_array = split(favorites_text_file_array, vbNewLine)
 
-	mandatory_array = trim(mandatory_array)
-	mandatory_array = split(mandatory_array, vbNewLine)
+	num_of_user_scripts = ubound(favorites_text_file_array)
+	
 
-	new_array = trim(new_array)
-	new_array = split(new_array, vbNewLine)
+	num_of_scripts = num_of_user_scripts + num_of_new_scripts
 
-	num_of_user_scripts = ubound(user_scripts_array)
-	num_of_mandatory_scripts = ubound(mandatory_array)
-	num_of_new_scripts = ubound(new_array)
-
-	num_of_scripts = num_of_user_scripts + num_of_mandatory_scripts + num_of_new_scripts
-
-	ReDim all_scripts_array(num_of_scripts, 5)
+	ReDim favorited_scripts_array(num_of_scripts, 6)
 	'position 0 = script name
 	'position 1 = script directory
 	'position 2 = button
 	'position 3 = category
 	'position 4 = script name without category
 	'position 5 = state-supported true/false
+	'position 6 = friendly name
 
 	scripts_pos = 0
-	FOR EACH script_path IN user_scripts_array
+	FOR EACH script_path IN favorites_text_file_array
 		IF script_path <> "" THEN
-			all_scripts_array(scripts_pos, 0) = script_path
+			favorited_scripts_array(scripts_pos, 0) = script_path
 			'>>> Creating the correct URL for the github call
-			'>>> When we clean up this for state-wide deployment, we will need determine the appropriate network location for the agency custom scripts
 			IF left(script_path, 5) = "notes" THEN
-				all_scripts_array(scripts_pos, 1) = script_path
-				all_scripts_array(scripts_pos, 3) = "NOTES"
-				all_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 6)
-				all_scripts_array(scripts_pos, 5) = true
+				favorited_scripts_array(scripts_pos, 1) = script_path
+				favorited_scripts_array(scripts_pos, 3) = "NOTES"
+				favorited_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 6)
+				favorited_scripts_array(scripts_pos, 5) = true
 			ELSEIF left(script_path, 7) = "actions" THEN
-				all_scripts_array(scripts_pos, 1) = script_path
-				all_scripts_array(scripts_pos, 3) = "ACTIONS"
-				all_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 8)
-				all_scripts_array(scripts_pos, 5) = true
+				favorited_scripts_array(scripts_pos, 1) = script_path
+				favorited_scripts_array(scripts_pos, 3) = "ACTIONS"
+				favorited_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 8)
+				favorited_scripts_array(scripts_pos, 5) = true
 			ELSEIF left(script_path, 4) = "bulk" THEN
-				all_scripts_array(scripts_pos, 1) = script_path
-				all_scripts_array(scripts_pos, 3) = "BULK"
-				all_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 5)
-				all_scripts_array(scripts_pos, 5) = true
+				favorited_scripts_array(scripts_pos, 1) = script_path
+				favorited_scripts_array(scripts_pos, 3) = "BULK"
+				favorited_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 5)
+				favorited_scripts_array(scripts_pos, 5) = true
 			ELSEIF left(script_path, 11) = "calculators" THEN
-				all_scripts_array(scripts_pos, 1) = script_path
-				all_scripts_array(scripts_pos, 3) = "CALCULATORS"
-				all_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 12)
-				all_scripts_array(scripts_pos, 5) = true
+				favorited_scripts_array(scripts_pos, 1) = script_path
+				favorited_scripts_array(scripts_pos, 3) = "CALCULATORS"
+				favorited_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 12)
+				favorited_scripts_array(scripts_pos, 5) = true
             ELSEIF left(script_path, 9) = "utilities" THEN
-    			all_scripts_array(scripts_pos, 1) = script_path
-    			all_scripts_array(scripts_pos, 3) = "UTILITIES"
-    			all_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 10)
-    			all_scripts_array(scripts_pos, 5) = true
+    			favorited_scripts_array(scripts_pos, 1) = script_path
+    			favorited_scripts_array(scripts_pos, 3) = "UTILITIES"
+    			favorited_scripts_array(scripts_pos, 4) = right(script_path, len(script_path) - 10)
+    			favorited_scripts_array(scripts_pos, 5) = true
 			END IF
-			scripts_pos = scripts_pos + 1
-		END IF
-	NEXT
-
-	FOR EACH script_name IN mandatory_array
-		IF script_name <> "" THEN
-			all_scripts_array(scripts_pos, 0) = script_name
-			'>>> Creating the correct URL for the github call
-			'>>> When we clean up this for state-wide deployment, we will need determine the appropriate network location for the agency custom scripts
-			IF left(script_name, 5) = "NOTES" THEN
-				all_scripts_array(scripts_pos, 1) = "/NOTES/" & script_name & ".vbs"
-				all_scripts_array(scripts_pos, 3) = "NOTES"
-				all_scripts_array(scripts_pos, 4) = right(script_name, len(script_name) - 7)
-				all_scripts_array(scripts_pos, 5) = true
-			ELSEIF left(script_name, 7) = "ACTIONS" THEN
-				all_scripts_array(scripts_pos, 1) = "/ACTIONS/" & script_name & ".vbs"
-				all_scripts_array(scripts_pos, 3) = "ACTIONS"
-				all_scripts_array(scripts_pos, 4) = right(script_name, len(script_name) - 9)
-				all_scripts_array(scripts_pos, 5) = true
-			ELSEIF left(script_name, 4) = "BULK" THEN
-				all_scripts_array(scripts_pos, 1) = "/BULK/" & script_name & ".vbs"
-				all_scripts_array(scripts_pos, 3) = "BULK"
-				all_scripts_array(scripts_pos, 4) = right(script_name, len(script_name) - 6)
-				all_scripts_array(scripts_pos, 5) = true
-			END IF
-			scripts_pos = scripts_pos + 1
-		END IF
-	NEXT
-
-	FOR EACH script_name IN new_array
-		IF script_name <> "" THEN
-			all_scripts_array(scripts_pos, 0) = script_name
-			'>>> Creating the correct URL for the github call
-			'>>> When we clean up this for state-wide deployment, we will need determine the appropriate network location for the agency custom scripts
-			IF left(script_name, 5) = "NOTES" THEN
-				all_scripts_array(scripts_pos, 1) = "/NOTES/" & script_name & ".vbs"
-				all_scripts_array(scripts_pos, 3) = "NOTES"
-				all_scripts_array(scripts_pos, 4) = right(script_name, len(script_name) - 7)
-				all_scripts_array(scripts_pos, 5) = true
-			ELSEIF left(script_name, 7) = "ACTIONS" THEN
-				all_scripts_array(scripts_pos, 1) = "/ACTIONS/" & script_name & ".vbs"
-				all_scripts_array(scripts_pos, 3) = "ACTIONS"
-				all_scripts_array(scripts_pos, 4) = right(script_name, len(script_name) - 9)
-				all_scripts_array(scripts_pos, 5) = true
-			ELSEIF left(script_name, 4) = "BULK" THEN
-				all_scripts_array(scripts_pos, 1) = "/BULK/" & script_name & ".vbs"
-				all_scripts_array(scripts_pos, 3) = "BULK"
-				all_scripts_array(scripts_pos, 4) = right(script_name, len(script_name) - 6)
-				all_scripts_array(scripts_pos, 5) = true
-			END IF
+			
+			'This part reads the complete list of scripts, and then stores the "friendly name" as an item in the array (makes the dialog prettier down the road)
+			for each cs_script_data_from_complete_list in cs_scripts_array
+				if favorited_scripts_array(scripts_pos, 4) = cs_script_data_from_complete_list.file_name then favorited_scripts_array(scripts_pos, 6) = cs_script_data_from_complete_list.script_name
+			next
+			
 			scripts_pos = scripts_pos + 1
 		END IF
 	NEXT
@@ -652,16 +631,17 @@ FUNCTION favorite_menu(user_scripts_array, mandatory_array, new_array, script_lo
 	bulk_count = 0
 	calc_count = 0
 	notes_count = 0
-	FOR i = 0 TO (ubound(user_scripts_array) - 1)
-		IF all_scripts_array(i, 3) = "ACTIONS" THEN
+	utilities_count = 0
+	FOR i = 0 TO (ubound(favorites_text_file_array) - 1)
+		IF favorited_scripts_array(i, 3) = "ACTIONS" THEN
 			actions_count = actions_count + 1
-		ELSEIF all_scripts_array(i, 3) = "BULK" THEN
+		ELSEIF favorited_scripts_array(i, 3) = "BULK" THEN
 			bulk_count = bulk_count + 1
-		ELSEIF all_scripts_array(i, 3) = "CALCULATORS" THEN
+		ELSEIF favorited_scripts_array(i, 3) = "CALCULATORS" THEN
 			calc_count = calc_count + 1
-		ELSEIF all_scripts_array(i, 3) = "NOTES" THEN
+		ELSEIF favorited_scripts_array(i, 3) = "NOTES" THEN
 			notes_count = notes_count + 1
-        ELSEIF all_scripts_array(i, 3) = "UTILITIES" THEN
+        ELSEIF favorited_scripts_array(i, 3) = "UTILITIES" THEN
     		utilities_count = utilities_count + 1
 		END IF
 	NEXT
@@ -671,59 +651,27 @@ FUNCTION favorite_menu(user_scripts_array, mandatory_array, new_array, script_lo
 	'>>> The groupboxes need to grow 10 for each script pushbutton, so the dialog also needs to grow 10 for each script push button. However,
 	'>>> 	the size of each groupbox will always be 15 plus (10 times the number of that kind of script)...
 	dlg_height = 0
-	IF actions_count <> 0 THEN dlg_height = 15 + (10 * actions_count)
-	IF bulk_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (10 * bulk_count))
-	IF calc_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (10 * bulk_count))
-	IF notes_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (10 * notes_count))
-    IF utilities_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (10 * utilities_count))
+	IF actions_count <> 0 THEN dlg_height = 15 + (button_height * actions_count)
+	IF bulk_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (button_height * bulk_count))
+	IF calc_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (button_height * bulk_count))
+	IF notes_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (button_height * notes_count))
+    IF utilities_count <> 0 THEN dlg_height = dlg_height + 15 + (15 + (button_height * utilities_count))
 	dlg_height = dlg_height + 5
 	'>>> The dialog needs to be at least 185 pixels tall. If it is not...because the user has not selected a sufficient number of scripts...then
-	'>>> the script needs to grow to 185.
+	'>>> the dialog needs to grow to 185.
 
-	'>>> Adjusting the height if the user has fewer scripts than what is "recommended" plus the new scripts
-	alt_dlg_height = 60 + (10 * (Ubound(mandatory_array) + 1)) + (10 * (Ubound(new_array) + 1))
-	IF alt_dlg_height > dlg_height THEN dlg_height = alt_dlg_height
+	'>>> Adjusting the height if the user has fewer scripts selected (in the left column) than what is "new" (in the right column).
+	right_col_dlg_height = 60 + (button_height * (Ubound(new_cs_scripts_array) + 1))
+	IF right_col_dlg_height > dlg_height THEN dlg_height = right_col_dlg_height
 
-	'>>> Determining the start row for the push buttons
-	'>>> The position of one groupbox will be determined from the existence of other groupboxes earlier in the alphabet.
-	'>>> The actions start row is 10, and the end row will be 10 plus 15 (for the default height of the groupbox) plus 10 for each ACTIONS script
-	IF actions_count <> 0 THEN
-		actions_start_row = 10
-		actions_end_row = 10 + (15 + (10 * actions_count))
-	ELSE
-		'>>> ...or they will both be 0 when there are not ACTIONS scripts in the user's favorites.
-		actions_start_row = 0
-		actions_end_row = 0
-	END IF
-	'>>> The BULK groupbox start row will be determined by the end of the ACTIONS row...and so on.
-	IF bulk_count <> 0 THEN
-		bulk_start_row = 10 + actions_end_row
-		bulk_end_row = bulk_start_row + (15 + (10 * bulk_count))
-	ELSE
-		bulk_start_row = actions_start_row
-		bulk_end_row = actions_end_row
-	END IF
-	IF calc_count <> 0 THEN
-		calc_start_row = 10 + bulk_end_row
-		calc_end_row = calc_start_row + (15 + (10 * calc_count))
-	ELSE
-		calc_start_row = bulk_start_row
-		calc_end_row = bulk_end_row
-	END IF
-	IF notes_count <> 0 THEN
-		notes_start_row = 10 + calc_end_row
-		notes_end_row = notes_start_row + (15 + (10 * notes_count))
-	ELSE
-		notes_start_row = calc_start_row
-		notes_end_row = calc_end_row
-	END IF
-    IF utilities_count <> 0 THEN
-		utilities_start_row = 10 + notes_end_row
-		utilities_end_row = utilities_start_row + (15 + (10 * utilities_count))
-	ELSE
-		utilities_start_row = notes_start_row
-		utilities_end_row = notes_end_row
-	END IF
+	
+	
+	'>>> Defining some variables for use in the display
+	groupbox_y_pos = dialog_margin
+	left_col_y_pos = groupbox_y_pos + (groupbox_margin * 2)
+	left_col_x_pos = dialog_margin + groupbox_margin 
+	
+	
 
 	'>>> A nice decoration for the user. If they have used Update Worker Signature, then their signature is built into the dialog display.
 	IF worker_signature <> "" THEN
@@ -735,55 +683,60 @@ FUNCTION favorite_menu(user_scripts_array, mandatory_array, new_array, script_lo
 	'>>> The dialog
 	BeginDialog favorites_dialog, 0, 0, 411, dlg_height, dlg_name & " "
   	  ButtonGroup ButtonPressed
+		
 		'>>> User's favorites
-		'>>> Here, we are using the value for the script type start_row to determine the vertical position of each pushbutton.
-		'>>> As we add a pushbutton, we need to increase the value for the start_row by 10 for that kind of script.
-		FOR i = 0 TO (ubound(user_scripts_array) - 1)
-			IF all_scripts_array(i, 3) = "ACTIONS" THEN
-				PushButton 20, actions_start_row + 10, 170, 10, all_scripts_array(i, 4), all_scripts_array(i, 2)
-				actions_start_row = actions_start_row + 10
-			ELSEIF all_scripts_array(i, 3) = "BULK" THEN
-				PushButton 20, bulk_start_row + 10, 170, 10, all_scripts_array(i, 4), all_scripts_array(i, 2)
-				bulk_start_row = bulk_start_row + 10
-			ELSEIF all_scripts_array(i, 3) = "CALCULATORS" THEN
-				PushButton 20, calc_start_row + 10, 170, 10, all_scripts_array(i, 4), all_scripts_array(i, 2)
-				calc_start_row = calc_start_row + 10
-			ELSEIF all_scripts_array(i, 3) = "NOTES" THEN
-				PushButton 20, notes_start_row + 10, 170, 10, all_scripts_array(i, 4), all_scripts_array(i, 2)
-				notes_start_row = notes_start_row + 10
-            ELSEIF all_scripts_array(i, 3) = "UTILITIES" THEN
-				PushButton 20, utilities_start_row + 10, 170, 10, all_scripts_array(i, 4), all_scripts_array(i, 2)
-				utilities_start_row = utilities_start_row + 10
-			END IF
+		'>>> This iterates through an array to display the scripts from the favorites text file, in buttons which can be pressed and will run the script.
+		
+		'Defining these variables before the start of the loop
+		number_of_scripts_in_this_category = 1			
+		button_placeholder = 100
+		
+		'The actual array (this goes through the text file and creates scripts and buttons)
+		FOR i = 0 TO (ubound(favorites_text_file_array) - 1)		
+						
+			'Defines the current category for comparison purposes, and to write out the labels.
+			current_script_category_from_list = favorited_scripts_array(i, 3)
+				
+			'Determines the next script category, but only if it's not at the end of the array (because then we're out and the ubound would error out)
+			if i + 1 < ubound(favorited_scripts_array) - 1 then
+				next_script_category_from_list = favorited_scripts_array(i + 1, 3)
+			end if
+			
+			'Adding the button
+			PushButton left_col_x_pos + groupbox_margin, left_col_y_pos, button_width, button_height, favorited_scripts_array(i, 6), button_placeholder
+			button_placeholder = button_placeholder + 1			'This gets passed to ButtonPressed where it can be refigured as the selected item in the array by subtracting 100
+			
+			'If the current category differs from the next, it's time to make the groupbox
+			if current_script_category_from_list <> next_script_category_from_list then
+				left_col_y_pos = groupbox_y_pos + ((groupbox_margin * 3) + (button_height * number_of_scripts_in_this_category))		'Margin x 3 because we need extra padding on the top, and half the extra on the bottom
+				GroupBox left_col_x_pos, groupbox_y_pos, button_width + (groupbox_margin * 2), (groupbox_margin * 3) + (button_height * number_of_scripts_in_this_category), current_script_category_from_list
+				number_of_scripts_in_this_category = 1
+				groupbox_y_pos = left_col_y_pos
+				left_col_y_pos = left_col_y_pos + (groupbox_margin * 2)
+			else
+				left_col_y_pos = left_col_y_pos + button_height
+				number_of_scripts_in_this_category = number_of_scripts_in_this_category + 1
+			end if			
+
 		NEXT
 
-		'>>> Placing Mandatory Scripts
-		FOR i = ubound(user_scripts_array) to (ubound(user_scripts_array) + (ubound(mandatory_array) - 1))
-			right_hand_row = (20 + (10 * (i - num_of_user_scripts)))
-			PushButton 220, right_hand_row, 180, 10, all_scripts_array(i, 0), all_scripts_array(i, 2)
+		'>>> Placing new scripts on the list! This happens in the right-hand column of the dialog.
+		
+		right_col_y_pos = dialog_margin + (groupbox_margin * 2)
+		
+				
+		'>>> Now we increment through the new scripts, and create buttons for them
+		for i = 1 to num_of_new_scripts
+			PushButton 215, right_col_y_pos, button_width, button_height, ucase(new_cs_scripts_array(i).category) & " - " & new_cs_scripts_array(i).script_name, button_placeholder
+			button_placeholder = button_placeholder + 1			'This gets passed to ButtonPressed where it can be refigured as the selected item in the array by subtracting 100
+			right_col_y_pos = right_col_y_pos + button_height
 		NEXT
 
-		right_hand_row = right_hand_row + 30
-		'>>> Placing new scripts
-		FOR i = (ubound(user_scripts_array) + ubound(mandatory_array)) to (ubound(user_scripts_array) + ubound(mandatory_array) + (ubound(new_array) - 1))
-			PushButton 220, right_hand_row, 180, 10, all_scripts_array(i, 0), all_scripts_array(i, 2)
-			right_hand_row = right_hand_row + 10
-		NEXT
-
-		'>>> Placing groupboxes.
-		'>>> All of the objects need to be placed at the end of the dialog. If they are not, it will throw off the positioning of the PushButtons
-		'>>> which will, in turn, throw off the calculations for which script should be run.
-		'>>> The height and position of each GroupBox is determed dynamically from the number of scripts in the groups previous.
-		'>>> Mandatory and New are always going to be in the there, and located on the right hand side of the DLG.
-        GroupBox 210, 10, 195, 5 + (10 * (Ubound(mandatory_array) + 1)), "Recommended Scripts"
-		GroupBox 210, 20 + (10 * (Ubound(mandatory_array) + 1)), 195, 5 + (10 * (UBound(new_array) + 1)), "NEW SCRIPTS!!!"
-		IF actions_count <> 0 THEN GroupBox 5, 10, 195, (15 + (10 * actions_count)), "ACTIONS"
-		IF bulk_count <> 0 THEN GroupBox 5, actions_end_row + 10, 195, (15 + (10 * bulk_count)), "BULK"
-		IF calc_count <> 0 THEN GroupBox 5, bulk_end_row + 10, 195, (15 + (10 * calc_count)), "CALCULATORS"
-		IF notes_count <> 0 THEN GroupBox 5, calc_end_row + 10, 195, (15 + (10 * notes_count)), "NOTES"
-        IF utilities_count <> 0 THEN GroupBox 5, notes_end_row + 10, 195, (15 + (10 * utilities_count)), "UTILITIES"
-		PushButton 210, dlg_height - 25, 65, 15, "Update Favorites", update_favorites_button
-		PushButton 285, dlg_height - 25, 60, 15, "Update Hotkeys", update_hotkeys_button
+		GroupBox 210, dialog_margin, button_width + (dialog_margin * 2), 5 + (button_height * (UBound(new_cs_scripts_array) + 1)), "NEW SCRIPTS (LAST 60 DAYS)"
+		
+		
+		' PushButton 210, dlg_height - 25, 60, 15, "Update Hotkeys", update_hotkeys_button						<<<<< SEE ISSUE #765
+		PushButton 285, dlg_height - 25, 65, 15, "Update Favorites", update_favorites_button
 		CancelButton 355, dlg_height - 25, 50, 15
 	EndDialog
 
@@ -791,6 +744,9 @@ FUNCTION favorite_menu(user_scripts_array, mandatory_array, new_array, script_lo
 	DIALOG favorites_dialog
 	'>>> Cancelling the script if ButtonPressed = 0
 	IF ButtonPressed = 0 THEN stopscript
+	
+	
+	
 	'>>> Giving user has the option of updating their favorites menu.
 	'>>> We should try to incorporate the chainloading function of the new script_end_procedure to bring the user back to their favorites.
 	IF buttonpressed = update_favorites_button THEN
@@ -800,22 +756,19 @@ FUNCTION favorite_menu(user_scripts_array, mandatory_array, new_array, script_lo
 		call edit_hotkeys
 		StopScript
 	End if
-	'>>> This tells the script which PushButton has been selected.
-	'>>> We need to do ButtonPressed - 1 because of the way that the system assigns a value to ButtonPressed.
-	'>>> When then favorites menu is launched from the Powerpad, the formula is ButtonPressed - 1. But if the menu is hidden behind another menu, then this formula is ButtonPressed - 1 - the number of other buttons ahead of the favorites menu button in that dialog tab order.
-	script_location = all_scripts_array(ButtonPressed - 1, 1)  '!!!! THIS WILL NEED TO BE buttonpressed - (the number of objects created before the PushButtons...which is the dialog itself. don't move the order of the pushbuttons!!
-	script_location = lcase(script_location)
-	script_location = replace(script_location, " ", "-")
-	script_location = replace(script_location, "bulk:-", "")
-	script_location = replace(script_location, "actions:-", "")
-	script_location = replace(script_location, "notes:-", "")
-	script_location = replace(script_location, "notes---", "")
-	script_location = replace(script_location, "actions---", "")
-	script_location = replace(script_location, "bulk---", "")
-	script_location = replace(script_location, "calc:-", "")
-	script_location = replace(script_location, "calc---", "")
-    script_location = replace(script_location, "utilities:-", "")
-	script_location = replace(script_location, "utilities---", "")
+	
+	'Determining the script that was selected, simply by subtracting 100 from the button_placeholder we'd previously defined. This corresponds with the array item selected.
+	selected_script = ButtonPressed - 100
+	
+	'If it's a new script, it'll be larger than the text file array since it's displayed after, so this will create a variable for that too.
+	selected_new_script = selected_script - (ubound(favorites_text_file_array) - 1)
+	
+	'This part takes the selected script integer and determines the file path for it
+	if selected_script < ubound(favorites_text_file_array) then
+		script_location = favorited_scripts_array(selected_script, 1)  '!!!! This works in conjunction with the button_placeholder that's used and incremented for each button. It won't work otherwise.
+	else
+		script_location = new_cs_scripts_array(selected_new_script).category & "/" & new_cs_scripts_array(selected_new_script).file_name
+	end if
 END FUNCTION
 '======================================
 
@@ -830,23 +783,26 @@ With (CreateObject("Scripting.FileSystemObject"))
 		Set fav_scripts = CreateObject("Scripting.FileSystemObject")
 		Set fav_scripts_command = fav_scripts.OpenTextFile(favorites_text_file_location)
 		fav_scripts_array = fav_scripts_command.ReadAll
-		IF fav_scripts_array <> "" THEN user_scripts_array = fav_scripts_array
+		IF fav_scripts_array <> "" THEN favorites_text_file_array = fav_scripts_array
 		fav_scripts_command.Close
 	ELSE
 		'>>> ...otherwise, if the file does not exist, the script will require the user to select their favorite scripts.
-		run_another_script(network_location_of_select_favorites_script)
+		call edit_favorites
 	END IF
 END WITH
 
 '>>> Calling the function that builds the favorites menu.
-CALL favorite_menu(user_scripts_array, mandatory_array, new_array, script_location, worker_signature)
+CALL favorite_menu(favorites_text_file_array, script_location)
 
-'>>> Running the script that is selected.
-'>>> The first determination is whether the script is located on the agency's network.
-'>>> Running the script if it is agency-custom script
+''Figuring out where the script goes...
+'if selected_script < ubound(favorites_text_file_array) then
+'	script_location = favorited_scripts_array(selected_script, 1)
+'end if
+'
+script_URL = script_repository & script_location
+
 
 '>>> Running the script
-script_URL = script_repository & script_location
 If run_locally = true then
     Set run_another_script_fso = CreateObject("Scripting.FileSystemObject")
     Set fso_command = run_another_script_fso.OpenTextFile(script_URL)

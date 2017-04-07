@@ -16,19 +16,21 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
+
+    <script src="js/moment.min.js" charset="utf-8"></script>
+
     <!-- Google fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Oxygen:300,400,700|Source+Sans+Pro:400,700|Source+Code+Pro:400,700" rel="stylesheet">
-	
+
 	<!--Hit our custom CSS-->
 	<link rel="stylesheet" href="css/styles.css">
-	
+
 	<!-- Favicon -->
 	<link rel="shortcut icon" type="image/png" href="img/BlueZoneScripts.png"/>
-    
+
 </head>
 <body>
-    
+
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -40,7 +42,7 @@
                 </button>
                 <a class="navbar-brand" href="index.html">DHS-PRISM-Scripts</a>
             </div>
-                
+
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -48,36 +50,40 @@
                     <li class="active"><a href="issuelist.html">Project tracking/issue list</a></li>
                     <li><a href="https://mn-script-team.github.io/bzs-config-utility/" target="_blank">Get scripts!</a></li>
                 </ul>
-            </div><!-- /.navbar-collapse --> 
-                
+            </div><!-- /.navbar-collapse -->
+
         </div>
     </nav>
 
     <div class="container">
         <h1>Issue list</h1>
         <h3>Note to viewers:</h3>
-        <em>This is a temporary list to test API functionality. While it should be accurate, the final layout may differ significantly.<em>
+        <em>This is a temporary list to test API functionality. While it should be accurate, the final layout may differ significantly.</em>
         <hr>
-          
-        <div class='list-group'>
+
+        <div class="list-group">
             <script type="text/javascript">
                 var apiURL = "https://api.github.com/repos/MN-Script-Team/DHS-PRISM-Scripts/issues?state=open&per_page=100";
-                
+
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", apiURL, false);
                 xhr.send();
-                
+
                 var apiJSON = xhr.responseText;
-                
+
                 var apiParsed = JSON.parse(apiJSON);
-                
+
+                var febResults = 0;
+
                 for (var i = 0; i < apiParsed.length; i++) {
-                    
+
                     var skipThisObject = false;
                     var issueAssignee = "unassigned";
                     var issueLabel = "unlabeled";
                     var issueLabelState = "";
-                    
+                    var createDate = "";
+
+
                     var objJSON = apiParsed[i];
                     for (var key in objJSON) {
                         if (key == "html_url") {
@@ -104,7 +110,7 @@
                                                 var issueAssignee = objAssigneeJSON[assigneeKey];
                                             } else {
                                                 var issueAssignee = issueAssignee + ", " + objAssigneeJSON[assigneeKey];
-                                            }                                    
+                                            }
                                         }
                                     }
                                 }
@@ -148,49 +154,60 @@
                         } else if (key == "pull_request") {
                             var skipThisObject = true;
                             break;
+                        } else if (key == "created_at") {
+                            var createDate = new Date(objJSON[key]);
+                            // Figuring out all stats for February
+                            if (moment(createDate).isBetween('2017-02-01', '2017-02-28') == true) {
+                                febResults ++;
+                            }
                         }
                     }
                     if (skipThisObject != true) {
-                        document.write( 
-                                            "<a href='" + issueURL + "' target='_blank' class='list-group-item'>" + "\n" + 
-                                            "<div class='row'>" + "\n" + 
-                                            "<div class='hidden-xs hidden-sm col-md-1'>" + "\n" + 
-                                                "<h1><span class='label " + issueLabelState + "'><span class='glyphicon " + issueGlyphicon + "' aria-hidden='true'></span></span></h1>" + "\n" + 
-                                            "</div>" + "\n" + 
-                                            "<div class='col-xs-12 col-md-11'>" + "\n" + 
-                                                "<h4 class='list-group-item-heading'>Issue #" + issueID + ": " + issueTitle + "</h4>" + "\n" + 
-                                                "<div class='row'>" + "\n" + 
-                                                    "<div class='col-xs-12 col-md-8'>" + "\n" + 
+                        document.write(
+                                            "<a href='" + issueURL + "' target='_blank' class='list-group-item'>" + "\n" +
+                                            "<div class='row'>" + "\n" +
+                                            "<div class='hidden-xs hidden-sm col-md-1'>" + "\n" +
+                                                "<h1><span class='label " + issueLabelState + "'><span class='glyphicon " + issueGlyphicon + "' aria-hidden='true'></span></span></h1>" + "\n" +
+                                            "</div>" + "\n" +
+                                            "<div class='col-xs-12 col-md-11'>" + "\n" +
+                                                "<h4 class='list-group-item-heading'>Issue #" + issueID + ": " + issueTitle + "</h4>" + "\n" +
+                                                "<div class='row'>" + "\n" +
+                                                    "<div class='col-xs-12 col-md-8'>" + "\n" +
                                                         "<p class='list-group-item-text'><em>" + issueBody + "</em></p>" + "\n" +
-                                                    "</div>" + "\n" + 
-                                                    "<div class='col-xs-12 col-md-4'>" + "\n" + 
+                                                    "</div>" + "\n" +
+                                                    "<div class='col-xs-12 col-md-4'>" + "\n" +
                                                         "<p class='list-group-item-text'><strong>Issue created by: </strong>" + issueUser + "</p>" + "\n" +
                                                         "<p class='list-group-item-text'><strong>Assigned to: </strong>" + issueAssignee + "</p>" + "\n" +
                                                         "<p class='list-group-item-text'><strong>Labels: </strong>" + issueLabel + "</p>" + "\n" +
-                                                    "</div>" + "\n" + 
-                                                "</div>" + "\n" + 
-                                                "</div>" + "\n" + 
-                                            "</div>" + "\n" + 
-                                            "</a>" 
+                                                        "<p class='list-group-item-text'><strong>Create date/time: </strong>" + moment(createDate).format('MM/DD/YYYY h:mm:ss a') + "</p>" + "\n" +
+                                                    "</div>" + "\n" +
+                                                "</div>" + "\n" +
+                                                "</div>" + "\n" +
+                                            "</div>" + "\n" +
+                                            "</a>"
 
                                     );
                     }
                 }
 
+                document.write("<hr>");
+                document.write("<h1>Stats for February</h1>");
+                document.write("<em>Issues created (number off by a bit, something in the function?): </em>" + febResults);
+
 
                 document.write("<hr>");
-                document.write("<h1>Temporary display of JSON block for testing</h1>");        
-                
+                document.write("<h1>Temporary display of JSON block for testing</h1>");
+
                 //if (apiParsed.url instanceof Array) {document.write('This!')} else {document.write('Not this...')};
                 document.write("<hr>");
-                document.write("<pre><code>"); 
+                document.write("<pre><code>");
                 //document.write(JSON.stringify(apiParsed, null, 4));
                 document.write(apiJSON);
                 //document.write(apiParsed);
                 document.write("</code></pre>");
-                
+
             </script>
-            
+
         </div>
     </div>
 

@@ -188,6 +188,15 @@ cs_scripts_array(script_num).scriptwriter		= ""
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "Refer to Mod"
+cs_scripts_array(script_num).category			= "actions"
+cs_scripts_array(script_num).description		= "Starts REAM and sends docs to include employer verifs."
+cs_scripts_array(script_num).release_date		= #03/28/2017#
+cs_scripts_array(script_num).scriptwriter		= ""
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "Returned Mail"
 cs_scripts_array(script_num).category			= "actions"
 cs_scripts_array(script_num).description		= "Updates address to new or unknown, and creates CAAD note."
@@ -239,6 +248,15 @@ cs_scripts_array(script_num).script_name		= "Case Transfer"
 cs_scripts_array(script_num).category			= "bulk"
 cs_scripts_array(script_num).description		= "Gives the user the ability to quickly transfer mulitple cases."
 cs_scripts_array(script_num).release_date		= #01/01/2000#
+cs_scripts_array(script_num).scriptwriter		= ""
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "E0002 No-Pay-To-Spreadsheet"
+cs_scripts_array(script_num).category			= "bulk"
+cs_scripts_array(script_num).description		= "Reviews all E0002 worklists and copies the Worklists Date, Case Number, NCP Name, File Location, Last NCP Contact in 90 days, NCP's Phone Number into a spreadsheet and purges the worklists"
+cs_scripts_array(script_num).release_date		= #03/28/2017#
 cs_scripts_array(script_num).scriptwriter		= ""
 
 script_num = script_num + 1
