@@ -58,6 +58,7 @@
 			<div class="collapse navbar-collapse" id="navbar-collapse-script-links">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="active"><a href="index.html">Changelog</a></li>
+					<li class=""><a href="instructions.html">Script Instructions</a></li>
 					<li><a href="issuelist.html">Project tracking/issue list</a></li>
 					<li><a href="https://mn-script-team.github.io/bzs-config-utility/" target="_blank">Get scripts!</a></li>
 				</ul>
@@ -67,9 +68,8 @@
 	</nav>
 	<div class="container">
 		
-		<div class="page-header">
-  			<h1>PRISM Scripts Changelog</h1> 
-		</div>
+		<h1 class="page-header">PRISM Scripts Changelog</h1> 
+		
 		
 		<span id="IEWarning">
 			<script>
@@ -81,16 +81,19 @@
 			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Please note that this list and the utilities behind it are both in "beta". They are functional but there may be bugs.
 		</div>
 
-		<div class="row">
+		<div class="row" id="about-this-list-text">
 			<div class="col-xs-12">
-				<h2>About this list</h2>
+				<h2 class="page-header">About this list</h2>
 				<p>This is a list of changes implemented by the Minnesota Department of Human Services' BlueZone Scripts PRISM project. It works by scanning each script file in our workspace, and returning a list of all changes made by scriptwriters.</p>
 				<p>To view this changelog, simply select some default dates (for example, "last 30 days"), and press the "submit" button.</p>
 				<p>These functions and all scripts in this project are open source. The source code for the project can be <a href="https://github.com/MN-Script-Team/DHS-PRISM-Scripts" target="_blank">found on GitHub</a>.</p>
 			</div>
 		</div>
-		<hr>
+		
 		<div class="row" id="search-form">
+			<div class="col-xs-12">
+				<h2 class="page-header">Changelog search form</h2>
+			</div>
 			<div class="col-xs-12 col-sm-3" id="defaultDatePicker">
 				<h4>Select some default dates...</h4>
 				<input type="button" onclick="modifyDateRangeLast30Days()" class="btn btn-default btn-md" value="last 30 days" /> <br />
@@ -117,12 +120,14 @@
   					<label><input type="checkbox" value="scriptwriterBranchCheckbox" id="scriptwriterBranchCheckbox" checked>Use scriptwriter branch</label>
 				</div>
 			</div>
-			<div class="col-xs-12 col-sm-1">
+			<div class="col-xs-12 col-sm-2" id="goButtonColumn">
 				<h4>Go!</h4>
-				<input id="goButton" type="button" onclick="displayChangelogInfo()" class="btn btn-primary btn-md" value="Submit" />
+				<input id="goButton" type="button" onclick="displaySpinner()" class="btn btn-primary btn-md" value="Submit" />
+				
 			</div>
+			<hr />
 		</div>
-		<hr />
+		
 		
 		<table class="table" id="changelogTable">
     		<thead>

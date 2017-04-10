@@ -43,14 +43,24 @@ function msieversion() {
     return false;
 }
 
-function displayChangelogInfo() {
+function displaySpinner() {
+    // Adds a loading spinner
+    var goButtonColumn = document.getElementById("goButtonColumn");
+    goButtonColumn.insertAdjacentHTML('beforeend', 
+        //'<div id="loading"><img id="loading-image" src="img/loading.gif" alt="Loading..." /></div>'
+        '<img id="loading-image" src="img/loading.gif" alt="Loading..." />'
+    );
     
+    // Now, run the changelog info
+    displayChangelogInfo();
+}
+
+function displayChangelogInfo() {
+        
     // Get the span for changelog contents, which is adds to later when we've retrieved details.
     var listOfScriptsHTML = document.getElementById("changelogContents");
     
     // Removes any existing details in the HTML doc (in case the report is re-run without refreshing)
-    
-    //listOfScriptsHTML.innerHTML = "";
     var tableRows = listOfScriptsHTML.getElementsByTagName('tr');
     var rowCount = tableRows.length;
 
@@ -60,10 +70,7 @@ function displayChangelogInfo() {
     
     
     
-    // Adds a loading spinner
-    //listOfScriptsHTML.insertAdjacentHTML('beforeend', 
-    //    '<div id="loading"><img id="loading-image" src="img/loading.gif" alt="Loading..." /></div>'
-    //);
+
     
     // Storing the changelog_update string in a variable, which we'll use in our regex search later
     var functionToCheckFor = "changelog_update";
@@ -164,11 +171,6 @@ function displayChangelogInfo() {
                                             // This is the part that writes to the HTML doc
                                             listOfScriptsHTML.insertAdjacentHTML('beforeend', 
                                             
-                                            //"<h4><a href=\'" + scriptURL + "\' target=\'_blank\'>" + scriptCategory.toUpperCase() + " - " + scriptFriendlyName + "</a></h4> \n" + 
-                                            //"<h5>" + changelogEntryDate.toDateString() + "</h5> \n" + 
-                                            //"<p>" + changelogEntryText + "</p> \n" + 
-                                            //"<p><strong> Completed by " + changelogEntryScriptwriter + ". </strong></p>"
-                                            //);
                                             "<tr> \n" +
                                             "    <td>" + scriptCategory.toUpperCase() + "</td> \n" + 
                                             "    <td><a href=\'" + scriptURL + "\' target=\'_blank\'>" + scriptFriendlyName + "</a></td> \n" + 
@@ -191,6 +193,13 @@ function displayChangelogInfo() {
         }
     }
     request.send(null);
+    
+    // Clear date selector
+    var searchFormContents = document.getElementById("search-form");
+    searchFormContents.innerHTML = "";
+    
+    var aboutContents = document.getElementById("about-this-list-text");
+    aboutContents.innerHTML = "";
 }
 
 function sortTable(n) {
