@@ -165,6 +165,9 @@ nav li {
     font-size: 20px;
     font-weight: bold;
 }
+.script-name {
+    font-weight: bold;
+}
 .tag-buttons {
     font-family: 'Calibri', sans-serif;
     font-weight: bold;

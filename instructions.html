@@ -17,23 +17,17 @@
 	  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	
-	<!-- Bootstrap datepicker -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css" integrity="sha256-LPN+eTpTPBqagrVriv55Ec3nMrGY4CdujtnzMBrAwMA=" crossorigin="anonymous" />
-
 	<!--Hit our custom CSS-->
 	<link rel="stylesheet" href="css/styles.css">
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" type="image/png" href="img/BlueZoneScripts.png"/>
-
-	<!--Hit our custom JavaScript-->
-	<script src="js/changelog-reader.js" charset="utf-8"></script>	
-	
-	<!--Hit moment.js-->
-	<script src="js/moment.min.js" charset="utf-8"></script>	
 	
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	
+	<!--Hit our custom JavaScript-->
+	<script src="js/instructions-reader.js" charset="utf-8"></script>	
 	
 
 </head>
@@ -66,9 +60,9 @@
 	</nav>
 	<div class="container">
 		
-		<div class="page-header">
-  			<h1 id="pageHeaderText">PRISM Scripts Instructions</h1> 
-		</div>
+		
+  		<h1 class="page-header" id="pageHeaderText">PRISM Scripts Instructions</h1> 
+		
 		
 		<span id="IEWarning">
 			<script>
@@ -76,34 +70,33 @@
 			</script>
 		</span>
 
-		<div class="alert alert-info" role="info">
-			<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Please note that this list and the utilities behind it are both in "beta". They are functional but there may be bugs.
+		<div class="alert alert-danger" role="alert">
+			<p><strong>Please note:</strong> while this list is a complete list of scripts, the porting of instructions from DHS-SIR is not complete, and the utilities behind displaying this information are in "beta". There may be display bugs while we continue moving instructions from DHS-SIR.</p>
 		</div>
 
 		<span id="scriptListArea">
-
 			<div class="row">
 				<div class="col-xs-12">
-					<h2>About this document</h2>
+					<h2 class="page-header">About this document</h2>
 					<p>This is a list of instructions for using the Minnesota Department of Human Services' BlueZone Scripts for PRISM. It works by scanning each script file in our workspace, and returning a list of instructions based on specific lines of code in each script.</p>
 					<p>To view these instructions, simply select a script from the list below.</p>
 					<p>These functions and all scripts in this project are open source. The source code for the project can be <a href="https://github.com/MN-Script-Team/DHS-PRISM-Scripts" target="_blank">found on GitHub</a>.</p>
 				</div>
 			</div>
-			<hr>
+			
 
 		
 		
 		
-			<input id="goButton" type="button" onclick="openFavoritesForTesting()" class="btn btn-primary btn-md" value="utilities/favorites-list.vbs" />
+			
 			
 			<table class="table" id="scriptListTable">
 	    		<thead>
 	      			<tr>
-						<th class="col-md-1" role="button" onclick="sortTable(0)">Category</th>
-	        			<th class="col-md-3" role="button" onclick="sortTable(1)">Script</th>
+						<th class="col-md-3" role="button" onclick="sortTable(0)">Script</th>
+	        			<th class="col-md-1" role="button" onclick="sortTable(1)">Category</th>
 	        			<th class="col-md-6" role="button" onclick="sortTable(2)">Description</th>
-						<th class="col-md-1" role="button" onclick="sortTable(3)">Has instructions?</th>
+						<th class="col-md-1" role="button" onclick="sortTable(3)">Has instructions</th>
 	      			</tr>
 	    		</thead>
 	    		<tbody id="scriptListContents">
@@ -120,122 +113,13 @@
 			<div class="col-xs-12 col-sm-4" id="testspan2"></div>
 		</div>
 		
-		<script>
-		
-			// This function will be replaced with a list that can pass the window.open to the url
-        	$("#goButton").click(function(){
-          		window.open("instructions.html?script=utilities%2Ffavorites-list.vbs", "_self");
-        	});
- 
-		
-			$(document).ready(function(){
-
-				// Setup config
-				var params = { doc: [] };
-				
-				// Setting up this variable, which is manipulated inside parseURLParams. This is used later to determine if fetchScript should be run.
-				var queryStringFound = false;
-				
-				// Parse URL Params
-				function parseURLParams(){
-					$.each(location.search.replace(/\?/g,"").split(/\&/g), function(k, v) { 
-						var param = v.split(/\=/g);
-						params[param[0]] = param[1]; 
-						if (param[0] != "") {queryStringFound = true};						// Sets an item for figuring out if a query string was found on the page
-					});
-				}
-				
-				// Sets up cross-site scripting, necessary for IE
-				jQuery.support.cors = true;
-
-				function fetchScript(callback){
-					$.ajax({
-						url: "https://raw.githubusercontent.com/MN-Script-Team/DHS-PRISM-Scripts/VKC-745-instructions-docstring-intro/" + params.script,
-						dataType: 'text',
-						success: function( data ){
-							callback(data);
-						},
-						error: function( data ){ 
-							// Just a simple readout for now because we're very much testing this.
-							alert(JSON.stringify(data));
-						}
-					});
-				}
-				
-				// Compile doc data into DOM
-				function compileDoc(){
-					// From original script
-					$("#scriptListArea").remove();
-					// Add elems to DOM
-					$.each(params.doc,function(k,v){
-						if(v.tagName == "P") $('#testspan').append(v);
-						else $('#testspan2').append(v);
-					})	
-				}
-				
-				
-
-				// Parse URL params 
-				parseURLParams();
-				
-				// alert(queryStringFound);
-				
-				
-				
-				
-				
-
-				// If a query string was passed through, run fetchscript, parse on success
-				if (queryStringFound == true) {
-					
-					// Setup title
-					$("#pageHeaderText").text("Instructions: " + decodeURIComponent(params.script));
-					
-					fetchScript(function(script){
-						//Parse Data
-						params.code = script.split(/\n/mg);
-						$.each(params.code,function(k,v){
-							// Reviews the code for key elements and creates HTML elems based on those
-							var elem, parsedData;
-							if(v.indexOf("'~~~~~") > -1) {
-								parsedData = v.replace("'~~~~~","").trim();
-								elem = $('<p>',{ 'text': parsedData });
-							}
-							else if(v.indexOf("'+++++") > -1){
-								parsedData = v.replace("'+++++","").trim();
-								elem = $('<img>',{ 'src': parsedData });
-							}
-							else if(v.indexOf("'*****") > -1){
-								parsedData = v.replace("'*****","").trim();
-								elem = $('<figcaption>',{ 'text': parsedData, 'class': 'figure-caption' });
-							}
-							if(elem) params.doc.push(elem[0]);
-						});
-						// Run DOM compiler
-						compileDoc();
-					});
-				}
-
-			});
-
-		</script>
+	
 		
 	</div>
 	
+
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js" integrity="sha256-zXNrZH6Aqd2T5QyZumro0VuxbhdKhOiQhxtw6YxgjUM=" crossorigin="anonymous"></script>
-	
-	<!-- jQuery for the datepicker -->
-	<script>
-		$(function(){
-			$('#search-form .input-daterange').datepicker({
-				maxViewMode: 2,
-    			todayBtn: "linked"
-			});
-		});
-	</script>
-
 </body>
 </html>
