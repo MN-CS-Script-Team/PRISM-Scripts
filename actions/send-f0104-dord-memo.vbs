@@ -40,6 +40,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("04/11/2017", "Added error handling to ensure that a recipient is selected, also added error handling to make sure script gets into DORD.", "Charles Potter, Anoka County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -82,7 +83,11 @@ FUNCTION write_value_and_transmit(text, row, col)
 END FUNCTION
 
 FUNCTION write_text_to_DORD(string_to_write, recipient)
-	CALL navigate_to_PRISM_screen("DORD")
+	DO
+		CALL navigate_to_PRISM_screen("DORD")
+		EMReadscreen DORD_check, 4, 21, 75
+		IF DORD_check <> "DORD" THEN PF3
+	LOOP until DORD_check = "DORD"
 	EMWriteScreen "C", 3, 29
 	transmit
 	EMWriteScreen "A", 3, 29
@@ -245,10 +250,10 @@ transmit
 
 'Shows dialog, checks to make sure we're still in PRISM (not passworded out)
 DO
-	error_msg = ""
+	err_msg = ""
 	Dialog memo_dialog
 	IF buttonpressed = 0 THEN stopscript
-
+	IF recipient_code = "Select One" THEN err_msg = "Please select a recipient" & vbCr
 
 	IF buttonpressed = spell_button THEN
 
@@ -271,8 +276,9 @@ DO
 		CALL write_text_to_msgbox(message_text, recipient_code)
 	End IF
 
+	IF err_msg <> "" THEN MsgBox "*** NOTICE!!! ***" & vbCr  & vbCr & err_msg & vbCr & vbCr & "Please resolve for the script to continue."
 
-LOOP UNTIL buttonpressed <> preview_button and buttonpressed <> spell_button and error_msg = ""
+LOOP UNTIL buttonpressed <> preview_button and buttonpressed <> spell_button and err_msg = ""
 
 
 
