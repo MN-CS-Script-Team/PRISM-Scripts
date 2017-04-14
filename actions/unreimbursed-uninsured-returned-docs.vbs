@@ -43,7 +43,8 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
-call changelog_update("03/28/2017", "You can now add the County Name for the Affidavit of Service.", "Gretchen Thornbrugh, Dakota Co.")
+call changelog_update("04/10/2017", "NCOD debt/arrears field is coded D and CPOD debt/arrears field is coded A.", "Gretchen Thornbrugh, Dakota County.")
+call changelog_update("03/28/2017", "You can now add the County Name for the Affidavit of Service.", "Gretchen Thornbrugh, Dakota County.")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 
 'Actually displays the changelog. This function uses a text file located in the My Documents folder. It stores the name of the script file and a description of the most recent viewed change.
@@ -397,10 +398,11 @@ Loop until err_msg = ""
 		EMWriteScreen "n", 13, 12
 		EMWriteScreen Co_Seq, 12, 55
 		EMWriteScreen jdgmt_number, 12, 74
+		EMWriteScreen "D", 18, 44
 		EMWriteScreen "y", 18, 57
 		EMWriteScreen beg_date, 14, 68 
 		transmit
-		'transmit
+		
 	
 	'reading ncod success
 		EMReadScreen ncod_success, 18 , 24, 34
@@ -694,7 +696,8 @@ Loop until err_msg = ""
 		EMWriteScreen "N", 13, 12 
 		EMWriteScreen Co_Seq, 12, 55 
 		EMWriteScreen beg_date, 14, 68
-		EMWriteScreen "D", 18, 57
+		EMWriteScreen "A", 18, 57
+		EMWriteScreen "N", 18, 71
 		transmit
 	
 	
