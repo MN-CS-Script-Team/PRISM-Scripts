@@ -144,34 +144,28 @@ function edit_favorites
 	'>>> The gobbins that happen before the user sees anything. <<<
 	'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-
-	'Looks up the script details online (or locally if you're a scriptwriter)
-
-	If run_locally <> true then
-
-		'Creating the object to the URL a la text file
-		SET get_all_scripts = CreateObject("Msxml2.XMLHttp.6.0")
-
-		'Building an array of all scripts
-		'Opening the URL for the given main menu
-		get_all_scripts.open "GET", all_scripts_repo, FALSE
-		get_all_scripts.send
-		IF get_all_scripts.Status = 200 THEN
-			Set filescriptobject = CreateObject("Scripting.FileSystemObject")
-			Execute get_all_scripts.responseText
-		ELSE
-			'If the script cannot open the URL provided...
-			MsgBox 	"Something went wrong with the URL: " & all_scripts_repo
-			stopscript
-		END IF
-	ELSE
-		Set run_another_script_fso = CreateObject("Scripting.FileSystemObject")
-		Set fso_command = run_another_script_fso.OpenTextFile(all_scripts_repo)
-		text_from_the_other_script = fso_command.ReadAll
-		fso_command.Close
-		Execute text_from_the_other_script
-	END IF
+	
+	If list_of_scripts_ran <> true then
+		' Looks up the script details online (or locally if you're a scriptwriter)
+		If run_locally <> true then
+			SET get_all_scripts = CreateObject("Msxml2.XMLHttp.6.0")				' Creating the object to the URL a la text file
+			get_all_scripts.open "GET", all_scripts_repo, FALSE						' Creating an AJAX object
+			get_all_scripts.send													' Opening the URL for the given main menu
+			IF get_all_scripts.Status = 200 THEN									' 200 means great success
+				Set filescriptobject = CreateObject("Scripting.FileSystemObject")	' Create an FSO for the script object
+				Execute get_all_scripts.responseText								' Execute the script (building an array of all scripts)
+			ELSE																	' If the script cannot open the URL provided...
+				MsgBox 	"Something went wrong with the URL: " & all_scripts_repo	' Tell the worker
+				stopscript															' Stop the script
+			END IF
+		ELSE																		' If it's set as run_locally...
+			Set run_another_script_fso = CreateObject("Scripting.FileSystemObject")	' Create an FSO to read the script list file
+			Set fso_command = run_another_script_fso.OpenTextFile(all_scripts_repo)	' Create a command object to run the script list object
+			text_from_the_other_script = fso_command.ReadAll						' Read the file
+			fso_command.Close														' Close the file
+			Execute text_from_the_other_script										' Execute the script (building an array of all scripts)
+		END If
+	end if
 
 	'Warning/instruction box
 	MsgBox  "This section will display a dialog with various scripts on it. Any script you check will be added to your favorites menu. Scripts you un-check will be removed. Once you are done making your selection hit ""OK"" and your menu will be updated. " & vbNewLine & vbNewLine &_
@@ -504,8 +498,12 @@ user_myDocs_folder = wshShell.SpecialFolders("MyDocuments") & "\"
 favorites_text_file_location = user_myDocs_folder & "\scripts-cs-favorites.txt"
 hotkeys_text_file_location = user_myDocs_folder & "\scripts-cs-hotkeys.txt"
 
-'switching up the script_repository because the all scripts file is not in the Script Files folder
-all_scripts_repo = script_repository & "/~complete-list-of-scripts.vbs"
+'Setting up the all_scripts_repo to work with the defined script_repository. If undefined it'll go with master (implies it's a scriptwriter testing)
+If script_repository <> "" then
+	all_scripts_repo = script_repository & "/~complete-list-of-scripts.vbs"
+Else
+	all_scripts_repo = "https://raw.githubusercontent.com/MN-Script-Team/DHS-PRISM-Scripts/master/~complete-list-of-scripts.vbs"
+End if
 
 '========================================================================================================
 '========================================================================================================
@@ -519,31 +517,56 @@ all_scripts_repo = script_repository & "/~complete-list-of-scripts.vbs"
 
 '>>> favorited_scripts_array will be built from the contents of the user's text file
 favorited_scripts_array = ""
+'
+''Does this differently if you're a run_locally user vs not
+'If run_locally <> true then
+'	'>>> Creating the object needed to connect to the interwebs.
+'	SET get_all_scripts = CreateObject("Msxml2.XMLHttp.6.0")
+'	get_all_scripts.open "GET", all_scripts_repo, FALSE
+'	get_all_scripts.send
+'	IF get_all_scripts.Status = 200 THEN
+'		Set filescriptobject = CreateObject("Scripting.FileSystemObject")
+'		Execute get_all_scripts.responseText
+'	ELSE
+'		'>>> Displaying the error message when the script fails to connect to a specific main menu.
+'		'>>> the replace & right bits are there to display the main menu in a way that is clear to the user.
+'		'>>> We are going to display the right length minus 99 because there are 99 characters between the start of the https and the last / before the main menu name.
+'		'>>> That length needs to be updated when we go state-wide.
+'		MsgBox("Something went wrong grabbing trying to locate All Scripts File. Please contact scripts administrator.")
+'		stopscript
+'	END IF
+'ELSE
+'	Set run_another_script_fso = CreateObject("Scripting.FileSystemObject")
+'	Set fso_command = run_another_script_fso.OpenTextFile(all_scripts_repo)
+'	text_from_the_other_script = fso_command.ReadAll
+'	fso_command.Close
+'	Execute text_from_the_other_script
+'END IF
+'
 
-'Does this differently if you're a run_locally user vs not
-If run_locally <> true then
-	'>>> Creating the object needed to connect to the interwebs.
-	SET get_all_scripts = CreateObject("Msxml2.XMLHttp.6.0")
-	get_all_scripts.open "GET", all_scripts_repo, FALSE
-	get_all_scripts.send
-	IF get_all_scripts.Status = 200 THEN
-		Set filescriptobject = CreateObject("Scripting.FileSystemObject")
-		Execute get_all_scripts.responseText
-	ELSE
-		'>>> Displaying the error message when the script fails to connect to a specific main menu.
-		'>>> the replace & right bits are there to display the main menu in a way that is clear to the user.
-		'>>> We are going to display the right length minus 99 because there are 99 characters between the start of the https and the last / before the main menu name.
-		'>>> That length needs to be updated when we go state-wide.
-		MsgBox("Something went wrong grabbing trying to locate All Scripts File. Please contact scripts administrator.")
-		stopscript
-	END IF
-ELSE
-	Set run_another_script_fso = CreateObject("Scripting.FileSystemObject")
-	Set fso_command = run_another_script_fso.OpenTextFile(all_scripts_repo)
-	text_from_the_other_script = fso_command.ReadAll
-	fso_command.Close
-	Execute text_from_the_other_script
-END IF
+If list_of_scripts_ran <> true then
+	' Looks up the script details online (or locally if you're a scriptwriter)
+	If run_locally <> true then
+		SET get_all_scripts = CreateObject("Msxml2.XMLHttp.6.0")				' Creating the object to the URL a la text file
+		get_all_scripts.open "GET", all_scripts_repo, FALSE						' Creating an AJAX object
+		get_all_scripts.send													' Opening the URL for the given main menu
+		IF get_all_scripts.Status = 200 THEN									' 200 means great success
+			Set filescriptobject = CreateObject("Scripting.FileSystemObject")	' Create an FSO for the script object
+			Execute get_all_scripts.responseText								' Execute the script (building an array of all scripts)
+		ELSE																	' If the script cannot open the URL provided...
+			MsgBox 	"Something went wrong with the URL: " & all_scripts_repo	' Tell the worker
+			stopscript															' Stop the script
+		END IF
+	ELSE																		' If it's set as run_locally...
+		Set run_another_script_fso = CreateObject("Scripting.FileSystemObject")	' Create an FSO to read the script list file
+		Set fso_command = run_another_script_fso.OpenTextFile(all_scripts_repo)	' Create a command object to run the script list object
+		text_from_the_other_script = fso_command.ReadAll						' Read the file
+		fso_command.Close														' Close the file
+		Execute text_from_the_other_script										' Execute the script (building an array of all scripts)
+	END If
+end if
+
+
 
 '>>> Building the array of new scripts
 num_of_new_scripts = 0

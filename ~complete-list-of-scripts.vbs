@@ -17,6 +17,7 @@ class cs_script
 end class
 
 
+
 'This variable must always start at zero. It figures out how many buttons it needs to process and create.
 script_num = 0
 
@@ -595,6 +596,15 @@ cs_scripts_array(script_num).scriptwriter		= "Robert Fewins-Kalb"
 script_num = script_num + 1
 ReDim Preserve cs_scripts_array(script_num)
 SET cs_scripts_array(script_num) = NEW cs_script
+cs_scripts_array(script_num).script_name		= "Favorites List"
+cs_scripts_array(script_num).category			= "utilities"
+cs_scripts_array(script_num).description		= "A user-customizable list of favorite scripts."
+cs_scripts_array(script_num).release_date		= #04/04/2016#
+cs_scripts_array(script_num).scriptwriter		= "Veronica Cary, Robert Fewins-Kalb"
+
+script_num = script_num + 1
+ReDim Preserve cs_scripts_array(script_num)
+SET cs_scripts_array(script_num) = NEW cs_script
 cs_scripts_array(script_num).script_name		= "MAXIS Screen Finder"
 cs_scripts_array(script_num).category			= "utilities"
 cs_scripts_array(script_num).description		= "Displays a list of MAXIS screens you can select."
@@ -636,3 +646,7 @@ cs_scripts_array(script_num).category			= "utilities"
 cs_scripts_array(script_num).description		= "Allows you to maintain a default signature that loads in all scripts."
 cs_scripts_array(script_num).release_date		= #01/01/2000#
 cs_scripts_array(script_num).scriptwriter		= "Robert Fewins-Kalb"
+
+' -----------------------------
+' This allows the favorites-list script to skip re-reading this file. This variable is used in that script.
+list_of_scripts_ran = true
