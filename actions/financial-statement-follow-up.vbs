@@ -155,7 +155,7 @@ EMWriteScreen "M", 3, 029
 
 EMSetCursor 16, 004
 
-Call Write_variable_in_CAAD("Finacial Statement follow up letter send to " & Left(recipient_code, 3))
+Call Write_variable_in_CAAD("Financial Statement follow up letter send to " & Left(recipient_code, 3))
 transmit
 
 
@@ -230,22 +230,25 @@ IF recipient_code = "BOTH - CP and NCP" THEN
 	PF9									'Printing CP Letter
 	Transmit
 
-	CALL navigate_to_PRISM_screen("CAAD")
-	EMWriteScreen "D", 8, 005
-	EMWriteScreen "D", 9, 005
-	transmit
-	EMWriteScreen "M", 3, 029
-	EMSetCursor 16, 004
-	Call Write_variable_in_CAAD("Finacial Statement follow up letter send to CP")
-	transmit
-	F3
-	EMWriteScreen "M", 3, 029
-	EMSetCursor 16, 004
-	Call Write_variable_in_CAAD("Finacial Statement follow up letter send to NCP")
-	Transmit
-	F3
+CALL navigate_to_PRISM_screen("CAAD")							'modifying and noting the caad note that the letter was sent
+EMWriteScreen "D", 8, 005
+transmit
+EMWriteScreen "M", 3, 029
+EMSetCursor 16, 004
+Call Write_variable_in_CAAD("Financial Statement follow up letter send to CP")
+transmit
+PF3
+EMWriteScreen "D", 9, 005
+Transmit
+EMWriteScreen "M", 3, 029
+EMSetCursor 16, 004
+Call Write_variable_in_CAAD("Financial Statement follow up letter send to NCP")
+Transmit
+PF3
 
 END IF
 
+
+script_end_procedure("")
 
 script_end_procedure("")
