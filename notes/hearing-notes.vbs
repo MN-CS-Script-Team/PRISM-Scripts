@@ -40,6 +40,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("05/02/2017", "Added the option to enter date of actual hearing in dialog box which will be the date the CAAD note will be saved.", "Heather Allen, Scott County")
 call changelog_update("11/21/2016", "This script has been updated to include a Review Hearing and Paternity Hearing selection in the Expro Dropdown list", "Kallista Imdieke, Stearns County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
 				
@@ -52,62 +53,69 @@ call convert_array_to_droplist_items(county_attorney_array, county_attorney_list
 call convert_array_to_droplist_items(child_support_magistrates_array, child_support_magistrates_list)					'County magistrates
 call convert_array_to_droplist_items(county_judge_array, county_judge_list)												'County judges
 
+
 'DIALOGS==================================================================================================================================================
 'This dialog has been modified to show a dynamic county_attorney_list and child_support_magistrates_list from Global Variables. As such, it cannot be directly edited using dialog editor, without re-adding the preceding variable.
-BeginDialog hearing_notes_expro_dialog, 0, 0, 321, 220, "Date of the Hearing ExPRO"
-  Text 5, 5, 80, 10, "Motion before the Court"
-  ComboBox 85, 5, 165, 15, "Select one or type in other motion:"+chr(9)+"MES 256 Action"+chr(9)+"Motion to Set"+chr(9)+"Continuance"+chr(9)+"License Suspension Appeal"+chr(9)+"COLA motion"+chr(9)+"Modification/RAM"+chr(9)+"UFM - Register for Modification"+chr(9)+"Paternity"+chr(9)+"Review Hearing", motion_before_court
-  Text 5, 25, 85, 10, "Child Support Magistrate"
-  DropListBox 90, 25, 85, 15, "Select one:"+chr(9)+child_support_magistrates_list, child_support_magistrate
-  Text 180, 25, 55, 10, "County Attorney"
-  DropListBox 235, 25, 85, 15, "Select one:"+chr(9)+county_attorney_list, CAO_list
-  CheckBox 5, 50, 50, 10, "NCP present", NCP_present_check
-  Text 60, 50, 60, 10, "Represented by:"
-  EditBox 115, 50, 85, 15, NCP_represented_by
-  CheckBox 5, 65, 50, 10, "CP present", CP_present_check
-  Text 60, 65, 55, 10, "Represented by:"
-  EditBox 115, 65, 85, 15, CP_represented_by
-  Text 5, 90, 70, 10, "Details of the hearing"
-  EditBox 75, 90, 170, 15, details_of_the_hearing
-  CheckBox 5, 110, 100, 10, "Driver's license addressed", DL_addressed_check
-  Text 20, 125, 105, 10, "Details of drivers license status"
-  EditBox 130, 125, 155, 15, dl_details
-  Text 10, 145, 70, 10, "Review Hearing Date"
-  EditBox 85, 145, 65, 15, review_hearing_date
-  Text 150, 175, 60, 10, "Worker signature"
-  EditBox 215, 175, 90, 15, worker_signature
+BeginDialog hearing_notes_expro_dialog, 0, 0, 321, 230, "Date of the Hearing ExPRO"
+  Text 5, 10, 55, 10, "Date of Hearing"
+  EditBox 60, 5, 105, 15, enter_date
+  Text 5, 30, 80, 10, "Motion before the Court"
+  ComboBox 90, 25, 165, 15, "Select one or type in other motion:"+chr(9)+"MES 256 Action"+chr(9)+"Motion to Set"+chr(9)+"Continuance"+chr(9)+"License Suspension Appeal"+chr(9)+"COLA motion"+chr(9)+"Modification/RAM"+chr(9)+"UFM - Register for Modification"+chr(9)+"Paternity"+chr(9)+"Review Hearing", motion_before_court
+  Text 5, 50, 85, 10, "Child Support Magistrate"
+  DropListBox 90, 45, 85, 15, "Select one:"+chr(9)+ child_support_magistrates_list, child_support_magistrate
+  Text 180, 50, 55, 10, "County Attorney"
+  DropListBox 235, 45, 85, 15, "Select one:"+chr(9)+ county_attorney_list, CAO_list
+  CheckBox 25, 75, 50, 10, "NCP present", NCP_present_check
+  Text 80, 75, 60, 10, "Represented by:"
+  EditBox 135, 70, 85, 15, NCP_represented_by
+  CheckBox 25, 95, 50, 10, "CP present", CP_present_check
+  Text 80, 95, 55, 10, "Represented by:"
+  EditBox 135, 90, 85, 15, CP_represented_by
+  Text 5, 120, 70, 10, "Details of the hearing"
+  EditBox 80, 115, 170, 15, details_of_the_hearing
+  CheckBox 5, 140, 100, 10, "Driver's license addressed", DL_addressed_check
+  Text 25, 155, 105, 10, "Details of drivers license status"
+  EditBox 130, 150, 155, 15, dl_details
+  Text 10, 180, 70, 10, "Review Hearing Date"
+  EditBox 85, 175, 65, 15, review_hearing_date
+  Text 155, 195, 60, 10, "Worker signature"
+  EditBox 215, 190, 90, 15, worker_signature
   ButtonGroup ButtonPressed
-    OkButton 200, 200, 50, 15
-    CancelButton 255, 200, 50, 15
+    OkButton 200, 210, 50, 15
+    CancelButton 255, 210, 50, 15
+  Text 170, 10, 50, 10, "(mm/dd/yyyy)"
 EndDialog
 
 
 'This dialog has been modified to show a dynamic county_attorney_list and county_judge_list from Global Variables. As such, it cannot be directly edited using dialog editor, without re-adding the preceding variable.
 BeginDialog hearing_notes_judicial_dialog, 0, 0, 321, 260, "Date of the Hearing Judicial"
-  Text 5, 5, 80, 10, "Motion before the Court"
-  ComboBox 85, 5, 155, 15, "Select one or type in other motion:"+chr(9)+"Initial Contempt of Court"+chr(9)+"Contempt Review"+chr(9)+"Continued Contempt Motion"+chr(9)+"Paternity Action", motion_before_court
-  Text 5, 25, 65, 10, "District Court Judge"
-  DropListBox 75, 25, 85, 15, "Select one:" +chr(9)+ county_judge_list, district_court_judge
-  Text 5, 45, 55, 10, "County Attorney"
-  DropListBox 65, 45, 85, 15, "Select one:" +chr(9)+ county_attorney_list, CAO_list
-  CheckBox 5, 70, 50, 10, "NCP present", NCP_present_check
-  Text 60, 70, 60, 10, "Represented by:"
-  EditBox 120, 70, 85, 15, NCP_represented_by
-  CheckBox 5, 85, 50, 10, "CP present", CP_present_check
-  Text 60, 85, 55, 10, "Represented by:"
-  EditBox 120, 85, 85, 15, CP_represented_by
-  Text 5, 105, 70, 10, "Details of the hearing"
-  EditBox 80, 105, 170, 15, details_of_the_hearing
-  CheckBox 10, 125, 100, 10, "Driver's license addressed", DL_addressed_check
-  Text 20, 140, 105, 10, "Details of drivers license status"
-  EditBox 130, 135, 155, 15, dl_details
-  Text 10, 160, 70, 10, "Review Hearing Date"
-  EditBox 85, 160, 65, 15, review_hearing_date
-  Text 150, 195, 60, 10, "Worker signature"
-  EditBox 215, 195, 90, 15, worker_signature
+  Text 5, 10, 55, 10, "Date of Hearing"
+  EditBox 60, 5, 105, 15, enter_date
+  Text 5, 30, 80, 10, "Motion before the Court"
+  ComboBox 85, 25, 155, 15, "Select one or type in other motion:"+chr(9)+"Initial Contempt of Court"+chr(9)+"Contempt Review"+chr(9)+"Continued Contempt Motion"+chr(9)+"Affidavit of Default/Cure Default"+chr(9)+"Paternity Action", motion_before_court
+  Text 5, 55, 65, 10, "District Court Judge"
+  DropListBox 75, 50, 85, 15, "Select one:"+chr(9)+ county_judge_list, district_court_judge
+  Text 170, 55, 55, 10, "County Attorney"
+  DropListBox 225, 50, 85, 15, "Select one:"+chr(9)+ county_attorney_list, CAO_list
+  CheckBox 35, 85, 50, 10, "NCP present", NCP_present_check
+  Text 90, 85, 60, 10, "Represented by:"
+  EditBox 150, 80, 85, 15, NCP_represented_by
+  CheckBox 35, 105, 50, 10, "CP present", CP_present_check
+  Text 90, 105, 55, 10, "Represented by:"
+  EditBox 150, 100, 85, 15, CP_represented_by
+  Text 10, 135, 70, 10, "Details of the hearing"
+  EditBox 85, 130, 170, 15, details_of_the_hearing
+  CheckBox 10, 155, 100, 10, "Driver's license addressed", DL_addressed_check
+  Text 20, 170, 105, 10, "Details of drivers license status"
+  EditBox 130, 165, 155, 15, dl_details
+  Text 10, 195, 70, 10, "Review Hearing Date"
+  EditBox 85, 190, 65, 15, review_hearing_date
+  Text 160, 215, 60, 10, "Worker signature"
+  EditBox 220, 210, 90, 15, worker_signature
   ButtonGroup ButtonPressed
     OkButton 210, 235, 50, 15
     CancelButton 265, 235, 50, 15
+  Text 170, 10, 50, 10, "(mm/dd/yyyy)"
 EndDialog
 
 'case number dialog-
@@ -122,7 +130,6 @@ BeginDialog case_number_dialog, 0, 0, 176, 135, "Case number dialog"
   Text 10, 80, 50, 10, "Case number:"
   Text 10, 95, 90, 10, "Type of case to note about: "
 EndDialog
-
 
 'END DIALOGS=====================================================================================================================================================================================================
 
@@ -209,9 +216,12 @@ call navigate_to_PRISM_screen("CAAD")
 call enter_PRISM_case_number(PRISM_case_number, 20, 8)
 
 
-PF5					'Did this because you have to add a new note
-EMWriteScreen "M3909", 4, 54  'adds correct caad code
-EMSetCursor 16, 4			'Because the cursor does not default to this location
+PF5						'Did this because you have to add a new note
+EMSetCursor 04, 37			'Set cursor on Activity Date
+EMWriteScreen enter_date, 4, 37	'Enters date user puts in dialog box which is the date of the hearing
+EMWriteScreen "M3909", 4, 54  	'Adds correct caad code
+EMSetCursor 16, 4				'Because the cursor does not default to this location
+
 
 'Now we enter the CAAD note details from our dialog.
 
