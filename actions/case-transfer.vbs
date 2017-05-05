@@ -41,9 +41,11 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("05/02/2017", "Added additional information to the last message box.", "Jodi Martin, Wright County")
 CALL changelog_update("01/18/2017", "A bug was fixed in this script to require the team field have 3 characters.", "Kelly Hiestand, Wright County")
 call changelog_update("11/16/2016", "County, Office, Team and Position fields now have length requirements.", "Kelly Hiestand, Wright County")
 call changelog_update("11/13/2016", "Initial version.", "Veronica Cary, DHS")
+
 
 
 
@@ -153,6 +155,6 @@ IF letter_checkbox = 1 THEN CALL write_variable_in_CAAD("* Sent New Worker lette
 CALL write_variable_in_CAAD(worker_signature)
 transmit
 
-MsgBox "Success! The case has been transferred and CAAD noted."
+MsgBox "Success! The case has been transferred and CAAD noted. Please complete any additional necessary actions per your county's case transfer process."
 
 script_end_procedure("")
