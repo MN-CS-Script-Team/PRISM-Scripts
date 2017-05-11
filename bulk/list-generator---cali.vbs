@@ -56,7 +56,7 @@ BeginDialog CALI_to_excel_Dialog, 0, 0, 186, 115, "CALI To Excel"
     OkButton 70, 95, 50, 15
     CancelButton 125, 95, 50, 15
   Text 10, 5, 100, 10, "Create a caseload report for:"
-  GroupBox 5, 35, 175, 55, "Additional options to include in the report:"
+  GroupBox 5, 35, 175, 55, "Additional report options (check all that apply):"
   Text 10, 75, 165, 10, "Note: Additional options increase processing time"
 EndDialog
 
