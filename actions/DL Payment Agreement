@@ -1,0 +1,157 @@
+'GATHERING STATS----------------------------------------------------------------------------------------------------
+
+'name_of_script = "ACTIONS -DL Payment Agreement.vbs"
+'start_time = timer
+
+
+'this is a function document
+'DIM beta_agency 'remember to add
+
+'LOADING FUNCTIONS LIBRARY FROM GITHUB REPOSITORY===========================================================================
+IF IsEmpty(FuncLib_URL) = TRUE THEN	'Shouldn't load FuncLib if it already loaded once
+	IF run_locally = FALSE or run_locally = "" THEN	   'If the scripts are set to run locally, it skips this and uses an FSO below.
+		IF use_master_branch = TRUE THEN			   'If the default_directory is C:\DHS-MAXIS-Scripts\Script Files, you're probably a scriptwriter and should use the master branch.
+			FuncLib_URL = "https://raw.githubusercontent.com/MN-Script-Team/BZS-FuncLib/master/MASTER%20FUNCTIONS%20LIBRARY.vbs"
+		Else											'Everyone else should use the release branch.
+			FuncLib_URL = "https://raw.githubusercontent.com/MN-Script-Team/BZS-FuncLib/RELEASE/MASTER%20FUNCTIONS%20LIBRARY.vbs"
+		End if
+		SET req = CreateObject("Msxml2.XMLHttp.6.0")				'Creates an object to get a FuncLib_URL
+		req.open "GET", FuncLib_URL, FALSE							'Attempts to open the FuncLib_URL
+		req.send													'Sends request
+		IF req.Status = 200 THEN									'200 means great success
+			Set fso = CreateObject("Scripting.FileSystemObject")	'Creates an FSO
+			Execute req.responseText								'Executes the script code
+		ELSE														'Error message
+			critical_error_msgbox = MsgBox ("Something has gone wrong. The Functions Library code stored on GitHub was not able to be reached." & vbNewLine & vbNewLine &_
+                                            "FuncLib URL: " & FuncLib_URL & vbNewLine & vbNewLine &_
+                                            "The script has stopped. Please check your Internet connection. Consult a scripts administrator with any questions.", _
+                                            vbOKonly + vbCritical, "BlueZone Scripts Critical Error")
+            StopScript
+		END IF
+	ELSE
+		FuncLib_URL = "C:\BZS-FuncLib\MASTER FUNCTIONS LIBRARY.vbs"
+		Set run_another_script_fso = CreateObject("Scripting.FileSystemObject")
+		Set fso_command = run_another_script_fso.OpenTextFile(FuncLib_URL)
+		text_from_the_other_script = fso_command.ReadAll
+		fso_command.Close
+		Execute text_from_the_other_script
+	END IF
+END IF
+'END FUNCTIONS LIBRARY BLOCK================================================================================================
+
+'Dialog Box=======================================================================================
+BeginDialog DL_Dialog, 0, 0, 227, 246, "Send DL Payment Agreement"
+  EditBox 60, 10, 110, 20, PRISM_case_number
+  Text 10, 10, 50, 10, "Case Number"
+  Text 40, 60, 60, 10, "Total Obligation:"
+  EditBox 100, 50, 60, 20, total_monthly_obligation
+  Text 40, 90, 50, 10, "Total Arrears:"
+  EditBox 100, 80, 60, 20, arrears_balance
+  Text 10, 120, 90, 20, "Monthly Pay Plan Amount: "
+  EditBox 100, 110, 60, 20, pay_plan_amt
+  Text 10, 150, 80, 10, "Enter Day Payment Due:"
+  EditBox 100, 140, 60, 20, enter_due_date
+  Text 170, 150, 50, 10, "Ex: 1st"
+  Text 10, 180, 80, 20, "Payment Plan Start Date:"
+  EditBox 100, 170, 60, 20, pmt_plan_start_date
+  Text 170, 180, 40, 10, "mm/dd/yyyy"
+  Text 50, 210, 140, 10, "Press the OK button to print agreement"
+  ButtonGroup ButtonPressed
+    OkButton 50, 220, 50, 20
+    CancelButton 120, 220, 50, 20
+EndDialog
+
+'Connecting to Bluezone
+EMConnect ""
+
+continue = msgbox ("Run this script to enter the data needed to complete and print a Driver's License Payment Agreement." &_
+	"The script will pull the payment information from the CAFS screen and print your DL Payment Agreement." &_
+	"Please click OK to continue or Cancel to stop the script.", 1)
+
+'Check to make sure you are not logged out of PRISM
+Dim TimeOutStr
+EMReadScreen TimeOutStr, 1, 12, 53
+If (TImeOutStr = ">") then
+	MsgBox "Please log in first!", vbExclamation
+	Stopscript
+End If
+
+'This will collect the data needed in the DL payment agreement
+CALL navigate_to_PRISM_screen ("CAFS")
+
+EMReadScreen PRISM_case_number, 13, 4, 8
+EMReadScreen total_monthly_obligation, 12, 9, 27
+EMReadScreen arrears_balance, 13, 12, 65
+
+'Shows Dialog box
+Do
+	err_msg = ""
+	Dialog DL_Dialog
+		If buttonpressed = 0 then stopscript		'Cancel
+		If enter_due_date = "" THEN err_msg = err_msg & vbNewline & "You must enter date"
+		If err_msg <> "" THEN
+			MsgBox "***NOTICE!!!***" & vbNewline & err_msg & vbNewline & "Please resolve for the script to continue."
+		End If
+		
+
+Loop until err_msg = ""
+
+		CALL navigate_to_PRISM_screen ("DORD")
+		EMWriteScreen "C", 3, 29
+		Transmit
+
+		EMWriteScreen "A", 3, 29
+		EMWriteScreen "F0701", 6, 36
+		Transmit
+		PF14
+		EMWriteScreen "U", 20, 14
+		Transmit
+
+		EMWriteScreen "S", 7, 5
+		Transmit
+		EMWriteScreen "X", 16, 15
+		Transmit
+
+		EMWriteScreen "S", 8, 5
+		Transmit
+		EMWriteScreen total_monthly_obligation, 16, 15
+		Transmit
+
+		EMWriteScreen "S", 9, 5
+		Transmit
+		EMWriteScreen "X", 16, 15
+		Transmit
+
+		EMWriteScreen "S", 10, 5
+		Transmit	
+		EMWriteScreen arrears_balance, 16, 15
+		Transmit
+
+		EMWriteScreen "S", 11, 5
+		Transmit
+		EMWriteScreen pay_plan_amt, 16, 15
+		Transmit
+
+		EMWriteScreen "S", 12, 5
+		Transmit	
+		EMWriteScreen enter_due_date, 16, 15
+		Transmit
+
+		EMWriteScreen "S", 13, 5
+		Transmit
+		EMWriteScreen  pmt_plan_start_date, 16, 15
+		Transmit
+
+		PF3
+		EMWriteScreen "M", 3, 29
+		Transmit
+		MsgBox "Select enforcement remedy and print document"
+		
+		
+		
+
+
+
+
+
+
