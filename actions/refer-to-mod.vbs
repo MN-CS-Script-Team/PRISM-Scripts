@@ -1,3 +1,4 @@
+
 'GATHERING STATS----------------------------------------------------------------------------------------------------
 name_of_script = "refer-to-mod.vbs"
 start_time = timer
@@ -40,6 +41,7 @@ changelog = array()
 
 'INSERT ACTUAL CHANGES HERE, WITH PARAMETERS DATE, DESCRIPTION, AND SCRIPTWRITER. **ENSURE THE MOST RECENT CHANGE GOES ON TOP!!**
 'Example: call changelog_update("01/01/2000", "The script has been updated to fix a typo on the initial dialog.", "Jane Public, Oak County")
+call changelog_update("08/17/2017", "Created edit boxes for mod worker info for collaborative version of the script and fixed bugs.", "Wendy LeVesseur, Anoka County")
 call changelog_update("03/10/2017", "Initial version.", "Wendy LeVesseur, Anoka County")
 
 
@@ -319,8 +321,9 @@ BeginDialog PRISM_case_number_dialog, 0, 0, 186, 50, "PRISM case number dialog"
   Text 5, 10, 90, 20, "PRISM case number (XXXXXXXXXX-XX format):"
 EndDialog
 
-'Dialog for selection actions for the script to take
-BeginDialog Mod_info_dialog, 0, 0, 321, 195, "Mod Actions Dialog"
+
+'Dialog for selection actions for the script to take for Anoka County
+BeginDialog Mod_info_dialog_Anoka, 0, 0, 321, 195, "Mod Actions Dialog"
   CheckBox 10, 25, 135, 10, "Employment Verification - NCP", NCP_EVR_check
   CheckBox 10, 40, 135, 10, "Special Services Assessment - NCP", NCP_Special_assessment_check
   CheckBox 180, 25, 135, 10, "Employment Verification - CP", CP_EVR_check
@@ -338,6 +341,34 @@ BeginDialog Mod_info_dialog, 0, 0, 321, 195, "Mod Actions Dialog"
   GroupBox 0, 10, 310, 60, "Documents to send out:"
   GroupBox 0, 70, 310, 40, "Actions to take:"
   Text 20, 125, 65, 10, "Mod worker name:"
+  Text 15, 155, 80, 10, "Optional CAAD note text:"
+EndDialog
+
+
+'Dialog for selection actions for the script to take for counties other than Anoka
+
+BeginDialog Mod_info_dialog, 0, 0, 321, 195, "Mod Actions Dialog"
+  CheckBox 10, 25, 135, 10, "Employment Verification - NCP", NCP_EVR_check
+  CheckBox 10, 40, 135, 10, "Special Services Assessment - NCP", NCP_Special_assessment_check
+  CheckBox 180, 25, 135, 10, "Employment Verification - CP", CP_EVR_check
+  CheckBox 180, 40, 135, 10, "Special Services Assessment - CP", CP_Special_assessment_check
+  CheckBox 180, 55, 110, 10, "Child Care Verification Form", child_care_verification_check
+  CheckBox 10, 80, 105, 10, "Send FPLS request for NCP", NCP_NCMR_check
+  CheckBox 180, 80, 125, 10, "Send FPLS request for child(ren)", CH_CHMR_check
+  CheckBox 10, 95, 165, 10, "Update Notice of Review with Mod Worker Info", update_mod_worker
+  CheckBox 180, 95, 125, 10, "Create followup worklist", CAWD_check
+  EditBox 5, 125, 90, 15, mod_worker_name_txt
+  EditBox 105, 125, 90, 15, mod_worker_title_txt
+  EditBox 205, 125, 90, 15, mod_worker_phone_txt
+  EditBox 100, 150, 90, 15, caad_note_text
+  ButtonGroup ButtonPressed
+    OkButton 205, 170, 50, 15
+    CancelButton 260, 170, 50, 15
+  GroupBox 0, 10, 310, 60, "Documents to send out:"
+  GroupBox 0, 70, 310, 40, "Actions to take:"
+  Text 10, 115, 65, 10, "Mod worker name:"
+  Text 110, 115, 65, 10, "Mod worker title:"
+  Text 210, 115, 65, 10, "Mod worker phone:"
   Text 15, 155, 80, 10, "Optional CAAD note text:"
 EndDialog
 
@@ -392,6 +423,11 @@ EMSetCursor 4, 8
 EMSendKey replace(PRISM_case_number, "-", "")									'Entering the specific case indicated
 EMWriteScreen "d", 3, 29												'Setting the screen as a display action
 transmit															'Transmitting into it
+
+'IF county is Anoka, then replace the regular dialog with the Anoka-specific dialog.
+IF county_cali_code = "003" THEN
+	mod_info_dialog = mod_info_dialog_anoka
+END IF
 
 'Shows intake dialog, checks to make sure we're still in PRISM (not passworded out)
 Do
@@ -773,36 +809,48 @@ IF update_mod_worker = checked THEN
 				EMWriteScreen "S", 12, 5
 				transmit
 				
-		
-				IF mod_worker = "Theresa Hogan" THEN
-					EMWriteScreen "Theresa Hogan          ", 16, 15
-					transmit
-					EMWriteScreen "Expedited Process Specialist", 16, 15
-					transmit
-					EMWriteScreen "763-323-6058", 16, 15
-					transmit
-				ELSEIF mod_worker = "Terri Spence-Garski" THEN
-					EMWriteScreen "Terri Spence-Garski", 16, 15
-					transmit
-					EMWriteScreen "Expedited Process Specialist", 16, 15
-					transmit
-					EMWriteScreen "763-323-6056", 16, 15				
-					transmit
-				ELSEIF mod_worker = "Kelly Rein" THEN
-					EMWriteScreen "Kelly Rein                  ", 16, 15
-					transmit
-					EMWriteScreen "Expedited Process Specialist", 16, 15
-					transmit
-					EMWriteScreen "763-323-6059", 16, 15					 
-					transmit
-				ELSEIF mod_worker = "Karla Wangrud" THEN
-					EMWriteScreen "Karla Wangrud            ", 16, 15
-					transmit
-					EMWriteScreen "Expedited Process Specialist", 16, 15
-					transmit
-					EMWriteScreen "763-422-7346", 16, 15					 
-					transmit
-				END IF		
+				'Populate mod worker info if county = Anoka
+				IF county_cali_code = "003" THEN
+					IF mod_worker = "Theresa Hogan" THEN
+						EMWriteScreen "Theresa Hogan          ", 16, 15
+						transmit
+						EMWriteScreen "Expedited Process Specialist", 16, 15
+						transmit
+						EMWriteScreen "763-324-2484", 16, 15
+						transmit
+					ELSEIF mod_worker = "Terri Spence-Garski" THEN
+						EMWriteScreen "Terri Spence-Garski", 16, 15
+						transmit
+						EMWriteScreen "Expedited Process Specialist", 16, 15
+						transmit
+						EMWriteScreen "763-324-2487", 16, 15				
+						transmit
+					ELSEIF mod_worker = "Kelly Rein" THEN
+						EMWriteScreen "Kelly Rein                  ", 16, 15
+						transmit
+						EMWriteScreen "Expedited Process Specialist", 16, 15
+						transmit
+						EMWriteScreen "763-324-2486", 16, 15					 
+						transmit
+					ELSEIF mod_worker = "Karla Wangrud" THEN
+						EMWriteScreen "Karla Wangrud            ", 16, 15
+						transmit
+						EMWriteScreen "Expedited Process Specialist", 16, 15
+						transmit
+						EMWriteScreen "763-324-2435", 16, 15					 
+						transmit
+					END IF	
+
+				'Or input the user's text if county is not Anoka	
+				ELSE
+						EMWriteScreen mod_worker_name_txt, 16, 15
+						transmit
+						EMWriteScreen mod_worker_title_txt, 16, 15
+						transmit
+						EMWriteScreen mod_worker_phone_txt, 16, 15
+						transmit
+				END IF
+
 			
 				PF3 
 				EMWriteScreen "M", 3, 29
@@ -852,7 +900,8 @@ If CAWD_check = checked then
 	PF5
 	EMWriteScreen "FREE", 4, 37
 	EMWriteScreen "*** Special Services assessment received from the parties?", 10, 4
-	EMWriteScreen dateadd("d", date, 7), 17, 21
+	worklist_date= dateadd("d", date, 7)
+	CALL write_date(worklist_date, "MM/DD/YYYY", 17, 21)
 	transmit
 End if
 
