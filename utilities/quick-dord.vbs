@@ -34,7 +34,7 @@ IF IsEmpty(FuncLib_URL) = TRUE THEN	'Shouldn't load FuncLib if it already loaded
 END IF
 'END FUNCTIONS LIBRARY BLOCK================================================================================================
 
-script_end_procedure("This script will be released sometime in February 2017. - VKC")
+script_end_procedure("This script will be released sometime, no ETA. - VKC")
 
 'CHANGELOG BLOCK ===========================================================================================================
 'Starts by defining a changelog array
